@@ -27,3 +27,6 @@ Stooq now needs a CAPTCHA-derived key and FRED needs a free key, so the market f
 
 ## D-market-recap: one morning run writes the recap
 The morning task reads the previous close from `market.json` and writes the recap, so there is no second (evening) task run. Quoted numbers are enforced by `validate.mjs --check-market`, run only by the task, so a new `market.json` landing after the recap never blocks a deploy. Weekends and holidays reuse the last close with an explicit "markets closed" opening line.
+
+## D-local-state: Local and State join the morning run (P4)
+Same run, same validator. Classification rule: one story, one section; Shelby County stories are Local even when the state is involved, statewide and non-Shelby Tennessee stories are State. Crime and court items report only what officials or records say and do not name uncharged people. Quiet days are written as quiet. Outlet fetch results are reported back after each run so `config/sources.json` can be updated by PR.
