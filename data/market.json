@@ -1,18 +1,65 @@
 {
   "schemaVersion": 1,
-  "mock": true,
-  "fetchedAt": "2026-11-21T15:35:00-06:00",
-  "asOf": "2026-11-21",
-  "marketStatus": "closed",
-  "note": "Mock numbers for layout only. Not real market data.",
+  "fetchedAt": "2026-11-23T19:23:39.745Z",
+  "asOf": "2026-11-20",
+  "marketStatus": "open",
   "items": [
-    { "id": "sp500",  "label": "S&P 500",       "value": 1000.00, "change": 10.00, "changePct": 1.00,  "unit": "points" },
-    { "id": "dow",    "label": "Dow",           "value": 2000.00, "change": -20.00, "changePct": -1.00, "unit": "points" },
-    { "id": "nasdaq", "label": "Nasdaq",        "value": 3000.00, "change": 0.00,  "changePct": 0.00,  "unit": "points" },
-    { "id": "us10y",  "label": "10-yr Treasury", "value": 4.00,   "change": 0.01,  "changePct": 0.25,  "unit": "percent" },
-    { "id": "wti",    "label": "Oil (WTI)",     "value": 60.00,   "change": 0.50,  "changePct": 0.84,  "unit": "usd" },
-    { "id": "gold",   "label": "Gold",          "value": 2000.00, "change": -5.00, "changePct": -0.25, "unit": "usd" },
-    { "id": "dxy",    "label": "US Dollar Index", "value": 100.00, "change": 0.10, "changePct": 0.10,  "unit": "index" }
+    {
+      "id": "sp500",
+      "label": "S&P 500",
+      "value": 6910.39,
+      "change": -265.44,
+      "changePct": -3.7,
+      "unit": "points"
+    },
+    {
+      "id": "dow",
+      "label": "Dow",
+      "value": 48147.33,
+      "change": -949.73,
+      "changePct": -1.93,
+      "unit": "points"
+    },
+    {
+      "id": "nasdaq",
+      "label": "Nasdaq",
+      "value": 22617.73,
+      "change": -1261.47,
+      "changePct": -5.28,
+      "unit": "points"
+    },
+    {
+      "id": "us10y",
+      "label": "10-yr Treasury",
+      "value": 4.91,
+      "change": -0.14,
+      "changePct": -2.77,
+      "unit": "percent"
+    },
+    {
+      "id": "wti",
+      "label": "Oil (WTI)",
+      "value": 83.98,
+      "change": 0.77,
+      "changePct": 0.93,
+      "unit": "usd"
+    },
+    {
+      "id": "gold",
+      "label": "Gold",
+      "value": 3515.4,
+      "change": -170.1,
+      "changePct": -4.62,
+      "unit": "usd"
+    },
+    {
+      "id": "dxy",
+      "label": "US Dollar Index",
+      "value": 103.81,
+      "change": -0.09,
+      "changePct": -0.09,
+      "unit": "index"
+    }
   ],
-  "source": "mock"
+  "source": "Yahoo Finance daily closes"
 }
