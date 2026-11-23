@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T13:13:28-06:00",
+  "generatedAt": "2026-11-23T13:27:52-06:00",
   "sections": {
     "local": {
-      "headline": "Commission to vote on data center rules; Millington launches $2 ride service",
+      "headline": "County Commission to vote on data center rules; Millington starts $2 ride service",
       "body": [
-        "The Shelby County Commission is set to vote on a framework for land-use rules covering data centers, according to the Daily Memphian. The Daily Memphian also reported that MLGW's CEO discussed proposed rate increases.",
-        "FOX13 Memphis reported that an on-demand ride service costing $2 a trip starts in Millington on Monday. Action News 5 said the week will start cooler and brisk, with rain possible around Wednesday's Thanksgiving travel."
+        "The Shelby County Commission is set to vote on a framework for land-use rules for data centers, according to the Daily Memphian. The paper also reported that a separate ordinance could bar permits for new data centers for up to a year. State transportation officials plan to break ground on the I-55 replacement bridge project in February, the Daily Memphian reported.",
+        "FOX13 Memphis reported that Millington's on-demand ride service began Monday, with $2 trips inside city limits under a 12-month pilot. Action News 5 reported that a woman reported missing in Mississippi was found in a lake near Shelby Farms on Saturday morning. A sheriff's deputy who tried to reach her was treated for possible hypothermia, and both were taken to Regional One in non-critical condition."
       ],
       "sources": [
         {
@@ -15,9 +15,9 @@
           "url": "https://dailymemphian.com/section/metroshelby-county/article/68805/shelby-county-commission-preview-data-center-land-use-regulation"
         },
         {
-          "title": "MLGW leader discusses proposed rate increases",
+          "title": "Plans for I-55 bridge work at Kings' Crossing",
           "outlet": "The Daily Memphian",
-          "url": "https://dailymemphian.com/section/business/article/68779/mlgw-rate-hikes-memphis-light-gas-and-water-utility-hike"
+          "url": "https://dailymemphian.com/section/metrostate-government/article/68781/kings-crossing-memphis-interstate-55-i-bridge-construction"
         },
         {
           "title": "Millington on-demand ride service launches Monday",
@@ -25,18 +25,18 @@
           "url": "https://www.fox13memphis.com/news/need-a-ride-in-millington-2-service-launches-monday/article_2d37d2b1-be01-4c85-b582-9349c330c2d5.html"
         },
         {
-          "title": "Forecast for a cooler week with Wednesday rain",
+          "title": "Woman rescued from lake near Shelby Farms",
           "outlet": "WMC Action News 5",
-          "url": "https://www.actionnews5.com/2026/11/23/first-alert-forecast-cooler-brisk-early-week-rain-impacts-wednesday-travel/"
+          "url": "https://www.actionnews5.com/2026/11/21/scso-investigation-underway-near-walnut-grove/"
         }
       ],
-      "updatedAt": "2026-11-23T13:13:28-06:00"
+      "updatedAt": "2026-11-23T13:27:52-06:00"
     },
     "state": {
-      "headline": "Blackburn team forms DCS advisory group; state returns record unclaimed property",
+      "headline": "Blackburn transition team names DCS advisers; death row lawyers seek wider review",
       "body": [
-        "The transition team for incoming Gov. Blackburn has formed a four-person advisory group, led by former Department of Children's Services leader Jim Henry, to review the department, according to the Tennessee Lookout. The Chattanooga Times Free Press reported that the state returned $111.5 million in unclaimed property to 169,303 owners, a record.",
-        "WSMV reported that death row attorneys are asking for a wider review of Tennessee's execution procedures after two executions this year that they describe as \"botched\"."
+        "According to the Tennessee Lookout, Gov.-elect Marsha Blackburn's transition committee formed a four-person advisory group, chaired by former Department of Children's Services leader Jim Henry, to assess the department and recommend its future direction and leadership. Blackburn takes office Jan. 16.",
+        "WSMV reported that attorneys for death row prisoners wrote to Gov. Bill Lee and Blackburn asking for an independent review of every execution under the 2025 lethal injection protocol. Lee has paused executions through the end of 2026. The Lookout also reported that the West Tennessee Megasite Authority is considering guiding principles for data centers on land it manages outside Shelby County."
       ],
       "sources": [
         {
@@ -45,101 +45,103 @@
           "url": "https://tennesseelookout.com/2026/11/23/blackburn-taps-child-welfare-advisory-group-to-review-tennessee-department-of-childrens-services/"
         },
         {
-          "title": "State returns record amount of unclaimed property",
-          "outlet": "Chattanooga Times Free Press",
-          "url": "https://www.timesfreepress.com/news/2026/nov/23/record-set-after-more-than-110m-returned-to-tennesseeans-from-state-treasury/"
-        },
-        {
           "title": "Attorneys seek wider review of execution procedures",
           "outlet": "WSMV",
           "url": "https://www.wsmv.com/2026/11/23/death-row-attorneys-push-expanded-review-tennessees-execution-procedures-after-2-botched-executions-this-year/"
+        },
+        {
+          "title": "Megasite board weighs data center principles",
+          "outlet": "Tennessee Lookout",
+          "url": "https://tennesseelookout.com/2026/11/23/west-tennessee-megasite-authority-to-consider-creating-guiding-principles-for-data-centers/"
         }
       ],
-      "updatedAt": "2026-11-23T13:13:28-06:00"
+      "updatedAt": "2026-11-23T13:27:52-06:00"
     },
     "federal": {
-      "headline": "Democrat projected to win North Carolina House race; Delta delays hit holiday travel",
+      "headline": "Democrats reach 258 House seats; Delta outage delays holiday travelers",
       "body": [
-        "CBS News and ABC News reported that Democrat Chuck Hubbard is projected to defeat Republican Rep. Virginia Foxx in North Carolina's 5th District. ABC News said the projection followed a recount.",
-        "PBS NewsHour, CBS News and ABC News reported that a technical problem at Delta Air Lines caused delays on Sunday, mostly at its Atlanta hub, as Americans began Thanksgiving travel. PBS NewsHour said the FAA issued a ground stop."
+        "The Associated Press, via PBS NewsHour, reported that House Democrats reached at least 258 of 435 seats on Sunday after Democrat Chuck Hubbard defeated Republican Rep. Virginia Foxx in North Carolina, as CBS News and ABC News also reported. Four races remain undecided. The new House convenes Jan. 3, 2027. ABC News reported that an outage in a Delta Air Lines weight-and-balance system delayed more than 1,600 flights on Sunday, mostly in Atlanta. Delta said it was not a hack and that systems were back to normal Sunday afternoon.",
+        "On CBS News's Face the Nation, Treasury Secretary Scott Bessent said the government needs answers from Nvidia on whether it complied with chip export limits to China, and that he had asked for a reply within 10 days. The Hill reported Monday that Nvidia's board reinstated Jensen Huang as chief executive."
       ],
       "sources": [
+        {
+          "title": "Democrats clinch House majority",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/politics/democrats-clinch-a-historic-house-majority-of-at-least-258-seats-the-largest-since-1992"
+        },
         {
           "title": "Projection of Hubbard win over Foxx",
           "outlet": "CBS News",
           "url": "https://www.cbsnews.com/news/democrat-chuck-hubbard-defeats-gop-rep-virginia-foxx-north-carolina/"
         },
         {
-          "title": "Hubbard projected to win after recount",
-          "outlet": "ABC News",
-          "url": "https://abcnews.com/Politics/democrat-chuck-hubbard-wins-recount-north-carolina-us/story?id=138362634"
-        },
-        {
-          "title": "Delta automation problem delays holiday travelers",
-          "outlet": "PBS NewsHour",
-          "url": "https://www.pbs.org/newshour/nation/automation-system-problem-at-delta-causes-flight-delays-as-americans-travel-for-thanksgiving"
-        },
-        {
-          "title": "Delta delays tied to a baggage system issue",
-          "outlet": "CBS News",
-          "url": "https://www.cbsnews.com/news/delta-air-lines-nationwide-delays-amid-baggage-network-system-issue/"
-        },
-        {
-          "title": "Equipment problems delay Delta flights",
+          "title": "Equipment outage delays Delta flights",
           "outlet": "ABC News",
           "url": "https://abcnews.com/US/equipment-outage-atlanta-causes-1300-delta-flight-delays/story?id=138360900"
+        },
+        {
+          "title": "Bessent seeks answers from Nvidia on China chips",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/bessent-nvidia-china-ai-chips-alice-huang-canard/"
         }
       ],
-      "updatedAt": "2026-11-23T13:13:28-06:00"
+      "updatedAt": "2026-11-23T13:27:52-06:00"
     },
     "international": {
-      "headline": "UN climate talks end without a deal; Ukraine and Libya attacks draw UN attention",
+      "headline": "COP31 ends without a climate deal; suspected drone strike hits Russian ship in Libya",
       "body": [
-        "PBS NewsHour and UN News reported that the COP31 climate talks ended without an agreement. Delegates told PBS NewsHour the draft lacked wording on fossil fuels, and UN Secretary-General Guterres said the science is clear.",
-        "The UN Security Council met on attacks on Ukraine's power grid and Black Sea shipping, UN News reported. The Associated Press, via the Chattanooga Times Free Press, said a Russian strike near Kyiv hit an apartment building and killed at least three people. CBS News reported suspected Ukrainian drones struck a Russian warship at a naval base in Benghazi, Libya, and UN News said the UN mission there urged an investigation of attacks at the port."
+        "UN News reported that the COP31 climate talks in Antalya, Türkiye, ended Sunday without an agreement after divisions over fossil fuels. UN Secretary-General António Guterres called the outcome \"deeply disappointing.\" PBS NewsHour reported that countries said at the final meeting that they could not accept a draft with no fossil fuel wording. Talks move to COP32 in Addis Ababa.",
+        "CBS News, citing the Associated Press, reported that two Libyan military officials said a suspected Ukrainian drone strike damaged the Russian corvette Merkury at the Benghazi naval base. No group claimed it, and neither Russia nor Ukraine had commented at the time. UN News said the UN mission in Libya urged an investigation of attacks at the port, and that the Security Council met Monday on attacks on Ukraine's power grid and Black Sea shipping."
       ],
       "sources": [
-        {
-          "title": "Leaders explain why climate talks ended without a deal",
-          "outlet": "PBS NewsHour",
-          "url": "https://www.pbs.org/newshour/world/in-their-own-words-leaders-at-un-climate-talks-discuss-why-negotiations-ended-without-deal"
-        },
         {
           "title": "COP31 closes without a climate pact",
           "outlet": "UN News",
           "url": "https://news.un.org/en/story/2026/11/1168855"
         },
         {
-          "title": "Security Council meets on attacks in Ukraine",
-          "outlet": "UN News",
-          "url": "https://news.un.org/en/story/2026/11/1168859"
-        },
-        {
-          "title": "Russian strike near Kyiv hits apartment building",
-          "outlet": "Chattanooga Times Free Press (AP)",
-          "url": "https://www.timesfreepress.com/news/2026/nov/22/russian-attack-near-ukraines-capital-strikes-apartment-building-killing-3-and-burying-others/"
+          "title": "Leaders explain why climate talks ended without a deal",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/world/in-their-own-words-leaders-at-un-climate-talks-discuss-why-negotiations-ended-without-deal"
         },
         {
           "title": "Warship reportedly struck at Libyan naval base",
           "outlet": "CBS News",
           "url": "https://www.cbsnews.com/news/russian-warship-struck-suspected-ukrainian-sea-drones-benghazi-naval-base-libya-officials/"
+        },
+        {
+          "title": "Security Council meets on attacks in Ukraine",
+          "outlet": "UN News",
+          "url": "https://news.un.org/en/story/2026/11/1168859"
         }
       ],
-      "updatedAt": "2026-11-23T13:13:28-06:00"
+      "updatedAt": "2026-11-23T13:27:52-06:00"
     },
     "market": {
-      "mock": true
+      "asOf": "2026-11-20",
+      "body": [
+        "These are the most recent closes, from Friday, November 20. The S&P 500 fell 3.7%. The Dow fell 1.93%. The Nasdaq fell 5.28%. Investors worried that heavy spending on AI data centers may not pay off, according to CBS News.",
+        "The 10-year Treasury yield fell 2.77%. Oil rose 0.93%. Gold fell 4.62%. The US Dollar Index fell 0.09%."
+      ],
+      "sources": [
+        {
+          "title": "CBS MoneyWatch explainer on the stock slide",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/why-stocks-are-falling-ai-fears/"
+        }
+      ],
+      "updatedAt": "2026-11-23T13:27:52-06:00"
     }
   },
   "scripture": {
-    "reference": "Psalm 147:3",
-    "theme": "comfort"
+    "reference": "Isaiah 26:3",
+    "theme": "peace"
   },
   "notes": [
-    "market: left unchanged, no fresh numbers (market.json is mock)",
-    "federal/international: feed listings and headline-level gists only; AP, BBC, Reuters blocked",
-    "international: Ukraine and Libya items from listings only; Kyiv strike is AP via Times Free Press",
-    "local/state: Daily Memphian items premium, listing text only; Action News 5, FOX13, WSMV, Lookout, Times Free Press worked",
-    "scripture: deaths in Ukraine strike, so comfort theme; history read from git"
+    "federal/international: PBS, CBS, ABC, The Hill, UN News worked; AP, BBC, Reuters blocked",
+    "international: Security Council and Libya UN mission items from UN News listing text only",
+    "local: Daily Memphian items premium, dek and listing text only; Action News 5 and FOX13 worked",
+    "state: Lookout article pages failed to fetch, facts from RSS text; Times Free Press page stale",
+    "scripture: deaths in Ukraine strike, so peace theme; history read from git"
   ]
 }
