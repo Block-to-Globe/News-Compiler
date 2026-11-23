@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-23T06:00:00-06:00",
+  "sections": {
+    "local": {
+      "headline": "Sample local headline for Shelby County",
+      "body": [
+        "This is sample text for the Local section. Real summaries about Shelby County, Tennessee will replace it once the scheduled task is running.",
+        "A second paragraph shows how two short paragraphs lay out on the page."
+      ],
+      "sources": [
+        {
+          "title": "Example source article",
+          "outlet": "Example Outlet",
+          "url": "https://example.com/local"
+        }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "state": {
+      "headline": "Sample state headline for Tennessee",
+      "body": [
+        "This is sample text for the State section. It will cover Tennessee-wide news."
+      ],
+      "sources": [
+        {
+          "title": "Example source article",
+          "outlet": "Example Outlet",
+          "url": "https://example.com/state"
+        }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "federal": {
+      "headline": "Sample federal headline",
+      "body": [
+        "This is sample text for the Federal section. It will summarize the day's top U.S. national stories in neutral, original wording.",
+        "A second short paragraph shows the two-paragraph layout."
+      ],
+      "sources": [
+        {
+          "title": "Example source article one",
+          "outlet": "Example Outlet",
+          "url": "https://example.com/federal-1"
+        },
+        {
+          "title": "Example source article two",
+          "outlet": "Another Outlet",
+          "url": "https://example.com/federal-2"
+        }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "international": {
+      "headline": "Sample international headline",
+      "body": [
+        "This is sample text for the International section. It will cover the most important world stories of the day."
+      ],
+      "sources": [
+        {
+          "title": "Example source article",
+          "outlet": "Example Outlet",
+          "url": "https://example.com/world"
+        }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "market": {
+      "asOf": "2026-11-21",
+      "body": [
+        "This is sample text for the Market recap. The real recap will explain the latest trading day and quote numbers that match market.json exactly."
+      ],
+      "sources": [],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    }
+  },
+  "scripture": {
+    "reference": "Psalm 46:1",
+    "theme": "comfort",
+    "why": "A short note on why this verse today."
+  },
+  "notes": []
+}

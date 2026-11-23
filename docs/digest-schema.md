@@ -2,7 +2,7 @@
 
 All files are UTF-8 JSON. All timestamps are ISO 8601 with offset (for example `2026-11-23T06:05:00-06:00`). All URLs are `https://`. No HTML in any text field. Text is plain; paragraphs are separate array items.
 
-Mock versions of every file live in `data/` with `"mock": true`. Real runs omit `mock`.
+Mock versions of the Action-written files live in `data/` with `"mock": true` (they are never deployed; the publish workflow generates real ones). In `digest.json`, a section that is not live yet is just `{ "mock": true }`. The page shows "Coming soon." for it. The scheduled task replaces a section with a full object (no `mock` field) when that section goes live.
 
 ## `data/digest.json` (writer: scheduled Claude task)
 
@@ -31,6 +31,7 @@ Mock versions of every file live in `data/` with `"mock": true`. Real runs omit 
 | `sources` | object[] | required, 1 to 5 items: `{ "title": string, "outlet": string, "url": https URL }` |
 | `quiet` | boolean | optional. `true` on a thin news day (body then says so briefly) |
 | `updatedAt` | timestamp | required |
+| `mock` | boolean | only as `{ "mock": true }` on its own, for a section that is not live yet. A live section never has it |
 
 ### Market narrative (`sections.market`)
 

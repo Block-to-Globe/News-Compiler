@@ -9,9 +9,11 @@ import { createServer } from 'node:http';
 
 const root = new URL('..', import.meta.url).pathname;
 
-function sandbox() {
+// The sandbox uses a full sample digest (tests/fixtures) so every rule has something to check.
+function sandbox({ rawRepoData = false } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'btg-'));
   cpSync(join(root, 'data'), join(dir, 'data'), { recursive: true });
+  if (!rawRepoData) cpSync(join(root, 'tests/fixtures/digest.full.json'), join(dir, 'data/digest.json'));
   return dir;
 }
 function validate(dir, extra = []) {
@@ -22,7 +24,14 @@ function edit(dir, file, fn) {
   const o = JSON.parse(readFileSync(p, 'utf8')); fn(o); writeFileSync(p, JSON.stringify(o, null, 2));
 }
 
-test('mock data passes validation', () => {
+test('repo data (sections marked mock) passes validation', () => {
+  const d = sandbox({ rawRepoData: true });
+  const r = validate(d);
+  assert.equal(r.status, 0, r.stderr);
+  rmSync(d, { recursive: true });
+});
+
+test('full sample digest passes validation', () => {
   const d = sandbox();
   const r = validate(d);
   assert.equal(r.status, 0, r.stderr);

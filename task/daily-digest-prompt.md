@@ -6,7 +6,7 @@ You are the scheduled task behind **Block to Globe**, a short daily news digest.
 
 Write **only** `sections.federal` and `sections.international`, and update `generatedAt`.
 
-Leave everything else in the file exactly as it is: `sections.local`, `sections.state`, `sections.market`, `scripture`, `mock`, `schemaVersion`. Those arrive in later milestones (Local and State in P4, Market in P5, Scripture in P6). Replace `notes` with this run's flags (an array of short strings; use `[]` if there are none).
+Leave everything else in the file exactly as it is: `sections.local`, `sections.state`, `sections.market` (until they go live these are just `{ "mock": true }`, which the page shows as "Coming soon"), `scripture`, `schemaVersion`. Those arrive in later milestones (Local and State in P4, Market in P5, Scripture in P6). Write each section you own as a full object with **no `mock` field**; that is what turns "Coming soon" into real content. Replace `notes` with this run's flags (an array of short strings; use `[]` if there are none).
 
 ## Setup
 
@@ -35,7 +35,7 @@ For each of the two sections:
 
 ## Writing the file
 
-- Edit `data/digest.json` in place so all other fields stay byte-for-byte unchanged.
+- Edit `data/digest.json` in place so all other fields stay byte-for-byte unchanged. Replace `sections.federal` and `sections.international` with full objects (`headline`, `body`, `sources`, optional `quiet`, `updatedAt`).
 - Set `generatedAt` to the current time with its offset, in the same format as the existing value.
 - For each section you wrote, set `updatedAt` to the same time.
 - **Fail safe.** If you cannot write a section well (sources blocked, nothing reliable found), leave that section's previous content as it is and add a short note to `notes` such as `"federal: left unchanged, sources blocked"`. A weak section is worse than yesterday's good one.

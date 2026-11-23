@@ -69,6 +69,7 @@ function sources(file, path, s, { required }) {
 function section(file, key, s) {
   const p = `sections.${key}`;
   if (!isObj(s)) { err(file, `${p} is missing`); return; }
+  if (s.mock === true) return; // placeholder for a section that is not live yet
   text(file, `${p}.headline`, s.headline, 90);
   body(file, `${p}.body`, s.body);
   sources(file, `${p}.sources`, s.sources, { required: true });
@@ -91,7 +92,7 @@ function digest(d) {
 
   const m = d.sections.market;
   if (!isObj(m)) err(f, 'sections.market is missing');
-  else {
+  else if (m.mock !== true) {
     if (!isStr(m.asOf) || !YMD.test(m.asOf)) err(f, 'sections.market.asOf must be YYYY-MM-DD');
     body(f, 'sections.market.body', m.body);
     sources(f, 'sections.market.sources', m.sources, { required: false });
