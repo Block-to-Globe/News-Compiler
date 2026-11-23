@@ -118,3 +118,15 @@ test('prompt: keeps the market date, fail-safe, scripture and originality rules'
   assert.match(p, /keeps its old `updatedAt`/);
   assert.match(p, /no digits and no direction words/);
 });
+
+test('prompt: keeps the Federal/International sourcing and paywall rules', () => {
+  const p = readFileSync(join(root, 'task/daily-digest-prompt.md'), 'utf8');
+  assert.match(p, /Two sources before fact/);
+  assert.match(p, /at least two independent working outlets/);
+  assert.match(p, /one official primary source/);
+  assert.match(p, /attributed to that outlet by name/);
+  assert.match(p, /not just one feed/);
+  assert.match(p, /Report official statements as statements \("the White House said"\), never as established fact/);
+  assert.match(p, /record it in `notes`/);
+  assert.match(p, /nothing beyond the headline and the public listing text/);
+});

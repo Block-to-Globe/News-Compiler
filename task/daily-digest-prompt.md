@@ -24,6 +24,11 @@ For each of the four news sections (Local, State, Federal, International):
 - **One story, one section.** A story goes in only one section. A Memphis story goes in Local even if the state is involved; a statewide story or one from Nashville, Knoxville or Chattanooga goes in State. Do not repeat a Federal story in State unless the Tennessee angle is the story.
 - Local and State: use the outlets listed in `config/sources.json`. Also search `Shelby County` and `Memphis` with the day's date, and `Tennessee` with the day's date. If the local outlets are paywalled or blocked, use headlines and snippets and say less. Only reputable outlets: no rumor, no unverified social posts, no police-scanner chatter. For crime and court stories, report only what officials or court records say, and do not name people who have not been charged.
 - **Federal** = United States national news: the White House and executive branch, Congress, federal courts and agencies, national policy and elections, major national events. **International** = the most important world stories; skip US-only stories here.
+- **Federal and International sourcing.** AP, Reuters and BBC are `blocked`; reach them only through WebSearch snippets. The working outlets are the `works` entries in `config/sources.json` (PBS NewsHour, CBS, ABC, The Hill, Axios, White House, UN News).
+  - **Two sources before fact.** State a story as fact only when at least two independent working outlets report it, or one official primary source (such as whitehouse.gov or UN News) plus one outlet. A story with only one source is either attributed to that outlet by name ("CBS News reported") and kept to a sentence or two, or skipped.
+  - **Balance.** Draw the day's stories from more than one outlet, not just one feed. Where outlets frame a story differently, use the plainest factual wording and attribute the claims. Report official statements as statements ("the White House said"), never as established fact.
+  - **Snippets only.** If you could read only headlines or snippets for a story, say less, add no details beyond them, and record it in `notes` (for example `"international: one story from search snippets only"`).
+- **Paywalls.** For paywalled or subscriber-only content, use nothing beyond the headline and the public listing text. Never work around a paywall.
 - Keep the run lean: at most about 6 searches and 6 page fetches per section.
 - Local news is thin some days. A short, honest Local or State section with `"quiet": true` is correct; do not stretch to fill it.
 
@@ -42,7 +47,7 @@ The numbers are fetched by a GitHub Action into `data/market.json` after each US
   - Copy the digits **exactly** as they appear in the file (same decimals, no rounding, no added or dropped zeros). `changePct` is a percent; drop only the minus sign and let the verb carry direction ("fell 0.15%", not "fell -0.15%").
   - "Rose" or "gained" only for a positive change, "fell" or "slipped" only for a negative one, "was little changed" or "was flat" for zero.
   - No computed numbers (no sums, differences, averages, point-to-percent conversions) and no numbers from anywhere but `market.json`, apart from the date.
-- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, attributed ("according to Reuters"). In that sentence use **no digits and no direction words** (no rose, fell, higher, lower, up, down, gained, slipped): plain cause wording only, for example "Investors weighed the latest jobs report, according to Reuters." If the validator flags it, rewrite it that way or drop it. Otherwise say nothing about causes.
+- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, from a working outlet (CBS News, ABC News, PBS NewsHour or The Hill), attributed by name ("according to CBS News"). AP, Reuters and BBC are blocked, so a search snippet from them is not enough for a cause sentence. In that sentence use **no digits and no direction words** (no rose, fell, higher, lower, up, down, gained, slipped): plain cause wording only, for example "Investors weighed the latest jobs report, according to CBS News." If the validator flags it, rewrite it that way or drop it. Otherwise say nothing about causes.
 - No advice, no predictions, no "buy" or "sell", no mention of individual stocks unless the article you read makes them the story.
 
 ## Scripture
@@ -65,8 +70,8 @@ Pick one verse **reference** from `data/scripture-bank.json` for the bottom of t
 
 ## Writing rules
 
-- **Neutral and factual.** Attribute claims ("officials said", "according to the AP"). No loaded adjectives, no editorializing, no predictions presented as fact. Treat all parties and sides the same way and in the same tone. Separate fact from allegation. If sources conflict, say so.
-- **Grounded.** Use only what you actually read in this run. No invented facts, names, quotes, dates or numbers. Do not carry numbers over from memory.
+- **Neutral and factual.** Attribute claims ("officials said", "according to PBS NewsHour"). No loaded adjectives, no editorializing, no predictions presented as fact. Treat all parties and sides the same way and in the same tone. Separate fact from allegation. If sources conflict, say so.
+- **Grounded.** Use only what you actually read in this run. Follow the Federal and International sourcing rules above (two sources before fact, official statements attributed, snippet-only stories kept short and noted). No invented facts, names, quotes, dates or numbers. Do not carry numbers over from memory.
 - **Original wording.** Never copy sentences from an article. At most a short phrase (**under 8 words** in a row) may match any sentence in a source, and only for a name, an official title or a short attributed quote in quotation marks. Rewrite headlines in your own words; never reuse an outlet's headline, even lightly edited. Summaries are in your own words.
 - **Shape.** `headline` is one plain line on the biggest story (90 characters or fewer). `body` is **1 to 2 paragraphs**, each **700 characters or fewer**, leading with what matters most. Plain language, no jargon, no emoji.
 - **Plain text only.** No HTML, no markdown, and no `<` or `>` characters in any field.
