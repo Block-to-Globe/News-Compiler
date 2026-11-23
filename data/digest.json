@@ -10,11 +10,7 @@
         "A second paragraph shows how two short paragraphs lay out on the page."
       ],
       "sources": [
-        {
-          "title": "Example source article",
-          "outlet": "Example Outlet",
-          "url": "https://example.com/local"
-        }
+        { "title": "Example source article", "outlet": "Example Outlet", "url": "https://example.com/local" }
       ],
       "updatedAt": "2026-11-23T06:00:00-06:00"
     },
@@ -24,11 +20,7 @@
         "This is placeholder text for the State section. It will cover Tennessee-wide news."
       ],
       "sources": [
-        {
-          "title": "Example source article",
-          "outlet": "Example Outlet",
-          "url": "https://example.com/state"
-        }
+        { "title": "Example source article", "outlet": "Example Outlet", "url": "https://example.com/state" }
       ],
       "updatedAt": "2026-11-23T06:00:00-06:00"
     },
@@ -39,30 +31,18 @@
         "A second short paragraph shows the two-paragraph layout."
       ],
       "sources": [
-        {
-          "title": "Example source article one",
-          "outlet": "Example Outlet",
-          "url": "http://example.com/not-https"
-        },
-        {
-          "title": "Example source article two",
-          "outlet": "Another Outlet",
-          "url": "https://example.com/federal-2"
-        }
+        { "title": "Example source article one", "outlet": "Example Outlet", "url": "https://example.com/federal-1" },
+        { "title": "Example source article two", "outlet": "Another Outlet", "url": "https://example.com/federal-2" }
       ],
       "updatedAt": "2026-11-23T06:00:00-06:00"
     },
     "international": {
-      "headline": "<script>alert(1)</script>",
+      "headline": "Mock international headline",
       "body": [
         "This is placeholder text for the International section. It will cover the most important world stories of the day."
       ],
       "sources": [
-        {
-          "title": "Example source article",
-          "outlet": "Example Outlet",
-          "url": "https://example.com/world"
-        }
+        { "title": "Example source article", "outlet": "Example Outlet", "url": "https://example.com/world" }
       ],
       "updatedAt": "2026-11-23T06:00:00-06:00"
     },
@@ -80,7 +60,5 @@
     "theme": "comfort",
     "why": "Mock entry. A real pick will fit the day's news."
   },
-  "notes": [
-    "Mock data for P1 and P2. Replaced by the scheduled task in P3."
-  ]
+  "notes": ["Mock data for P1 and P2. Replaced by the scheduled task in P3."]
 }
