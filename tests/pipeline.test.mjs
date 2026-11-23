@@ -343,3 +343,51 @@ test('digest scripture must be a bank reference with its own theme', () => {
   d = sandbox(); edit(d, 'digest.json', (g) => { g.scripture.theme = 'justice'; });
   r = validate(d, ['--only', 'digest']); assert.equal(r.status, 1); assert.match(r.stderr, /does not match the bank/); rmSync(d, { recursive: true });
 });
+
+// ---------- repo audit (rules from CLAUDE.md) ----------
+
+import { readdirSync, statSync } from 'node:fs';
+function walk(dir, out = []) {
+  for (const n of readdirSync(dir)) {
+    if (n === '.git' || n === 'node_modules' || n === '_site') continue;
+    const p = join(dir, n); statSync(p).isDirectory() ? walk(p, out) : out.push(p);
+  }
+  return out;
+}
+test('audit: no secrets or keys in the repo', () => {
+  const pat = /(sk-ant-[A-Za-z0-9_-]{10,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|api[_-]?key\s*[:=]\s*['"][A-Za-z0-9]{16,})/i;
+  for (const f of walk(root)) {
+    if (/\.(png|jpg|ico|woff2?)$/.test(f)) continue;
+    assert.doesNotMatch(readFileSync(f, 'utf8'), pat, f);
+  }
+});
+test('audit: site files use relative paths only', () => {
+  const html = readFileSync(join(root, 'index.html'), 'utf8');
+  assert.doesNotMatch(html, /(src|href)="\/(?!\/)/);
+  const js = readFileSync(join(root, 'assets/app.js'), 'utf8');
+  assert.doesNotMatch(js, /fetch\(\s*['"`]\//);
+  assert.doesNotMatch(js, /['"`]\/(data|assets)\//);
+  assert.doesNotMatch(readFileSync(join(root, 'assets/style.css'), 'utf8'), /url\(\s*['"]?\//);
+});
+test('audit: no trackers, frameworks or third-party scripts on the page', () => {
+  const html = readFileSync(join(root, 'index.html'), 'utf8');
+  assert.doesNotMatch(html, /<script[^>]+src="https?:/i);
+  assert.doesNotMatch(html, /google-analytics|googletagmanager|plausible|segment\.com|hotjar/i);
+  assert.equal(existsSync(join(root, 'package.json')) && /"(react|vue|svelte|webpack|vite)"/.test(readFileSync(join(root, 'package.json'), 'utf8')), false);
+});
+test('audit: page markup has no images, tables or canvases (words only)', () => {
+  const html = readFileSync(join(root, 'index.html'), 'utf8');
+  assert.doesNotMatch(html, /<(img|table|canvas|svg|picture|video)\b/i);
+});
+test('audit: KJV note and "not investment advice" stay in the footer', () => {
+  const html = readFileSync(join(root, 'index.html'), 'utf8');
+  assert.match(html, /King James Version \(KJV\)[^<]*public domain/i);
+  assert.match(html, /not investment advice/i);
+});
+test('audit: task prompt references only files and commands that exist', () => {
+  const p = readFileSync(join(root, 'task/daily-digest-prompt.md'), 'utf8');
+  for (const m of p.match(/`((?:config|data|docs|scripts)\/[A-Za-z0-9._-]+)`/g) || []) {
+    const f = m.replace(/`/g, '');
+    assert.ok(existsSync(join(root, f)), `${f} is mentioned in the prompt but missing`);
+  }
+});
