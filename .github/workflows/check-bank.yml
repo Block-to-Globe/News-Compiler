@@ -1,0 +1,25 @@
+name: Check verse bank
+
+# Fetches every reference in data/scripture-bank.json from the KJV source and reports
+# any that fail or run long. Runs when the bank changes, or by hand. Takes about 7 minutes.
+
+on:
+  push:
+    paths:
+      - data/scripture-bank.json
+      - scripts/check-bank.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check-bank.mjs

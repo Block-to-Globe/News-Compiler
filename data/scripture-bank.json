@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 1,
+  "translation": "KJV",
+  "note": "References and themes only. Verse text is fetched at deploy time and never typed by a model. Short passages (1 to 3 verses) only. Checked by the scripture-curator before use.",
+  "themes": [
+    "sovereignty",
+    "comfort",
+    "peace",
+    "strength",
+    "hope",
+    "trust",
+    "justice",
+    "wisdom",
+    "guidance",
+    "mercy",
+    "courage",
+    "provision",
+    "love-neighbor",
+    "gratitude",
+    "prayer"
+  ],
+  "verses": [
+    {
+      "reference": "Psalm 24:1",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 33:10-11",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 47:7-8",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 93:1",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 103:19",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 115:3",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 135:6",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Proverbs 16:9",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Proverbs 19:21",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Proverbs 21:1",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Isaiah 40:22-23",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Isaiah 46:9-10",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Daniel 2:21",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Daniel 4:35",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Acts 17:26",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Romans 8:28",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Romans 11:36",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Ephesians 1:11",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Revelation 19:6",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "1 Chronicles 29:11",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Job 42:2",
+      "theme": "sovereignty"
+    },
+    {
+      "reference": "Psalm 23:4",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 34:18",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 46:1",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 56:8",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 91:1-2",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 94:19",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 121:1-2",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Psalm 147:3",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Isaiah 41:10",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Isaiah 43:2",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Isaiah 66:13",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Matthew 11:28",
+      "theme": "comfort"
+    },
+    {
+      "reference": "John 14:1",
+      "theme": "comfort"
+    },
+    {
+      "reference": "John 14:27",
+      "theme": "comfort"
+    },
+    {
+      "reference": "2 Corinthians 1:3-4",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Revelation 21:4",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Lamentations 3:22-23",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Nahum 1:7",
+      "theme": "comfort"
+    },
+    {
+      "reference": "Numbers 6:24-26",
+      "theme": "peace"
+    },
+    {
+      "reference": "Psalm 4:8",
+      "theme": "peace"
+    },
+    {
+      "reference": "Psalm 29:11",
+      "theme": "peace"
+    },
+    {
+      "reference": "Psalm 119:165",
+      "theme": "peace"
+    },
+    {
+      "reference": "Isaiah 26:3",
+      "theme": "peace"
+    },
+    {
+      "reference": "John 16:33",
+      "theme": "peace"
+    },
+    {
+      "reference": "Romans 5:1",
+      "theme": "peace"
+    },
+    {
+      "reference": "Romans 15:13",
+      "theme": "peace"
+    },
+    {
+      "reference": "Philippians 4:6-7",
+      "theme": "peace"
+    },
+    {
+      "reference": "Colossians 3:15",
+      "theme": "peace"
+    },
+    {
+      "reference": "2 Thessalonians 3:16",
+      "theme": "peace"
+    },
+    {
+      "reference": "Exodus 15:2",
+      "theme": "strength"
+    },
+    {
+      "reference": "Deuteronomy 31:6",
+      "theme": "strength"
+    },
+    {
+      "reference": "Joshua 1:9",
+      "theme": "strength"
+    },
+    {
+      "reference": "Nehemiah 8:10",
+      "theme": "strength"
+    },
+    {
+      "reference": "Psalm 18:2",
+      "theme": "strength"
+    },
+    {
+      "reference": "Psalm 27:1",
+      "theme": "strength"
+    },
+    {
+      "reference": "Psalm 28:7",
+      "theme": "strength"
+    },
+    {
+      "reference": "Psalm 46:10",
+      "theme": "strength"
+    },
+    {
+      "reference": "Psalm 73:26",
+      "theme": "strength"
+    },
+    {
+      "reference": "Isaiah 40:31",
+      "theme": "strength"
+    },
+    {
+      "reference": "Habakkuk 3:19",
+      "theme": "strength"
+    },
+    {
+      "reference": "Ephesians 6:10",
+      "theme": "strength"
+    },
+    {
+      "reference": "Philippians 4:13",
+      "theme": "strength"
+    },
+    {
+      "reference": "2 Timothy 1:7",
+      "theme": "strength"
+    },
+    {
+      "reference": "1 Corinthians 16:13",
+      "theme": "strength"
+    },
+    {
+      "reference": "Psalm 31:24",
+      "theme": "hope"
+    },
+    {
+      "reference": "Psalm 42:11",
+      "theme": "hope"
+    },
+    {
+      "reference": "Psalm 130:5",
+      "theme": "hope"
+    },
+    {
+      "reference": "Jeremiah 29:11",
+      "theme": "hope"
+    },
+    {
+      "reference": "Jeremiah 17:7",
+      "theme": "hope"
+    },
+    {
+      "reference": "Romans 8:18",
+      "theme": "hope"
+    },
+    {
+      "reference": "Romans 12:12",
+      "theme": "hope"
+    },
+    {
+      "reference": "Romans 15:4",
+      "theme": "hope"
+    },
+    {
+      "reference": "1 Corinthians 15:58",
+      "theme": "hope"
+    },
+    {
+      "reference": "Hebrews 6:19",
+      "theme": "hope"
+    },
+    {
+      "reference": "Hebrews 10:23",
+      "theme": "hope"
+    },
+    {
+      "reference": "1 Peter 1:3",
+      "theme": "hope"
+    },
+    {
+      "reference": "Titus 2:13",
+      "theme": "hope"
+    },
+    {
+      "reference": "Zephaniah 3:17",
+      "theme": "hope"
+    },
+    {
+      "reference": "Psalm 9:10",
+      "theme": "trust"
+    },
+    {
+      "reference": "Psalm 37:5",
+      "theme": "trust"
+    },
+    {
+      "reference": "Psalm 56:3-4",
+      "theme": "trust"
+    },
+    {
+      "reference": "Psalm 62:8",
+      "theme": "trust"
+    },
+    {
+      "reference": "Psalm 112:7",
+      "theme": "trust"
+    },
+    {
+      "reference": "Psalm 125:1",
+      "theme": "trust"
+    },
+    {
+      "reference": "Proverbs 3:5-6",
+      "theme": "trust"
+    },
+    {
+      "reference": "Proverbs 29:25",
+      "theme": "trust"
+    },
+    {
+      "reference": "Isaiah 12:2",
+      "theme": "trust"
+    },
+    {
+      "reference": "Matthew 6:33-34",
+      "theme": "trust"
+    },
+    {
+      "reference": "Mark 11:24",
+      "theme": "trust"
+    },
+    {
+      "reference": "Romans 8:31",
+      "theme": "trust"
+    },
+    {
+      "reference": "1 Peter 5:7",
+      "theme": "trust"
+    },
+    {
+      "reference": "Deuteronomy 32:4",
+      "theme": "justice"
+    },
+    {
+      "reference": "Psalm 9:7-8",
+      "theme": "justice"
+    },
+    {
+      "reference": "Psalm 33:5",
+      "theme": "justice"
+    },
+    {
+      "reference": "Psalm 37:28",
+      "theme": "justice"
+    },
+    {
+      "reference": "Psalm 89:14",
+      "theme": "justice"
+    },
+    {
+      "reference": "Psalm 146:7-8",
+      "theme": "justice"
+    },
+    {
+      "reference": "Isaiah 30:18",
+      "theme": "justice"
+    },
+    {
+      "reference": "Micah 6:8",
+      "theme": "justice"
+    },
+    {
+      "reference": "Amos 5:24",
+      "theme": "justice"
+    },
+    {
+      "reference": "Romans 12:19",
+      "theme": "justice"
+    },
+    {
+      "reference": "Romans 13:1",
+      "theme": "justice"
+    },
+    {
+      "reference": "Job 28:28",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Psalm 111:10",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Proverbs 2:6",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Proverbs 4:7",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Proverbs 9:10",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Proverbs 15:1",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Proverbs 15:22",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Ecclesiastes 3:1",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "James 1:5",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "James 3:17",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Colossians 3:16",
+      "theme": "wisdom"
+    },
+    {
+      "reference": "Psalm 25:4-5",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Psalm 32:8",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Psalm 37:23",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Psalm 48:14",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Psalm 119:105",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Psalm 139:9-10",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Proverbs 16:3",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Isaiah 30:21",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Isaiah 58:11",
+      "theme": "guidance"
+    },
+    {
+      "reference": "John 8:12",
+      "theme": "guidance"
+    },
+    {
+      "reference": "Psalm 86:15",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Psalm 103:8",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Psalm 103:11-12",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Psalm 136:1",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Psalm 145:8",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Micah 7:18",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Matthew 5:7",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Luke 6:36",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Ephesians 2:4-5",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Titus 3:5",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Hebrews 4:16",
+      "theme": "mercy"
+    },
+    {
+      "reference": "1 John 1:9",
+      "theme": "mercy"
+    },
+    {
+      "reference": "Deuteronomy 31:8",
+      "theme": "courage"
+    },
+    {
+      "reference": "Psalm 27:14",
+      "theme": "courage"
+    },
+    {
+      "reference": "Psalm 118:6",
+      "theme": "courage"
+    },
+    {
+      "reference": "Isaiah 41:13",
+      "theme": "courage"
+    },
+    {
+      "reference": "Matthew 10:29-31",
+      "theme": "courage"
+    },
+    {
+      "reference": "Matthew 14:27",
+      "theme": "courage"
+    },
+    {
+      "reference": "Romans 8:38-39",
+      "theme": "courage"
+    },
+    {
+      "reference": "Psalm 23:1",
+      "theme": "provision"
+    },
+    {
+      "reference": "Psalm 34:10",
+      "theme": "provision"
+    },
+    {
+      "reference": "Psalm 37:25",
+      "theme": "provision"
+    },
+    {
+      "reference": "Psalm 84:11",
+      "theme": "provision"
+    },
+    {
+      "reference": "Psalm 145:15-16",
+      "theme": "provision"
+    },
+    {
+      "reference": "Matthew 6:26",
+      "theme": "provision"
+    },
+    {
+      "reference": "Matthew 6:31-32",
+      "theme": "provision"
+    },
+    {
+      "reference": "Philippians 4:19",
+      "theme": "provision"
+    },
+    {
+      "reference": "Genesis 8:22",
+      "theme": "provision"
+    },
+    {
+      "reference": "Leviticus 19:18",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Proverbs 3:27",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Matthew 22:37-39",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "John 13:34-35",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Romans 12:10",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Romans 12:18",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Galatians 6:2",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Galatians 6:10",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Ephesians 4:32",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "1 John 4:7",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "1 Peter 4:8",
+      "theme": "love-neighbor"
+    },
+    {
+      "reference": "Psalm 100:4-5",
+      "theme": "gratitude"
+    },
+    {
+      "reference": "Psalm 107:1",
+      "theme": "gratitude"
+    },
+    {
+      "reference": "Psalm 118:24",
+      "theme": "gratitude"
+    },
+    {
+      "reference": "Colossians 3:17",
+      "theme": "gratitude"
+    },
+    {
+      "reference": "1 Thessalonians 5:16-18",
+      "theme": "gratitude"
+    },
+    {
+      "reference": "Hebrews 13:15",
+      "theme": "gratitude"
+    },
+    {
+      "reference": "Psalm 55:22",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 145:18",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Jeremiah 33:3",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Matthew 7:7",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Philippians 4:6",
+      "theme": "prayer"
+    },
+    {
+      "reference": "1 Timothy 2:1-2",
+      "theme": "prayer"
+    },
+    {
+      "reference": "James 5:16",
+      "theme": "prayer"
+    },
+    {
+      "reference": "1 John 5:14",
+      "theme": "prayer"
+    }
+  ]
+}

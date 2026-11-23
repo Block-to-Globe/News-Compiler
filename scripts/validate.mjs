@@ -107,10 +107,23 @@ function digest(d) {
   else {
     if (!isStr(s.reference) || !/^([1-3] )?[A-Z][A-Za-z]+( [A-Za-z]+)* \d+(:\d+(-\d+)?)?$/.test(s.reference)) err(f, 'scripture.reference must look like "Psalm 46:1-3"');
     text(f, 'scripture.theme', s.theme);
+    checkBank(f, s);
     if (s.why !== undefined) text(f, 'scripture.why', s.why, 160);
   }
   if (d.notes !== undefined && !(Array.isArray(d.notes) && d.notes.every(isStr))) err(f, 'notes must be an array of strings');
   return d;
+}
+
+// The verse must come from the reference bank (data/scripture-bank.json) with its own theme.
+function checkBank(f, s) {
+  const p = join(DIR, 'scripture-bank.json');
+  if (!existsSync(p)) return; // the bank is optional until P6 is finished
+  let bank;
+  try { bank = JSON.parse(readFileSync(p, 'utf8')); } catch { err('scripture-bank.json', 'not valid JSON'); return; }
+  if (!bank || !Array.isArray(bank.verses)) { err('scripture-bank.json', 'verses must be an array'); return; }
+  const hit = bank.verses.find((v) => v.reference === s.reference);
+  if (!hit) err(f, `scripture.reference "${s.reference}" is not in scripture-bank.json`);
+  else if (hit.theme !== s.theme) err(f, `scripture.theme "${s.theme}" does not match the bank ("${hit.theme}") for ${s.reference}`);
 }
 
 function market(m) {
