@@ -22,7 +22,7 @@ See `docs/architecture.md` for details and `docs/digest-schema.md` for the data 
 
 ## Status
 
-Milestone P1 (repo, contracts, first deploy). The page currently shows a placeholder.
+Milestone P2 (UI shell). The page renders the mock data in `data/`; real content arrives in P3 onward.
 
 ## Scripture
 
