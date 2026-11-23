@@ -87,8 +87,13 @@
 
   // ---------- news sections ----------
 
+  function comingSoon(root) {
+    setBlock(root, 'ok', [el('p', 'fallback', 'Coming soon.')]);
+  }
+
   function renderSection(key, sec) {
     var root = $('sec-' + key);
+    if (sec && sec.mock === true) { comingSoon(root); return; }
     if (!sec || !isStr(sec.headline) || !validBody(sec.body)) {
       failBlock(root);
       return;
@@ -108,6 +113,7 @@
     var root = $('sec-market');
     var narr = digestRes.ok && digestRes.data && digestRes.data.sections
       ? digestRes.data.sections.market : null;
+    if (narr && narr.mock === true) { comingSoon(root); return; }
     if (!narr || !validBody(narr.body)) { failBlock(root); return; }
     var nodes = [];
     if (isStr(narr.asOf)) nodes.push(el('p', 'asof', 'As of ' + prettyDate(narr.asOf)));
@@ -237,8 +243,10 @@
         banners.appendChild(el('p', 'banner', "Heads up: today's news hasn't updated yet. You're seeing the last good version."));
       }
     }
-    if (d && d.mock === true) {
-      banners.appendChild(el('p', 'banner', 'Preview: this page is showing sample content while the daily updates are being set up.'));
+    var secs = d && d.sections ? d.sections : null;
+    var pending = secs && Object.keys(secs).some(function (k) { return secs[k] && secs[k].mock === true; });
+    if (pending) {
+      banners.appendChild(el('p', 'banner', 'Some sections are still being set up and will appear here soon.'));
     }
   }
 
