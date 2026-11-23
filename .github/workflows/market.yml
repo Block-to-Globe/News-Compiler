@@ -1,0 +1,51 @@
+name: Market numbers
+
+# Fetches the day's closing numbers into data/market.json (the only writer of that file).
+# Runs after the US close on weekdays. Commits only when the file changed, then asks
+# the publish workflow to deploy (commits made with the built-in token do not trigger it).
+# If the source fails, nothing is committed and the last good file stays.
+
+on:
+  schedule:
+    # 21:30 UTC = 4:30 PM Eastern in winter, 5:30 PM in summer: after the close either way.
+    - cron: '30 21 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: market
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch numbers
+        run: node scripts/fetch-market.mjs --out data/market.json
+      - name: Check the file
+        run: node scripts/validate.mjs --only market
+      - name: Commit if changed
+        id: commit
+        run: |
+          if git diff --quiet -- data/market.json; then
+            echo "No change."; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/market.json
+          git commit -m "market: $(jq -r .asOf data/market.json) close"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Deploy
+        if: steps.commit.outputs.changed == 'true'
+        run: gh workflow run publish.yml --ref main

@@ -21,3 +21,6 @@
 
 - Pick the KJV text source (no-key, public-domain; `bible-api.com` is a candidate) and check its terms and rate limits. Resolve in P6. With the KJV, daily verses in git history are not a copyright concern.
 - Market data source (Stooq + FRED preferred). Resolve in P5.
+
+## D-market: provisional no-key source for market numbers
+Stooq now needs a CAPTCHA-derived key and FRED needs a free key, so the market fetcher uses Yahoo Finance's public chart endpoint (no key, unofficial) for the seven items. It is all-or-nothing: if any item fails, nothing is written and the last good file stays. The swap point is `ITEMS` and `parse()` in `scripts/fetch-market.mjs`. If it proves flaky, the fallback is a free FRED key stored as an Actions secret (Connor's call).

@@ -16,7 +16,7 @@ How a day's content gets from the news to the page, and what happens when someth
 
 1. About 6:00 AM: the task writes `digest.json` and pushes.
 2. The push triggers `publish.yml`. The backup run at 12:30 UTC (about 6:30 AM CST, 7:30 AM CDT) does the same in case a push did not trigger a deploy, and also checks the digest's age.
-3. The market file arrives with P5.
+3. `market.yml` (weekdays 21:30 UTC) runs `scripts/fetch-market.mjs`, validates, commits `data/market.json` only if it changed, then dispatches `publish.yml`. If the source fails nothing is committed.
 
 ## What `publish.yml` does
 
