@@ -14,6 +14,7 @@
 | 2026-11-23 | `scripture.json` is generated at deploy time and not committed. If the fetch fails the file is omitted and the page shows the reference with a link | One writer, no daily commits, no stale or mock verse can go live |
 | 2026-11-23 | Provisional verse source: bible-api.com (free, no key). Final choice in P6 | Keep P3 moving; the fetcher validates translation and reference so a bad source cannot publish a wrong verse |
 | 2026-11-23 | Freshness check flags a digest older than 20 hours at the 12:30 UTC run; page stale banner stays at 26 hours | A missed morning run is about 24.5 hours old at check time |
+| 2026-11-23 | `history.json` is generated at deploy time like the verse: `scripts/fetch-history.mjs` plus `config/history-filter.json`. Not committed | Same reasoning as the verse. Skips grim entries entirely; prefers linked, well-documented firsts. Done early (P6 item) because it needs no news task |
 | 2026-11-23 | Words only, minimalist page: summaries of each section, no images, charts, graphs or tables. Market block is the written recap only | Connor's call. `market.json` stays as the source of truth for numbers quoted in the recap |
 
 ## Open

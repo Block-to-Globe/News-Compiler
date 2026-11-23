@@ -143,3 +143,76 @@ test('fetch-scripture skips cleanly when the source is unreachable', async () =>
   assert.equal(existsSync(join(d, 'out/scripture.json')), false);
   rmSync(d, { recursive: true });
 });
+
+// ---------- fetch-history ----------
+
+async function runHistory(base, extra = []) {
+  const dir = mkdtempSync(join(tmpdir(), 'btg-h-'));
+  const out = join(dir, 'h.json');
+  const { spawn } = await import('node:child_process');
+  const r = await new Promise((resolve) => {
+    const p = spawn('node', [join(root, 'scripts/fetch-history.mjs'), '--out', out, '--date', '2026-11-24', '--filter', join(root, 'config/history-filter.json'), ...extra],
+      { env: { ...process.env, HISTORY_API_BASE: base } });
+    let err = ''; p.stderr.on('data', (c) => (err += c)); p.stdout.on('data', () => {});
+    p.on('close', (code) => resolve({ code, err }));
+  });
+  return { ...r, out, dir };
+}
+const page = (t) => ({ content_urls: { desktop: { page: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(t) } } });
+
+test('fetch-history picks a fun, linked entry over grim and unlinked ones', async () => {
+  let seen;
+  const s = await fakeSource((req, res) => {
+    seen = req.url;
+    res.end(JSON.stringify({ selected: [
+      { year: 1900, text: 'A terrorist bomb destroys a market.', pages: [page('Bomb')] },
+      { year: 1901, text: 'Scholars publish a long study of grain prices.', pages: [page('Grain')] },
+      { year: 1859, text: 'Charles Darwin publishes On the Origin of Species, the first of its kind.', pages: [page('Darwin')] },
+      { year: 1950, text: 'The first transatlantic flight of its type lands without a page.', pages: [] },
+    ] }));
+  });
+  const r = await runHistory(`http://127.0.0.1:${s.address().port}`);
+  s.close();
+  assert.equal(r.code, 0, r.err);
+  assert.equal(seen, '/api/rest_v1/feed/onthisday/selected/11/24');
+  const out = JSON.parse(readFileSync(r.out, 'utf8'));
+  assert.equal(out.year, 1859); assert.equal(out.date, '2026-11-24'); assert.match(out.url, /^https:\/\/en\.wikipedia\.org\//);
+  // output passes the validator
+  const d = sandbox(); cpSync(r.out, join(d, 'data/history.json'));
+  assert.equal(validate(d, ['--only', 'history']).status, 0);
+  rmSync(d, { recursive: true }); rmSync(r.dir, { recursive: true });
+});
+
+test('fetch-history: word-start matching ("studies" is not "dies")', async () => {
+  const s = await fakeSource((req, res) => res.end(JSON.stringify({ selected: [
+    { year: 1800, text: 'A university studies the stars with a new telescope.', pages: [page('Uni')] } ] })));
+  const r = await runHistory(`http://127.0.0.1:${s.address().port}`);
+  s.close();
+  assert.equal(JSON.parse(readFileSync(r.out, 'utf8')).year, 1800);
+  rmSync(r.dir, { recursive: true });
+});
+
+for (const [name, handler, expectMsg] of [
+  ['feed error', (req, res) => { res.statusCode = 500; res.end('x'); }, /answered 500/],
+  ['not JSON', (req, res) => { res.end('<html>'); }, /did not return JSON/],
+  ['no selected list', (req, res) => { res.end('{}'); }, /no "selected" list/],
+  ['only grim entries', (req, res) => { res.end(JSON.stringify({ selected: [{ year: 1, text: 'A massacre took place.', pages: [page('x')] }] })); }, /no suitable entry/],
+  ['only overlong entries', (req, res) => { res.end(JSON.stringify({ selected: [{ year: 1, text: 'word '.repeat(100), pages: [page('x')] }] })); }, /no suitable entry/],
+  ['unsafe link', (req, res) => { res.end(JSON.stringify({ selected: [{ year: 1, text: 'A fine first.', pages: [{ content_urls: { desktop: { page: 'javascript:alert(1)' } } }] }] })); }, /no suitable entry/],
+]) {
+  test(`fetch-history skips cleanly on: ${name}`, async () => {
+    const s = await fakeSource(handler);
+    const r = await runHistory(`http://127.0.0.1:${s.address().port}`);
+    s.close();
+    assert.equal(r.code, 0);
+    assert.equal(existsSync(r.out), false);
+    assert.match(r.err, expectMsg);
+    rmSync(r.dir, { recursive: true });
+  });
+}
+
+test('fetch-history skips cleanly when the feed is unreachable', async () => {
+  const r = await runHistory('http://127.0.0.1:9');
+  assert.equal(r.code, 0); assert.equal(existsSync(r.out), false);
+  rmSync(r.dir, { recursive: true });
+});

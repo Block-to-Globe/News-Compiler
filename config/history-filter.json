@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "owner": "history-curator",
+  "notes": "Case-insensitive match against the entry text, at the start of a word (so \"dies\" does not match \"studies\"). 'avoid' entries are skipped. 'prefer' entries raise an entry's score so fun, well-documented 'firsts' win over routine items.",
+  "avoid": [
+    "massacre", "genocide", "terror", "bomb", "explosion", "assassinat", "murder", "executed", "execution",
+    "shot dead", "killed", "kills", "dead", "deaths", "died", "dies", "death toll", "victims", "hostage",
+    "suicide", "rape", "torture", "lynch", "shooting", "gunman", "crash", "sinks", "sank", "famine",
+    "epidemic", "pandemic", "plague", "earthquake", "tsunami", "hurricane", "tornado", "fire destroys",
+    "concentration camp", "holocaust", "slaughter", "riot", "coup", "invade", "invasion", "attack",
+    "war breaks", "declares war", "surrender", "siege"
+  ],
+  "prefer": [
+    "first", "invent", "patent", "founded", "founds", "established", "launch", "opens", "opened", "premiere",
+    "discover", "record", "champion", "wins", "won", "landed", "lands", "orbit", "telescope", "expedition",
+    "published", "publishes", "debut", "released", "completed", "inaugurat", "treaty signed", "constitution",
+    "independence", "elected", "olympic", "world cup", "nobel", "telephone", "airplane", "railway", "bridge"
+  ]
+}

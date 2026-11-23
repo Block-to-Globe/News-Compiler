@@ -1,6 +1,6 @@
 name: Publish site
 
-# Validate the data, fetch the KJV verse text, deploy to GitHub Pages.
+# Validate the data, fetch the KJV verse text and the history line, deploy to GitHub Pages.
 # If a push breaks validation, nothing is deployed (the last good site stays live).
 # When that push touched only data/digest.json, it is reverted and an issue is opened.
 
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Validate data files
-        run: node scripts/validate.mjs --only digest,market,history
+        run: node scripts/validate.mjs --only digest,market
 
       - name: Stage site files
         run: |
@@ -35,14 +35,21 @@ jobs:
           cp index.html _site/
           cp -r assets _site/assets
           cp -r data _site/data
-          # The repo's scripture.json is mock data. Only fresh KJV text is deployed.
-          rm -f _site/data/scripture.json
+          # The repo's scripture.json and history.json are mock data. Only fresh copies are deployed.
+          rm -f _site/data/scripture.json _site/data/history.json
 
       - name: Fetch KJV text
         run: |
           node scripts/fetch-scripture.mjs --out _site/data/scripture.json
           if [ -f _site/data/scripture.json ]; then
             node scripts/validate.mjs --dir _site/data --only scripture || rm -f _site/data/scripture.json
+          fi
+
+      - name: Fetch history line
+        run: |
+          node scripts/fetch-history.mjs --out _site/data/history.json
+          if [ -f _site/data/history.json ]; then
+            node scripts/validate.mjs --dir _site/data --only history || rm -f _site/data/history.json
           fi
 
       - uses: actions/configure-pages@v5
