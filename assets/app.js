@@ -47,9 +47,39 @@
     setBlock(root, 'error', [el('p', 'fallback', msg || "Couldn't load this section right now.")]);
   }
 
-  function localDateStr(d) {
+  var TZ = 'America/Chicago';
+  var SECTION_STALE_MS = 30 * 60 * 60 * 1000;
+  var MARKET_STALE_DAYS = 4;
+
+  // Date parts for a Date in Central time: {y, m, d} as numbers.
+  function chicagoParts(d) {
+    var out = {};
+    new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
+      .formatToParts(d).forEach(function (x) { out[x.type] = x.value; });
+    return { y: +out.year, m: +out.month, d: +out.day };
+  }
+
+  function chicagoDateStr(d) {
+    var c = chicagoParts(d);
     function p(n) { return (n < 10 ? '0' : '') + n; }
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    return c.y + '-' + p(c.m) + '-' + p(c.d);
+  }
+
+  // Whole days between a YYYY-MM-DD string and today in Central time (null if unparseable).
+  function daysOld(ymd) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || '');
+    if (!m) return null;
+    var t = chicagoParts(new Date());
+    return Math.round((Date.UTC(t.y, t.m - 1, t.d) - Date.UTC(+m[1], +m[2] - 1, +m[3])) / 86400000);
+  }
+
+  // Muted note when a section's updatedAt is older than ~30 hours; null otherwise.
+  function staleNote(updatedAt) {
+    if (!isStr(updatedAt)) return null;
+    var t = new Date(updatedAt);
+    if (isNaN(t.getTime()) || Date.now() - t.getTime() <= SECTION_STALE_MS) return null;
+    var label = t.toLocaleDateString('en-US', { timeZone: TZ, weekday: 'long', month: 'short', day: 'numeric' });
+    return el('p', 'stale-note', 'Last updated ' + label + '.');
   }
 
   // "2026-11-21" -> "Nov 21, 2026" without timezone shifts.
@@ -101,6 +131,8 @@
     var h3 = el('h3', null, sec.headline);
     if (sec.quiet === true) h3.appendChild(el('span', 'quiet-tag', 'Quiet day'));
     var nodes = [h3];
+    var note = staleNote(sec.updatedAt);
+    if (note) nodes.push(note);
     sec.body.forEach(function (t) { nodes.push(el('p', null, t)); });
     var src = sourcesEl(sec.sources);
     if (src) nodes.push(src);
@@ -117,6 +149,10 @@
     if (!narr || !validBody(narr.body)) { failBlock(root); return; }
     var nodes = [];
     if (isStr(narr.asOf)) nodes.push(el('p', 'asof', 'As of ' + prettyDate(narr.asOf)));
+    var age = daysOld(narr.asOf);
+    if (age !== null && age > MARKET_STALE_DAYS) {
+      nodes.push(el('p', 'stale-note', 'This recap is older than expected.'));
+    }
     narr.body.forEach(function (t) { nodes.push(el('p', null, t)); });
     var src = sourcesEl(narr.sources);
     if (src) nodes.push(src);
@@ -193,15 +229,25 @@
   }
 
   function validHistory(h) {
-    return h && isStr(h.text) && isNum(h.year) && h.date === localDateStr(new Date());
+    return h && isStr(h.text) && isNum(h.year) && h.date === chicagoDateStr(new Date());
   }
 
-  var GRIM = /massacre|killed|kills|terror|bomb|execut|assassinat|genocide|murder|shot dead|dies|died|death/i;
+  // Keep in sync with "avoid" in config/history-filter.json (owned by history-curator).
+  // Case-insensitive, matched at the start of a word.
+  var GRIM_TERMS = [
+    'massacre', 'genocide', 'terror', 'bomb', 'explosion', 'assassinat', 'murder', 'executed', 'execution',
+    'shot dead', 'killed', 'kills', 'dead', 'deaths', 'died', 'dies', 'death toll', 'victims', 'hostage',
+    'suicide', 'rape', 'torture', 'lynch', 'shooting', 'gunman', 'crash', 'sinks', 'sank', 'famine',
+    'epidemic', 'pandemic', 'plague', 'earthquake', 'tsunami', 'hurricane', 'tornado', 'fire destroys',
+    'concentration camp', 'holocaust', 'slaughter', 'riot', 'coup', 'invade', 'invasion', 'attack',
+    'war breaks', 'declares war', 'surrender', 'siege'
+  ];
+  var GRIM = new RegExp('\\b(?:' + GRIM_TERMS.join('|') + ')', 'i');
 
   function wikiFallback() {
-    var d = new Date();
+    var c = chicagoParts(new Date());
     function p(n) { return (n < 10 ? '0' : '') + n; }
-    var url = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/' + p(d.getMonth() + 1) + '/' + p(d.getDate());
+    var url = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/' + p(c.m) + '/' + p(c.d);
     var ctl = typeof AbortController === 'function' ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 3000);
     var race = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')); }, 3000); });
@@ -209,13 +255,18 @@
       .then(function (r) { if (!r.ok) throw new Error('wiki ' + r.status); return r.json(); })
       .then(function (j) {
         clearTimeout(timer);
-        var list = (j.selected || []).filter(function (e) {
-          return e && isStr(e.text) && isNum(e.year) && !GRIM.test(e.text);
+        var found = null;
+        (j.selected || []).some(function (e) {
+          if (!e || !isStr(e.text) || !isNum(e.year) || GRIM.test(e.text)) return false;
+          var pages = Array.isArray(e.pages) ? e.pages : [];
+          for (var i = 0; i < pages.length; i++) {
+            var u = pages[i] && pages[i].content_urls && pages[i].content_urls.desktop;
+            if (u && isHttps(u.page)) { found = { year: e.year, text: e.text, url: u.page }; return true; }
+          }
+          return false;
         });
-        if (!list.length) throw new Error('no entries');
-        var e = list[0];
-        var page = e.pages && e.pages[0] && e.pages[0].content_urls && e.pages[0].content_urls.desktop;
-        return { year: e.year, text: e.text, url: page && page.page };
+        if (!found) throw new Error('no entries');
+        return found;
       });
     return Promise.race([req, race]);
   }

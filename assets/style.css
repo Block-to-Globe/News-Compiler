@@ -60,6 +60,7 @@ a:focus-visible, .skip:focus-visible { outline: 2px solid var(--accent); outline
 .block .where { margin-left: .5rem; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
 .block h3 { margin: 0 0 .4rem; font-size: 1.15rem; line-height: 1.35; font-weight: 600; }
 .block p { margin: .6rem 0; }
+.stale-note { margin: 0 0 .5rem; font-size: .85rem; color: var(--muted); font-style: italic; }
 .asof { margin: 0 0 .25rem; font-size: .85rem; color: var(--muted); }
 
 .quiet-tag { margin-left: .5rem; font-size: .75rem; font-weight: 400; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }

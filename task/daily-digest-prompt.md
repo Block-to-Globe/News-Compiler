@@ -32,29 +32,45 @@ For each of the four news sections (Local, State, Federal, International):
 The numbers are fetched by a GitHub Action into `data/market.json` after each US market close. You never look numbers up and never type one from memory: you **read `data/market.json` and describe it.**
 
 - Write `sections.market` = `{ "asOf", "body", "updatedAt" }` (add `sources` only for pages you actually read). `asOf` must equal `market.json`'s `asOf`.
-- `body` is 1 to 2 short paragraphs. Lead with the stock indices (S&P 500, Dow, Nasdaq: direction and percent change), then the 10-year yield, oil, gold and the dollar index. Use the values exactly as they appear in `market.json` (same digits; `changePct` is a percent). Say "rose", "fell" or "was little changed" to match the sign.
-- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, attributed ("according to Reuters"). Otherwise say nothing about causes.
-- `marketStatus` or `note` in the file say whether markets were closed: if `weekend` or `holiday`, open the recap with "Markets were closed; this is the last close, <weekday> <date>." Always name the day the numbers are from.
-- If `market.json` is missing, still marked `"mock": true`, or its `asOf` is more than 4 days old, leave `sections.market` as it is and add a note such as `"market: left unchanged, no fresh numbers"`.
+- **Check freshness first.** If `market.json` is missing, still marked `"mock": true`, or its `asOf` is more than 4 days before today's Central date, leave `sections.market` exactly as it is and add a note such as `"market: left unchanged, no fresh numbers"`. In that case `validate.mjs --check-market` skips the market cross-check and says so; that is expected, not a failure.
+- **Which day the numbers are from.** Compare today's Central date (the `YYYY-MM-DD` part of `TZ=America/Chicago date -Iseconds`) with `market.json`'s `asOf`. Work out the weekday of `asOf` yourself from the date (for example `date -d 2026-11-20 +%A`). Do not rely on `marketStatus` or `note` alone.
+  - If they are the **same date**, the numbers are today's close; you may say "on <weekday>" or "today".
+  - If they **differ**, the first sentence of the recap must say so plainly and name the weekday and date of the numbers. Use "Markets were closed <today's weekday>; these are <asOf weekday>'s closes from <Month day>." on a weekend or holiday, or "These are the most recent closes, from <asOf weekday>, <Month day>." when you cannot tell why the date differs. Never write "today", "this session" or anything else that implies the numbers are from today when they are not.
+- `body` is 1 to 2 short paragraphs. Lead with the stock indices (S&P 500, Dow, Nasdaq: direction and percent change), then the 10-year yield, oil, gold and the dollar index.
+- **The numbers are machine-checked.** The validator matches every number in the recap against `market.json`: each number must belong to the item named **in the same sentence**, and a direction word ("rose", "gained", "fell", "slipped", "was little changed") must match the sign of that item's change. So:
+  - Write short sentences, **one item per number**: "The S&P 500 rose 0.42%." "The Dow fell 0.15%." Do not pack several items and numbers into one sentence, and do not use "respectively".
+  - Copy the digits **exactly** as they appear in the file (same decimals, no rounding, no added or dropped zeros). `changePct` is a percent; drop only the minus sign and let the verb carry direction ("fell 0.15%", not "fell -0.15%").
+  - "Rose" or "gained" only for a positive change, "fell" or "slipped" only for a negative one, "was little changed" or "was flat" for zero.
+  - No computed numbers (no sums, differences, averages, point-to-percent conversions) and no numbers from anywhere but `market.json`, apart from the date.
+- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, attributed ("according to Reuters"). Keep any numbers out of that sentence. Otherwise say nothing about causes.
 - No advice, no predictions, no "buy" or "sell", no mention of individual stocks unless the article you read makes them the story.
 
 ## Scripture
 
 Pick one verse **reference** from `data/scripture-bank.json` for the bottom of the page: `scripture` = `{ "reference", "theme", "why" }`. The reference and theme must match a bank entry exactly. **Never write, quote or paraphrase verse text anywhere**; the deploy fetches the KJV text itself.
 
-- Purpose: a short word of reassurance that God is still in control, loosely fitting the day. After writing the news sections, look at the mood of the day and choose a theme: `comfort` or `peace` after grief, disaster or violence; `sovereignty` or `trust` on a day of political turmoil or uncertainty; `justice` when the news is about wrongdoing or courts; `strength` or `courage` on a day of fear or strain; `hope`, `gratitude`, `provision` or `guidance` on an ordinary or good day; `love-neighbor` or `mercy` when the news is about conflict between people.
-- Pastoral sensitivity: never choose a verse that could read as God's judgment on, or approval of, a specific event, person, party or nation. Never use a verse to take a side in a political story. On a tragic day prefer gentle comfort over triumph.
-- Variety: do not reuse a reference used in the last 30 days (check `git log -p -30 -- data/digest.json | grep '"reference"'`), and avoid the same theme more than two days running.
-- `why` is optional. Leave it out unless one short, humble line helps (160 characters or fewer, plain words, no claim about what God is doing in a particular event). When unsure, omit it.
+- Purpose: a short word of reassurance that God is still in control, loosely fitting the day. After writing the news sections, look at the mood of the day and choose a theme. Check the rules below in order; the first that fits the day's lead stories decides.
+  1. **Deaths, disaster or violence:** only `comfort`, `peace` or `prayer`. Never `sovereignty`, `justice` or `gratitude` that day, and skip any verse saying all things work together for good or telling readers to give thanks in everything.
+  2. **War or Middle East:** no verse that names Israel, Zion or Jerusalem, or that speaks of enemies or nations. (If people died, rule 1 also applies.)
+  3. **Elections and politics:** `sovereignty`, `trust` or `prayer`, pointing to God's lasting rule, never to any outcome or person.
+  4. **Crime and courts:** `justice` is fine, read as God's care for the oppressed and our call to do right. Never imply punishment or vengeance on anyone in the story.
+  5. **Fear or strain:** `strength` or `courage`. **Conflict between people:** `love-neighbor` or `mercy`. **Ordinary or good day:** `hope`, `gratitude`, `provision` or `guidance`.
+- Pastoral sensitivity: never choose a verse that could read as God's judgment on, or approval of, a specific event, person, party or nation. Never use a verse to take a side. On a tragic day prefer gentle comfort over triumph.
+- Variety: do not reuse a reference used in the last 30 days, and avoid the same theme more than two days running. The clone may be shallow, so get real history first:
+  1. Run `git rev-parse --is-shallow-repository`. If it prints `true`, run `git fetch --unshallow origin main` (or `git fetch --deepen=60 origin main` if that fails).
+  2. Then run `git log -p -40 -- data/digest.json | grep -E '"(reference|theme)"'` to see recent picks.
+  3. If git history still cannot be read, use the GitHub API instead: list recent commits for `data/digest.json` (`gh api "repos/OWNER/REPO/commits?path=data/digest.json&per_page=30"`, with the owner and repo of the clone) and read the file at a few of those commits.
+  4. If no history can be read at all, still pick a **different theme** from the one in the current `data/digest.json` (yesterday's) and a different reference, and add the note `"scripture: history unavailable, variety not fully checked"`.
+- `why` is optional. Leave it out unless one short, humble line helps (160 characters or fewer, plain words, no claim about what God is doing in a particular event). Never connect the verse to a candidate, party, ruling or vote result. Do not use the word "judgment" in a `why` (in the KJV it usually means justice, and readers may hear condemnation). When unsure, omit it.
 
 ## Writing rules
 
 - **Neutral and factual.** Attribute claims ("officials said", "according to the AP"). No loaded adjectives, no editorializing, no predictions presented as fact. Treat all parties and sides the same way and in the same tone. Separate fact from allegation. If sources conflict, say so.
 - **Grounded.** Use only what you actually read in this run. No invented facts, names, quotes, dates or numbers. Do not carry numbers over from memory.
-- **Original wording.** Never copy sentences from an article, and never quote more than a short phrase. Summaries are in your own words.
+- **Original wording.** Never copy sentences from an article. At most a short phrase (**under 8 words** in a row) may match any sentence in a source, and only for a name, an official title or a short attributed quote in quotation marks. Rewrite headlines in your own words; never reuse an outlet's headline, even lightly edited. Summaries are in your own words.
 - **Shape.** `headline` is one plain line on the biggest story (90 characters or fewer). `body` is **1 to 2 paragraphs**, each **700 characters or fewer**, leading with what matters most. Plain language, no jargon, no emoji.
 - **Plain text only.** No HTML, no markdown, and no `<` or `>` characters in any field.
-- **Sources.** 1 to 5 per section. Each is `{ "title", "outlet", "url" }` for an article you actually read in this run. `url` must be an `https://` link to that article. Do not add links you did not open.
+- **Sources.** 1 to 5 per section. Each is `{ "title", "outlet", "url" }` for an article you actually read in this run. `url` must be an `https://` link to that article. Do not add links you did not open. `title` is a short, plain description of the article in your own words (it is tone-linted like the body); if the outlet's headline is neutral and under 8 words you may use it, otherwise describe it neutrally.
 - **Quiet day.** If there is little real news, say so briefly in the body and set `"quiet": true`. Never pad with unrelated stories.
 - **Do not put these in any news section:** market prices or index levels, Bible verses, anything about the digest itself.
 
@@ -67,8 +83,8 @@ Pick one verse **reference** from `data/scripture-bank.json` for the bottom of t
 
 ## Validate, commit, push
 
-1. Run `node scripts/validate.mjs --only digest --check-market`. Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
-2. Run `node scripts/lint-tone.mjs`. It flags loaded wording, first person, predictions and opinion. Rewrite every flagged phrase in plain, attributed language and run it again until it prints `tone: ok`. If a flag is a false alarm (for example a word inside a direct, attributed phrase), say so in your report instead of contorting the sentence.
+1. Run `node scripts/validate.mjs --only digest --check-market`. (When `market.json` is mock, missing or stale and you left `sections.market` unchanged, it skips the market cross-check; that is expected.) Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
+2. Run `node scripts/lint-tone.mjs`. It checks headlines, bodies, source titles and the scripture `why` line for loaded wording, first person, predictions and opinion. It ignores text inside double quotation marks, so a loaded word is acceptable only as a short, attributed direct quote (for example: the governor called the plan a "disaster"), never in your own voice. Rewrite every flagged phrase in plain, attributed language and run it again until it prints `tone: ok`. If a flag is a false alarm, say so in your report instead of contorting the sentence.
 3. Run `git status` and `git diff --stat`. Only `data/digest.json` may be changed. If anything else changed, undo it.
 4. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.
 5. Never edit this file, `config/`, `scripts/`, `docs/` or any workflow. If you think one needs a change, say so in your report instead.

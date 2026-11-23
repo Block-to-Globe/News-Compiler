@@ -38,13 +38,22 @@ const etParts = (d) => Object.fromEntries(new Intl.DateTimeFormat('en-US', {
 }).formatToParts(d).map((p) => [p.type, p.value]));
 const etDate = (d) => { const p = etParts(d); return `${p.year}-${p.month}-${p.day}`; };
 
-// Returns { date: 'YYYY-MM-DD' (ET), last, prev } from the last two daily closes.
-function parse(j) {
+const AFTER_CLOSE_MIN = 16 * 60 + 30; // 16:30 ET: the cash close plus a buffer for the data vendor
+const etMinutes = (d) => { const p = etParts(d); return Number(p.hour) * 60 + Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', minute: '2-digit' }).format(d)); };
+const validClose = (c) => typeof c === 'number' && Number.isFinite(c) && c > 0;
+
+// Returns { date: 'YYYY-MM-DD' (ET), last, prev } from the last two COMPLETE daily closes.
+// The latest bar is dropped when it is incomplete: a null/zero close, or a bar stamped today
+// while the run is before 16:30 ET (Yahoo shows a live, still-moving value there).
+function parse(j, now) {
   const r = j && j.chart && j.chart.result && j.chart.result[0];
   const ts = r && r.timestamp;
   const closes = r && r.indicators && r.indicators.quote && r.indicators.quote[0] && r.indicators.quote[0].close;
   if (!Array.isArray(ts) || !Array.isArray(closes) || ts.length !== closes.length) return null;
-  const rows = ts.map((t, i) => ({ t, c: closes[i] })).filter((x) => typeof x.c === 'number' && Number.isFinite(x.c) && x.c > 0);
+  let bars = ts.map((t, i) => ({ t, c: closes[i] }));
+  const last = bars[bars.length - 1];
+  if (last && (!validClose(last.c) || (etDate(new Date(last.t * 1000)) === etDate(now) && etMinutes(now) < AFTER_CLOSE_MIN))) bars = bars.slice(0, -1);
+  const rows = bars.filter((x) => validClose(x.c));
   if (rows.length < 2) return null;
   const a = rows[rows.length - 2], b = rows[rows.length - 1];
   return { date: etDate(new Date(b.t * 1000)), last: b.c, prev: a.c };
@@ -57,7 +66,7 @@ async function get(item) {
   catch (e) { die(`${item.id}: fetch failed: ${e.message}`); }
   if (!res.ok) die(`${item.id}: source answered ${res.status}`);
   let j; try { j = await res.json(); } catch { die(`${item.id}: source did not return JSON`); }
-  const p = parse(j);
+  const p = parse(j, NOW);
   if (!p) die(`${item.id}: could not read two daily closes`);
   return p;
 }
@@ -68,15 +77,18 @@ for (const it of ITEMS) got.push({ it, p: await get(it) });
 const asOf = got[0].p.date; // S&P 500 sets the trading day
 for (const { it, p } of got) {
   const gapDays = Math.abs(Date.parse(asOf) - Date.parse(p.date)) / 864e5;
-  if (gapDays > 4) die(`${it.id}: latest close ${p.date} is far from ${asOf}`);
+  if (gapDays > 3) die(`${it.id}: latest close ${p.date} is far from ${asOf}`);
 }
 
 const today = etDate(NOW), ep = etParts(NOW);
 const weekend = ep.weekday === 'Sat' || ep.weekday === 'Sun';
+const afterClose = etMinutes(NOW) >= AFTER_CLOSE_MIN;
 let marketStatus, note;
 if (weekend) { marketStatus = 'weekend'; note = 'Markets are closed for the weekend; showing the last close.'; }
-else if (asOf !== today) { marketStatus = 'holiday'; note = 'Markets were closed today; showing the last close.'; }
-else if (Number(ep.hour) >= 16) marketStatus = 'closed';
+// A holiday is only claimed when it is a weekday, the close is long past, and still no bar exists for today.
+// If the source merely lags, we make no claim: status stays open/closed and there is no note.
+else if (afterClose && asOf < today) { marketStatus = 'holiday'; note = 'Markets were closed today; showing the last close.'; }
+else if (afterClose) marketStatus = 'closed';
 else marketStatus = 'open';
 
 const items = got.map(({ it, p }) => {

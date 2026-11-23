@@ -36,7 +36,8 @@ try { j = await res.json(); } catch { bail('source did not return JSON'); }
 const verseText = typeof j.text === 'string' ? j.text.replace(/\s+/g, ' ').trim() : '';
 const translation = String(j.translation_id || '').toLowerCase();
 if (!verseText) bail('source returned no text');
-if (translation && translation !== 'kjv') bail('source returned translation ' + translation + ', expected kjv');
+// The source must say it is the KJV. A missing translation_id is refused too.
+if (translation !== 'kjv') bail('source returned translation ' + (translation || '(none)') + ', expected kjv');
 // Compare references loosely: ignore case and spaces, and treat "Psalms" as "Psalm".
 const norm = (r) => r.replace(/\s+/g, '').toLowerCase().replace(/^psalms/, 'psalm');
 if (typeof j.reference === 'string' && norm(j.reference) !== norm(ref))
