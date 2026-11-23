@@ -114,4 +114,7 @@ test('prompt: keeps the market date, fail-safe, scripture and originality rules'
   assert.match(p, /different theme/);
   assert.match(p, /under 8 words/);
   assert.match(p, /Rewrite headlines in your own words/);
+  assert.match(p, /exactly the same string\*\* as `generatedAt`/);
+  assert.match(p, /keeps its old `updatedAt`/);
+  assert.match(p, /no digits and no direction words/);
 });

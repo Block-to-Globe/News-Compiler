@@ -68,16 +68,18 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Deploy
+        id: deploy
         if: ${{ steps.commit.outputs.changed == 'true' }}
         run: gh workflow run publish.yml --ref main
 
-      # Reports a failed fetch or validation. Avoids a duplicate issue by commenting on the open one.
+      # Runs when any earlier step fails (fetch, check, commit or deploy). Lists each step's outcome.
+      # Avoids a duplicate issue by commenting on the open one.
       - name: Report failure
-        if: ${{ always() && (steps.fetch.outcome == 'failure' || steps.check.outcome == 'failure') }}
+        if: ${{ failure() }}
         run: |
           title="Market numbers failed"
           number=$(gh issue list --repo "${{ github.repository }}" --state open --search "$title in:title" --json number --jq '.[0].number // empty')
-          body="The market fetch or check failed in run ${{ github.run_id }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). The last good data/market.json is still live. Often this is a Yahoo Finance outage; re-run the workflow once the source is back."
+          body="The market job failed in run ${{ github.run_id }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Step outcomes: fetch=${{ steps.fetch.outcome }}, check=${{ steps.check.outcome }}, commit=${{ steps.commit.outcome }}, deploy=${{ steps.deploy.outcome }}. The last good data/market.json is still live. If the fetch failed, this is often a Yahoo Finance outage; re-run the workflow once the source is back."
           if [ -n "$number" ]; then
             gh issue comment "$number" --repo "${{ github.repository }}" --body "$body"
           else

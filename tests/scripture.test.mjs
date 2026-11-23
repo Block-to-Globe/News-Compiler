@@ -62,11 +62,11 @@ test('fetch-scripture accepts translation_id "KJV" in any case', async () => {
 
 const PROMPT_THEMES = ['comfort', 'peace', 'strength', 'hope', 'trust', 'justice', 'wisdom', 'guidance', 'mercy', 'courage', 'provision', 'love-neighbor', 'gratitude', 'prayer', 'sovereignty'];
 
-test('bank themes cover every theme the task prompt uses, each with at least 8 verses', () => {
+test('bank themes cover every theme the task prompt uses, each with at least 10 verses', () => {
   for (const t of PROMPT_THEMES) {
     assert.ok(bank.themes.includes(t), `theme ${t} missing from themes list`);
     const n = bank.verses.filter((v) => v.theme === t).length;
-    assert.ok(n >= 8, `theme ${t} has only ${n} verses`);
+    assert.ok(n >= 10,`theme ${t} has only ${n} verses`);
   }
   assert.ok(bank.verses.length >= 150);
 });
@@ -93,6 +93,10 @@ const RETIRED = [
   'Daniel 2:21', 'Daniel 4:35', 'Psalm 135:6', 'Psalm 47:7-8', 'Acts 17:26', 'Romans 8:31', 'Psalm 118:6',
   'Psalm 37:28', 'Psalm 37:25', 'Psalm 34:10', 'Deuteronomy 31:6', 'Exodus 15:2', 'Isaiah 43:2', 'Isaiah 66:13',
   'Psalm 125:1', 'Jeremiah 29:11', 'Mark 11:24',
+  // Final QA, 2026-11-23: war/nations wording, approval of outcomes, or promised
+  // deliverance/answers that read badly after a death.
+  'Psalm 46:10', 'Romans 8:28', 'Psalm 50:15', '1 Timothy 2:1-2', 'Matthew 7:7', '1 John 5:14',
+  'Psalm 55:22', 'Jeremiah 33:3', 'James 5:16', 'Psalm 115:3',
 ];
 test('retired references stay out of the bank', () => {
   const refs = new Set(bank.verses.map((v) => v.reference));
