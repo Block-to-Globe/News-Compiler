@@ -85,6 +85,18 @@ async function runFetch(dir, base) {
   });
 }
 
+test('fetch-scripture accepts "Psalms" for "Psalm"', async () => {
+  const d = sandbox();
+  const s = await fakeSource((req, res) => {
+    res.end(JSON.stringify({ reference: 'Psalms 46:1', text: 'God is our refuge.', translation_id: 'kjv' }));
+  });
+  const r = await runFetch(d, `http://127.0.0.1:${s.address().port}`);
+  s.close();
+  assert.equal(r.code, 0);
+  assert.equal(JSON.parse(readFileSync(join(d, 'out/scripture.json'), 'utf8')).reference, 'Psalm 46:1');
+  rmSync(d, { recursive: true });
+});
+
 test('fetch-scripture writes KJV text from the source', async () => {
   const d = sandbox();
   const s = await fakeSource((req, res) => {
