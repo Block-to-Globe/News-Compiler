@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "owner": "news-ingest-engineer (Local and State entries: local-news-resolver)",
-  "notes": "fetch values: 'works', 'blocked', 'stale', 'untested'. Surveyed 2026-11-23 with WebFetch, one request per outlet entry page. Try outlets in listed order, starting from `entry` URLs, skip `blocked`, and fall back to WebSearch with the day's date (headlines and snippets only, say less). Prefer RSS entries. Market entries were not retested. Record changes here by PR.",
+  "notes": "fetch values: 'works', 'blocked', 'stale', 'untested'. Surveyed 2026-11-23 with WebFetch, one request per outlet entry page. Try outlets in listed order, starting from `entry` URLs, skip `blocked`, and fall back to WebSearch with the day's date (headlines and snippets only, say less). Prefer RSS entries. Market entries surveyed 2026-11-23 (some untested). Record changes here by PR.",
   "fallback": "search snippets and headlines only",
   "sections": {
     "federal": [
@@ -297,16 +297,116 @@
     ],
     "market": [
       {
+        "outlet": "CBS MoneyWatch",
+        "site": "cbsnews.com/moneywatch",
+        "fetch": "works",
+        "entry": "https://www.cbsnews.com/latest/rss/moneywatch",
+        "notes": "2026-11-23: RSS fresh (Nov 22). Usable for an optional one-sentence cause; numbers still come only from market.json."
+      },
+      {
+        "outlet": "ABC News Business",
+        "site": "abcnews.com/Business",
+        "fetch": "works",
+        "entry": "https://abcnews.com/Business",
+        "notes": "2026-11-23: Business page fetches; newest items Nov 20 (a market-sell-off story among them), no Nov 21-23 items. Fresh enough for Monday; recheck."
+      },
+      {
+        "outlet": "PBS NewsHour Economy",
+        "site": "pbs.org/newshour/economy",
+        "fetch": "works",
+        "entry": "https://www.pbs.org/newshour/economy",
+        "notes": "2026-11-23: Economy page fetches; newest items Nov 21, undated years but current."
+      },
+      {
+        "outlet": "The Hill Business",
+        "site": "thehill.com/business",
+        "fetch": "works",
+        "entry": "https://thehill.com/business/feed/",
+        "notes": "2026-11-23: RSS fresh (Nov 22); includes market-moving political stories."
+      },
+      {
+        "outlet": "Axios Markets",
+        "site": "axios.com/markets",
+        "fetch": "blocked",
+        "notes": "2026-11-23: axios.com/markets returned a client error (the homepage is listed as works under federal)."
+      },
+      {
         "outlet": "AP News business",
         "site": "apnews.com/business",
-        "fetch": "untested",
-        "notes": "P5. Numbers come from market.json, never from articles"
+        "fetch": "blocked",
+        "notes": "2026-11-23: apnews.com returned SITE_BLOCKED for other sections. Use WebSearch snippets only; not enough for a cause sentence."
       },
       {
         "outlet": "Reuters markets",
         "site": "reuters.com/markets",
+        "fetch": "blocked",
+        "notes": "2026-11-23: reuters.com returned SITE_BLOCKED for other sections. Use WebSearch snippets only; not enough for a cause sentence."
+      },
+      {
+        "outlet": "CNBC Markets",
+        "site": "cnbc.com/markets",
         "fetch": "untested",
-        "notes": "P5"
+        "notes": "2026-11-23: Not tested; WebFetch approval went unanswered. Candidate entry: https://www.cnbc.com/id/20910258/device/rss/rss.html"
+      },
+      {
+        "outlet": "MarketWatch",
+        "site": "marketwatch.com/markets",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
+      },
+      {
+        "outlet": "Yahoo Finance",
+        "site": "finance.yahoo.com",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
+      },
+      {
+        "outlet": "Investing.com",
+        "site": "investing.com/news/stock-market-news",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
+      },
+      {
+        "outlet": "Fox Business",
+        "site": "foxbusiness.com/markets",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
+      },
+      {
+        "outlet": "Barron's",
+        "site": "barrons.com",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered. Likely paywalled."
+      },
+      {
+        "outlet": "WSJ Markets",
+        "site": "wsj.com/finance",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered. Likely paywalled."
+      },
+      {
+        "outlet": "Bloomberg Markets",
+        "site": "bloomberg.com/markets",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered. Likely blocked or paywalled."
+      },
+      {
+        "outlet": "Treasury press releases",
+        "site": "home.treasury.gov/news/press-releases",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
+      },
+      {
+        "outlet": "Federal Reserve press releases",
+        "site": "federalreserve.gov/newsevents",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
+      },
+      {
+        "outlet": "BLS release schedule",
+        "site": "bls.gov/schedule/news_release",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; approval unanswered."
       }
     ]
   }
