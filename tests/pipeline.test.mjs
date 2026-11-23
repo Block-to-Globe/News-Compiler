@@ -225,3 +225,65 @@ test('fetch-history skips cleanly when the feed is unreachable', async () => {
   assert.equal(r.code, 0); assert.equal(existsSync(r.out), false);
   rmSync(r.dir, { recursive: true });
 });
+
+// ---------- fetch-market ----------
+
+// Closes are keyed by symbol: [prev, last]. Timestamps are 21:00 UTC (4pm ET) on the given dates.
+function chart(dates, closes) {
+  return { chart: { result: [{ timestamp: dates.map((d) => Date.parse(d + 'T21:00:00Z') / 1000), indicators: { quote: [{ close: closes }] } }] } };
+}
+const CLOSES = { '^GSPC': [5000, 5050], '^DJI': [40000, 39800], '^IXIC': [16000, 16000], '^TNX': [4.2, 4.25], 'CL=F': [60, 61.5], 'GC=F': [2000, 1990], 'DX-Y.NYB': [100, 100.1] };
+
+async function runMarket(handler, now = '2026-11-24T21:30:00Z') {
+  const s = await fakeSource(handler);
+  const dir = mkdtempSync(join(tmpdir(), 'btg-m-'));
+  const out = join(dir, 'market.json');
+  const { spawn } = await import('node:child_process');
+  const r = await new Promise((resolve) => {
+    const p = spawn('node', [join(root, 'scripts/fetch-market.mjs'), '--out', out, '--now', now],
+      { env: { ...process.env, MARKET_API_BASE: `http://127.0.0.1:${s.address().port}` } });
+    let err = ''; p.stderr.on('data', (c) => (err += c)); p.stdout.on('data', () => {});
+    p.on('close', (code) => resolve({ code, err }));
+  });
+  s.close();
+  return { ...r, out, dir };
+}
+const goodHandler = (dates = ['2026-11-21', '2026-11-24']) => (req, res) => {
+  const sym = decodeURIComponent(req.url.split('/chart/')[1].split('?')[0]);
+  res.end(JSON.stringify(chart(dates, CLOSES[sym])));
+};
+
+test('fetch-market writes computed numbers that pass the validator', async () => {
+  const r = await runMarket(goodHandler());
+  assert.equal(r.code, 0, r.err);
+  const m = JSON.parse(readFileSync(r.out, 'utf8'));
+  assert.equal(m.asOf, '2026-11-24'); assert.equal(m.marketStatus, 'closed'); assert.equal(m.items.length, 7);
+  const sp = m.items.find((i) => i.id === 'sp500'), dow = m.items.find((i) => i.id === 'dow'), ty = m.items.find((i) => i.id === 'us10y');
+  assert.deepEqual([sp.value, sp.change, sp.changePct], [5050, 50, 1]);
+  assert.deepEqual([dow.change, dow.changePct], [-200, -0.5]);
+  assert.deepEqual([ty.value, ty.change, ty.unit], [4.25, 0.05, 'percent']);
+  const d = sandbox(); cpSync(r.out, join(d, 'data/market.json'));
+  assert.equal(validate(d, ['--only', 'market']).status, 0);
+  rmSync(d, { recursive: true }); rmSync(r.dir, { recursive: true });
+});
+
+test('fetch-market: weekend and holiday status', async () => {
+  let r = await runMarket(goodHandler(['2026-11-20', '2026-11-23']), '2026-11-28T15:00:00Z'); // Saturday
+  assert.equal(JSON.parse(readFileSync(r.out, 'utf8')).marketStatus, 'weekend'); rmSync(r.dir, { recursive: true });
+  r = await runMarket(goodHandler(['2026-11-24', '2026-11-25']), '2026-11-26T21:30:00Z'); // Thanksgiving, no bar for the 26th
+  const m = JSON.parse(readFileSync(r.out, 'utf8'));
+  assert.equal(m.marketStatus, 'holiday'); assert.match(m.note, /closed/); rmSync(r.dir, { recursive: true });
+});
+
+for (const [name, handler] of [
+  ['an HTTP error', (q, s) => { s.statusCode = 429; s.end('{}'); }],
+  ['bad JSON', (q, s) => s.end('nope')],
+  ['only one close', (q, s) => s.end(JSON.stringify(chart(['2026-11-24'], [5000])))],
+  ['a zero close', (q, s) => s.end(JSON.stringify(chart(['2026-11-21', '2026-11-24'], [5000, 0])))],
+  ['one symbol missing', (q, s) => { if (q.url.includes('CL%3DF')) { s.statusCode = 404; s.end('{}'); } else goodHandler()(q, s); }],
+]) {
+  test(`fetch-market writes nothing and exits 1 on: ${name}`, async () => {
+    const r = await runMarket(handler);
+    assert.equal(r.code, 1); assert.equal(existsSync(r.out), false); rmSync(r.dir, { recursive: true });
+  });
+}
