@@ -37,7 +37,9 @@ const verseText = typeof j.text === 'string' ? j.text.replace(/\s+/g, ' ').trim(
 const translation = String(j.translation_id || '').toLowerCase();
 if (!verseText) bail('source returned no text');
 if (translation && translation !== 'kjv') bail('source returned translation ' + translation + ', expected kjv');
-if (typeof j.reference === 'string' && j.reference.replace(/\s+/g, '').toLowerCase() !== ref.replace(/\s+/g, '').toLowerCase())
+// Compare references loosely: ignore case and spaces, and treat "Psalms" as "Psalm".
+const norm = (r) => r.replace(/\s+/g, '').toLowerCase().replace(/^psalms/, 'psalm');
+if (typeof j.reference === 'string' && norm(j.reference) !== norm(ref))
   bail(`source returned reference "${j.reference}", expected "${ref}"`);
 
 mkdirSync(dirname(OUT), { recursive: true });
