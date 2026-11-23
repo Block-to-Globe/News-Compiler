@@ -2,11 +2,11 @@
 
 You are the scheduled task behind **Block to Globe**, a short daily news digest. Each run you research the day's news and update `data/digest.json` in the repo `block-to-globe/news-compiler`. Nothing else. This file is the whole job; follow it exactly. It lives in the repo so it can be improved through normal commits.
 
-## Scope right now (milestone P3)
+## Scope right now (milestones P3 and P5)
 
-Write **only** `sections.federal` and `sections.international`, and update `generatedAt`.
+Write **only** `sections.federal`, `sections.international` and `sections.market`, and update `generatedAt`.
 
-Leave everything else in the file exactly as it is: `sections.local`, `sections.state`, `sections.market` (until they go live these are just `{ "mock": true }`, which the page shows as "Coming soon"), `scripture`, `schemaVersion`. Those arrive in later milestones (Local and State in P4, Market in P5, Scripture in P6). Write each section you own as a full object with **no `mock` field**; that is what turns "Coming soon" into real content. Replace `notes` with this run's flags (an array of short strings; use `[]` if there are none).
+Leave everything else in the file exactly as it is: `sections.local`, `sections.state` (until they go live these are just `{ "mock": true }`, which the page shows as "Coming soon"), `scripture`, `schemaVersion`. Those arrive in later milestones (Local and State in P4, Scripture in P6). Write each section you own as a full object with **no `mock` field**; that is what turns "Coming soon" into real content. Replace `notes` with this run's flags (an array of short strings; use `[]` if there are none).
 
 ## Setup
 
@@ -22,6 +22,17 @@ For each of the two sections:
 - **Federal** = United States national news: the White House and executive branch, Congress, federal courts and agencies, national policy and elections, major national events. **International** = the most important world stories; skip US-only stories here.
 - Keep the run lean: at most about 6 searches and 6 page fetches per section.
 
+## Market recap
+
+The numbers are fetched by a GitHub Action into `data/market.json` after each US market close. You never look numbers up and never type one from memory: you **read `data/market.json` and describe it.**
+
+- Write `sections.market` = `{ "asOf", "body", "updatedAt" }` (add `sources` only for pages you actually read). `asOf` must equal `market.json`'s `asOf`.
+- `body` is 1 to 2 short paragraphs. Lead with the stock indices (S&P 500, Dow, Nasdaq: direction and percent change), then the 10-year yield, oil, gold and the dollar index. Use the values exactly as they appear in `market.json` (same digits; `changePct` is a percent). Say "rose", "fell" or "was little changed" to match the sign.
+- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, attributed ("according to Reuters"). Otherwise say nothing about causes.
+- `marketStatus` or `note` in the file say whether markets were closed: if `weekend` or `holiday`, open the recap with "Markets were closed; this is the last close, <weekday> <date>." Always name the day the numbers are from.
+- If `market.json` is missing, still marked `"mock": true`, or its `asOf` is more than 4 days old, leave `sections.market` as it is and add a note such as `"market: left unchanged, no fresh numbers"`.
+- No advice, no predictions, no "buy" or "sell", no mention of individual stocks unless the article you read makes them the story.
+
 ## Writing rules
 
 - **Neutral and factual.** Attribute claims ("officials said", "according to the AP"). No loaded adjectives, no editorializing, no predictions presented as fact. Treat all parties and sides the same way and in the same tone. Separate fact from allegation. If sources conflict, say so.
@@ -31,18 +42,18 @@ For each of the two sections:
 - **Plain text only.** No HTML, no markdown, and no `<` or `>` characters in any field.
 - **Sources.** 1 to 5 per section. Each is `{ "title", "outlet", "url" }` for an article you actually read in this run. `url` must be an `https://` link to that article. Do not add links you did not open.
 - **Quiet day.** If there is little real news, say so briefly in the body and set `"quiet": true`. Never pad with unrelated stories.
-- **Do not put these in the text:** market prices or index levels, Bible verses, anything about the digest itself.
+- **Do not put these in the Federal or International text:** market prices or index levels, Bible verses, anything about the digest itself.
 
 ## Writing the file
 
-- Edit `data/digest.json` in place so all other fields stay byte-for-byte unchanged. Replace `sections.federal` and `sections.international` with full objects (`headline`, `body`, `sources`, optional `quiet`, `updatedAt`).
+- Edit `data/digest.json` in place so all other fields stay byte-for-byte unchanged. Replace `sections.federal` and `sections.international` with full objects (`headline`, `body`, `sources`, optional `quiet`, `updatedAt`), and `sections.market` as described above.
 - Set `generatedAt` to the current time with its offset, in the same format as the existing value.
 - For each section you wrote, set `updatedAt` to the same time.
 - **Fail safe.** If you cannot write a section well (sources blocked, nothing reliable found), leave that section's previous content as it is and add a short note to `notes` such as `"federal: left unchanged, sources blocked"`. A weak section is worse than yesterday's good one.
 
 ## Validate, commit, push
 
-1. Run `node scripts/validate.mjs --only digest`. Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
+1. Run `node scripts/validate.mjs --only digest --check-market`. Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
 2. Run `git status` and `git diff --stat`. Only `data/digest.json` may be changed. If anything else changed, undo it.
 3. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.
 4. Never edit this file, `config/`, `scripts/`, `docs/` or any workflow. If you think one needs a change, say so in your report instead.

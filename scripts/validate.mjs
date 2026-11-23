@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Validates the data files against docs/digest-schema.md. No dependencies.
 //
-// Usage: node scripts/validate.mjs [--dir data] [--only digest,market,scripture,history]
+// Usage: node scripts/validate.mjs [--dir data] [--only digest,market,scripture,history] [--check-market]
 //                                  [--max-age-hours 26]
 // Exit code 0 = all good, 1 = at least one error (errors printed one per line).
 
@@ -16,6 +16,9 @@ function opt(name, dflt) {
 const DIR = opt('--dir', 'data');
 const ONLY = opt('--only', 'digest,market,scripture,history').split(',');
 const MAX_AGE_H = opt('--max-age-hours', null);
+// Cross-check the market recap against market.json. Only the scheduled task passes this:
+// the deploy must not fail just because market.json moved on after the recap was written.
+const CHECK_MARKET = args.includes('--check-market');
 
 const errors = [];
 const err = (file, msg) => errors.push(`${file}: ${msg}`);
@@ -154,8 +157,38 @@ function history(h) {
   ts(f, 'fetchedAt', h.fetchedAt);
 }
 
+// The market recap may only quote numbers that appear in market.json (rule: numbers are never model-typed).
+function marketNumbers(d) {
+  const m = d.sections && d.sections.market;
+  if (!isObj(m) || m.mock === true || !Array.isArray(m.body)) return;
+  const f = 'digest.json';
+  const p = join(DIR, 'market.json');
+  let mk = null;
+  try { mk = JSON.parse(readFileSync(p, 'utf8')); } catch { /* handled below */ }
+  if (!isObj(mk) || mk.mock === true || !Array.isArray(mk.items)) { err(f, 'sections.market is live but market.json is missing, mock or unreadable, so its numbers cannot be checked'); return; }
+  if (m.asOf !== mk.asOf) err(f, `sections.market.asOf ${m.asOf} does not match market.json asOf ${mk.asOf}`);
+  const allowed = [];
+  for (const it of mk.items) for (const k of ['value', 'change', 'changePct']) {
+    if (!isNum(it[k])) continue;
+    const v = Math.abs(it[k]);
+    allowed.push(v, Math.round(v * 10) / 10, Math.round(v));
+  }
+  const year = Number(String(mk.asOf).slice(0, 4));
+  for (const para of m.body) {
+    if (!isStr(para)) continue;
+    for (const tok of para.match(/\d[\d,]*(?:\.\d+)?/g) || []) {
+      const hasPunct = /[.,]/.test(tok);
+      const n = Number(tok.replace(/,/g, ''));
+      if (!Number.isFinite(n)) continue;
+      if (!hasPunct && n < 1000) continue;       // small whole numbers (dates, "two") are not checked
+      if (n === year) continue;
+      if (!allowed.some((a) => Math.abs(a - n) < 0.005)) err(f, `sections.market quotes ${tok}, which is not in market.json`);
+    }
+  }
+}
+
 let digestData = null;
-if (ONLY.includes('digest')) { digestData = load('digest'); if (digestData) digest(digestData); }
+if (ONLY.includes('digest')) { digestData = load('digest'); if (digestData) { digest(digestData); if (CHECK_MARKET) marketNumbers(digestData); } }
 else if (ONLY.includes('scripture')) digestData = load('digest');
 if (ONLY.includes('market')) { const m = load('market'); if (m) market(m); }
 if (ONLY.includes('scripture')) { const s = load('scripture'); if (s) scripture(s, digestData); }

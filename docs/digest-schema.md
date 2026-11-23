@@ -39,6 +39,8 @@ Mock versions of the Action-written files live in `data/` with `"mock": true` (t
 |---|---|---|
 | `asOf` | date `YYYY-MM-DD` | required. Must match `market.json.asOf` at write time |
 | `body` | string[] | required, 1 to 2 items, each max 700 chars. Any number quoted must match `market.json` exactly |
+
+The scheduled task checks this with `node scripts/validate.mjs --only digest --check-market` (asOf equal, every quoted number found in `market.json`). The deploy does not run that check, because `market.json` can move on after the recap was written; the page shows the recap with its own `asOf` date.
 | `sources` | object[] | optional, same shape as above |
 | `updatedAt` | timestamp | required |
 
