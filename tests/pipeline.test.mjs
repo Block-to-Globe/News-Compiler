@@ -13,7 +13,10 @@ const root = new URL('..', import.meta.url).pathname;
 function sandbox({ rawRepoData = false } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'btg-'));
   cpSync(join(root, 'data'), join(dir, 'data'), { recursive: true });
-  if (!rawRepoData) cpSync(join(root, 'tests/fixtures/digest.full.json'), join(dir, 'data/digest.json'));
+  if (!rawRepoData) {
+    cpSync(join(root, 'tests/fixtures/digest.full.json'), join(dir, 'data/digest.json'));
+    cpSync(join(root, 'tests/fixtures/market.full.json'), join(dir, 'data/market.json'));
+  }
   return dir;
 }
 function validate(dir, extra = []) {
@@ -287,3 +290,40 @@ for (const [name, handler] of [
     assert.equal(r.code, 1); assert.equal(existsSync(r.out), false); rmSync(r.dir, { recursive: true });
   });
 }
+
+// ---------- market narrative vs market.json ----------
+
+function liveMarketSandbox(bodyText) {
+  const d = sandbox();
+  const r = (cpSync(join(root, 'data/market.json'), join(d, 'data/market.json')), 0);
+  edit(d, 'market.json', (m) => { delete m.mock; m.source = 'test'; });
+  edit(d, 'digest.json', (g) => { g.sections.market = { asOf: '2026-11-21', body: [bodyText], updatedAt: g.generatedAt }; });
+  return d;
+}
+test('market narrative: numbers that match market.json pass', () => {
+  const d = liveMarketSandbox('The S&P 500 rose 1.00% to 1,000.00 on Friday. Oil gained 0.84% to $60.00 and the dollar index held at 100.');
+  const r = validate(d, ['--only', 'digest', '--check-market']);
+  assert.equal(r.status, 0, r.stderr); rmSync(d, { recursive: true });
+});
+test('market narrative: a number not in market.json fails', () => {
+  const d = liveMarketSandbox('The S&P 500 rose 1.7% to 1,000.00 on Friday.');
+  const r = validate(d, ['--only', 'digest', '--check-market']);
+  assert.equal(r.status, 1); assert.match(r.stderr, /1\.7/); rmSync(d, { recursive: true });
+});
+test('market narrative: asOf mismatch fails', () => {
+  const d = liveMarketSandbox('Stocks were mixed.');
+  edit(d, 'digest.json', (g) => { g.sections.market.asOf = '2026-11-20'; });
+  const r = validate(d, ['--only', 'digest', '--check-market']);
+  assert.equal(r.status, 1); assert.match(r.stderr, /asOf/); rmSync(d, { recursive: true });
+});
+test('market narrative: live section with mock market.json fails', () => {
+  const d = liveMarketSandbox('Stocks were mixed.');
+  edit(d, 'market.json', (m) => { m.mock = true; });
+  assert.equal(validate(d, ['--only', 'digest', '--check-market']).status, 1); rmSync(d, { recursive: true });
+});
+
+test('market narrative cross-check is off unless --check-market is passed (deploys never fail on it)', () => {
+  const d = liveMarketSandbox('The S&P 500 rose 9.9% on Friday.');
+  assert.equal(validate(d, ['--only', 'digest']).status, 0);
+  rmSync(d, { recursive: true });
+});
