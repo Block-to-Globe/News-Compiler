@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "mock": true,
+  "generatedAt": "2026-11-23T06:00:00-06:00",
+  "sections": {
+    "local": {
+      "headline": "Mock local headline for Shelby County",
+      "body": [
+        "This is placeholder text for the Local section. Real summaries about Shelby County, Tennessee will replace it once the scheduled task is running.",
+        "A second paragraph shows how two short paragraphs lay out on the page."
+      ],
+      "sources": [
+        { "title": "Example source article", "outlet": "Example Outlet", "url": "https://example.com/local" }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "state": {
+      "headline": "Mock state headline for Tennessee",
+      "body": [
+        "This is placeholder text for the State section. It will cover Tennessee-wide news."
+      ],
+      "sources": [
+        { "title": "Example source article", "outlet": "Example Outlet", "url": "https://example.com/state" }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "federal": {
+      "headline": "Mock federal headline",
+      "body": [
+        "This is placeholder text for the Federal section. It will summarize the day's top U.S. national stories in neutral, original wording.",
+        "A second short paragraph shows the two-paragraph layout."
+      ],
+      "sources": [
+        { "title": "Example source article one", "outlet": "Example Outlet", "url": "https://example.com/federal-1" },
+        { "title": "Example source article two", "outlet": "Another Outlet", "url": "https://example.com/federal-2" }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "international": {
+      "headline": "Mock international headline",
+      "body": [
+        "This is placeholder text for the International section. It will cover the most important world stories of the day."
+      ],
+      "sources": [
+        { "title": "Example source article", "outlet": "Example Outlet", "url": "https://example.com/world" }
+      ],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    },
+    "market": {
+      "asOf": "2026-11-21",
+      "body": [
+        "This is placeholder text for the Market recap. The real recap will explain the latest trading day and quote numbers that match market.json exactly."
+      ],
+      "sources": [],
+      "updatedAt": "2026-11-23T06:00:00-06:00"
+    }
+  },
+  "scripture": {
+    "reference": "Psalm 46:1",
+    "theme": "comfort",
+    "why": "Mock entry. A real pick will fit the day's news."
+  },
+  "notes": ["Mock data for P1 and P2. Replaced by the scheduled task in P3."]
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "mock": true,
+  "date": "2026-11-23",
+  "year": 1900,
+  "text": "Mock entry. A real this-day-in-history fact from Wikipedia replaces this line in P6.",
+  "url": "https://en.wikipedia.org/wiki/Main_Page",
+  "fetchedAt": "2026-11-23T05:30:00-06:00"
+}
