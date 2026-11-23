@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "mock": true,
+  "fetchedAt": "2026-11-21T15:35:00-06:00",
+  "asOf": "2026-11-21",
+  "marketStatus": "closed",
+  "note": "Mock numbers for layout only. Not real market data.",
+  "items": [
+    { "id": "sp500",  "label": "S&P 500",       "value": 1000.00, "change": 10.00, "changePct": 1.00,  "unit": "points" },
+    { "id": "dow",    "label": "Dow",           "value": 2000.00, "change": -20.00, "changePct": -1.00, "unit": "points" },
+    { "id": "nasdaq", "label": "Nasdaq",        "value": 3000.00, "change": 0.00,  "changePct": 0.00,  "unit": "points" },
+    { "id": "us10y",  "label": "10-yr Treasury", "value": 4.00,   "change": 0.01,  "changePct": 0.25,  "unit": "percent" },
+    { "id": "wti",    "label": "Oil (WTI)",     "value": 60.00,   "change": 0.50,  "changePct": 0.84,  "unit": "usd" },
+    { "id": "gold",   "label": "Gold",          "value": 2000.00, "change": -5.00, "changePct": -0.25, "unit": "usd" },
+    { "id": "dxy",    "label": "US Dollar Index", "value": 100.00, "change": 0.10, "changePct": 0.10,  "unit": "index" }
+  ],
+  "source": "mock"
+}
