@@ -32,7 +32,7 @@ For each of the four news sections (Local, State, Federal, International):
 The numbers are fetched by a GitHub Action into `data/market.json` after each US market close. You never look numbers up and never type one from memory: you **read `data/market.json` and describe it.**
 
 - Write `sections.market` = `{ "asOf", "body", "updatedAt" }` (add `sources` only for pages you actually read). `asOf` must equal `market.json`'s `asOf`.
-- **Check freshness first.** If `market.json` is missing, still marked `"mock": true`, or its `asOf` is more than 4 days before today's Central date, leave `sections.market` exactly as it is and add a note such as `"market: left unchanged, no fresh numbers"`. In that case `validate.mjs --check-market` skips the market cross-check and says so; that is expected, not a failure.
+- **Check freshness first.** If `market.json` is missing, still marked `"mock": true`, or its `asOf` is more than 4 days before today's Central date, leave `sections.market` exactly as it is, even if the existing recap is old or still `{ "mock": true }`. Do not touch any of its fields, including `updatedAt`. Add a note such as `"market: left unchanged, no fresh numbers"`. Because its `updatedAt` then differs from `generatedAt`, `validate.mjs --check-market` skips the market cross-check for it; that is expected, not a failure.
 - **Which day the numbers are from.** Compare today's Central date (the `YYYY-MM-DD` part of `TZ=America/Chicago date -Iseconds`) with `market.json`'s `asOf`. Work out the weekday of `asOf` yourself from the date (for example `date -d 2026-11-20 +%A`). Do not rely on `marketStatus` or `note` alone.
   - If they are the **same date**, the numbers are today's close; you may say "on <weekday>" or "today".
   - If they **differ**, the first sentence of the recap must say so plainly and name the weekday and date of the numbers. Use "Markets were closed <today's weekday>; these are <asOf weekday>'s closes from <Month day>." on a weekend or holiday, or "These are the most recent closes, from <asOf weekday>, <Month day>." when you cannot tell why the date differs. Never write "today", "this session" or anything else that implies the numbers are from today when they are not.
@@ -42,7 +42,7 @@ The numbers are fetched by a GitHub Action into `data/market.json` after each US
   - Copy the digits **exactly** as they appear in the file (same decimals, no rounding, no added or dropped zeros). `changePct` is a percent; drop only the minus sign and let the verb carry direction ("fell 0.15%", not "fell -0.15%").
   - "Rose" or "gained" only for a positive change, "fell" or "slipped" only for a negative one, "was little changed" or "was flat" for zero.
   - No computed numbers (no sums, differences, averages, point-to-percent conversions) and no numbers from anywhere but `market.json`, apart from the date.
-- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, attributed ("according to Reuters"). Keep any numbers out of that sentence. Otherwise say nothing about causes.
+- You may add one sentence on **why** markets moved, only if you read a reliable article this run that says so, attributed ("according to Reuters"). In that sentence use **no digits and no direction words** (no rose, fell, higher, lower, up, down, gained, slipped): plain cause wording only, for example "Investors weighed the latest jobs report, according to Reuters." If the validator flags it, rewrite it that way or drop it. Otherwise say nothing about causes.
 - No advice, no predictions, no "buy" or "sell", no mention of individual stocks unless the article you read makes them the story.
 
 ## Scripture
@@ -78,12 +78,12 @@ Pick one verse **reference** from `data/scripture-bank.json` for the bottom of t
 
 - Edit `data/digest.json` in place so all other fields (`schemaVersion`) stay byte-for-byte unchanged. Replace `sections.local`, `sections.state`, `sections.federal` and `sections.international` with full objects (`headline`, `body`, `sources`, optional `quiet`, `updatedAt`), and `sections.market` as described above.
 - Set `generatedAt` to the current time with its offset, in the same format as the existing value.
-- For each section you wrote, set `updatedAt` to the same time.
+- **`updatedAt` tells the checker what you wrote.** Every section you write this run gets `updatedAt` set to **exactly the same string** as `generatedAt` (copy it; do not re-read the clock). A section you leave unchanged keeps its old `updatedAt` and all its other fields untouched, byte for byte; that mismatch is how the validator knows it was left alone.
 - **Fail safe.** If you cannot write a section well (sources blocked, nothing reliable found), leave that section's previous content as it is and add a short note to `notes` such as `"federal: left unchanged, sources blocked"`. A weak section is worse than yesterday's good one.
 
 ## Validate, commit, push
 
-1. Run `node scripts/validate.mjs --only digest --check-market`. (When `market.json` is mock, missing or stale and you left `sections.market` unchanged, it skips the market cross-check; that is expected.) Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
+1. Run `node scripts/validate.mjs --only digest --check-market`. (A recap left unchanged, with its old `updatedAt`, is exempt: the checker skips the market cross-check for it. A recap you wrote this run is always checked.) Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
 2. Run `node scripts/lint-tone.mjs`. It checks headlines, bodies, source titles and the scripture `why` line for loaded wording, first person, predictions and opinion. It ignores text inside double quotation marks, so a loaded word is acceptable only as a short, attributed direct quote (for example: the governor called the plan a "disaster"), never in your own voice. Rewrite every flagged phrase in plain, attributed language and run it again until it prints `tone: ok`. If a flag is a false alarm, say so in your report instead of contorting the sentence.
 3. Run `git status` and `git diff --stat`. Only `data/digest.json` may be changed. If anything else changed, undo it.
 4. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.

@@ -451,6 +451,31 @@ test('market narrative: when the check is skipped, a recap that quotes numbers f
   const d = liveMarketSandbox('Stocks fell 2 percent.'); edit(d, 'market.json', (m) => { m.mock = true; });
   assert.equal(check(d).status, 1); rmSync(d, { recursive: true });
 });
+test('market narrative: a recap left unchanged this run (updatedAt != generatedAt) is exempt, even with stale market.json', () => {
+  const body = 'The S&P 500 rose 9.9% to 5,000.00 on Nov. 10.';
+  for (const mut of [() => {}, (d) => edit(d, 'market.json', (m) => { m.mock = true; }), (d) => rmSync(join(d, 'data/market.json'))]) {
+    const d = liveMarketSandbox(body); mut(d);
+    edit(d, 'digest.json', (g) => { g.sections.market.updatedAt = '2026-11-10T22:00:00Z'; g.sections.market.asOf = '2026-11-10'; });
+    const r = check(d); assert.equal(r.status, 0, r.stderr); assert.match(r.stdout, /not written this run/); rmSync(d, { recursive: true });
+  }
+  const d = liveMarketSandbox(body); edit(d, 'market.json', (m) => { m.mock = true; });
+  assert.equal(check(d).status, 1, 'written this run (updatedAt == generatedAt) in skip mode: digits banned'); rmSync(d, { recursive: true });
+});
+test('market narrative: skip mode lets item labels through (S&P 500, 10-year) but still bans real numbers', () => {
+  const ok = 'Stocks were mixed at the close. The S&P 500 and the 10-year yield barely moved on Nov. 21, 2026.';
+  let d = liveMarketSandbox(ok); edit(d, 'market.json', (m) => { m.mock = true; });
+  let r = check(d); assert.equal(r.status, 0, r.stderr); rmSync(d, { recursive: true });
+  d = liveMarketSandbox('The S&P 500 and the 10-year yield rose 2%.'); edit(d, 'market.json', (m) => { m.mock = true; });
+  r = check(d); assert.equal(r.status, 1); assert.match(r.stderr, /quotes 2\b/); assert.doesNotMatch(r.stderr, /quotes (500|10)\b/); rmSync(d, { recursive: true });
+});
+test('market narrative: direction adjectives without a tied number are not checked; verbs on the item and numbers still are', () => {
+  for (const t of ['Oil prices were lower on Friday as stocks rallied.', 'Gold was higher, the Dow lower, in a quiet session.', 'Stocks rose on Friday; the dollar was down on the week.']) {
+    const r = recap(t); assert.equal(r.status, 0, t + ' ' + r.stderr);
+  }
+  for (const [t, re] of [['The S&P 500 rose 0.4% on Friday.', /S&P 500/], ['The Dow rose on Friday.', /Dow.*"rose"/], ['Oil prices fell on Friday.', /"fell"/], ['Oil was lower at $60.00 on Friday.', /Oil.*"lower"/]]) {
+    const r = recap(t); assert.equal(r.status, 1, t); assert.match(r.stderr, re);
+  }
+});
 test('market narrative: fresh market.json with a different asOf still fails', () => {
   const d = liveMarketSandbox('Stocks were mixed.'); edit(d, 'digest.json', (g) => { g.sections.market.asOf = '2026-11-20'; });
   assert.equal(check(d).status, 1); rmSync(d, { recursive: true });

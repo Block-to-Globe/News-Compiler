@@ -33,10 +33,6 @@
       "theme": "sovereignty"
     },
     {
-      "reference": "Psalm 115:3",
-      "theme": "sovereignty"
-    },
-    {
       "reference": "Proverbs 16:9",
       "theme": "sovereignty"
     },
@@ -46,10 +42,6 @@
     },
     {
       "reference": "Isaiah 46:9-10",
-      "theme": "sovereignty"
-    },
-    {
-      "reference": "Romans 8:28",
       "theme": "sovereignty"
     },
     {
@@ -66,10 +58,6 @@
     },
     {
       "reference": "Job 42:2",
-      "theme": "sovereignty"
-    },
-    {
-      "reference": "Psalm 46:10",
       "theme": "sovereignty"
     },
     {
@@ -713,35 +701,7 @@
       "theme": "gratitude"
     },
     {
-      "reference": "Psalm 55:22",
-      "theme": "prayer"
-    },
-    {
       "reference": "Psalm 145:18",
-      "theme": "prayer"
-    },
-    {
-      "reference": "Jeremiah 33:3",
-      "theme": "prayer"
-    },
-    {
-      "reference": "Matthew 7:7",
-      "theme": "prayer"
-    },
-    {
-      "reference": "1 Timothy 2:1-2",
-      "theme": "prayer"
-    },
-    {
-      "reference": "James 5:16",
-      "theme": "prayer"
-    },
-    {
-      "reference": "1 John 5:14",
-      "theme": "prayer"
-    },
-    {
-      "reference": "Psalm 50:15",
       "theme": "prayer"
     },
     {
@@ -750,6 +710,38 @@
     },
     {
       "reference": "Romans 8:26",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 130:1-2",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 5:3",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 17:6",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 102:17",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 116:1-2",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 141:2",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Psalm 65:2",
+      "theme": "prayer"
+    },
+    {
+      "reference": "Matthew 6:9-10",
       "theme": "prayer"
     }
   ]

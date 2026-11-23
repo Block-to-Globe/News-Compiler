@@ -189,6 +189,8 @@ const SYN = {
 };
 const UP = /\b(rose|rises|rise|rising|gained|gains|gain|climbed|climbs|advanced|rallied|jumped|surged|added|higher|up)\b/gi;
 const DOWN = /\b(fell|falls|fall|falling|dropped|drops|declined|declines|slipped|slid|lost|lower|down|retreated|sank|tumbled|dipped)\b/gi;
+// Verbs that state a move; "higher", "lower", "up" and "down" are adjectives/adverbs and only count when a quoted number is tied to the item.
+const MOVE_VERB = /^(rose|rises|rise|rising|gained|gains|gain|climbed|climbs|advanced|rallied|jumped|surged|added|fell|falls|fall|falling|dropped|drops|declined|declines|slipped|slid|lost|retreated|sank|tumbled|dipped)$/i;
 const FLAT = /\b(flat|unchanged|little changed)\b/gi;
 const MONTH = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s*$/i;
 const ABBR = /\b(U\.S|Nov|Dec|Jan|Feb|Mar|Apr|Aug|Sept?|Oct|No|St|Inc|Corp|Co|Mr|Ms|Dr|a\.m|p\.m)\./g;
@@ -234,6 +236,7 @@ function checkSentence(f, where, sentence, items, inherited, year) {
   const short = sentence.length > 70 ? sentence.slice(0, 67) + '...' : sentence;
   const label = (id) => (items.find((i) => i.id === id) || {}).label || id;
 
+  const fitIds = new Set(); // items that a quoted number in this sentence is tied to
   const re = /(?<![\w.,])([+\-−])?(\$)?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?:(\s?(?:%|percent\b))|(\s(?:percentage points?|basis points?|bps)\b)|(\s(?:points?)\b))?/gi;
   for (let m; (m = re.exec(scan));) {
     const tok = m[0].trim();
@@ -251,6 +254,7 @@ function checkSentence(f, where, sentence, items, inherited, year) {
     if (!ids.length) { err(f, `${where} quotes ${tok} but names no market item in "${short}"`); continue; }
     const q = { n, d, pct, usd, bp, signed: !!sign, neg: sign === 'neg' };
     const hit = ids.map((id) => items.find((i) => i.id === id)).filter(Boolean).some((it) => fits(it, q));
+    for (const id of ids) { const it = items.find((i) => i.id === id); if (it && fits(it, q)) fitIds.add(id); }
     if (!hit) err(f, `${where} quotes ${tok}, which does not match ${ids.map(label).join(' / ')} (value, change or % change) in market.json: "${short}"`);
   }
 
@@ -272,6 +276,10 @@ function checkSentence(f, where, sentence, items, inherited, year) {
       const near1 = own.reduce((a, b) => (dist(b) < dist(a) ? b : a));
       const it = items.find((i) => i.id === near1.id);
       if (!it || !isNum(it.change) || !isNum(it.changePct)) continue;
+      // Only check a direction word that is tied to the item: a quoted number that fits it, or a move verb right after its name.
+      const gap = scan.slice(near1.end, at);
+      const direct = MOVE_VERB.test(m[0]) && at >= near1.end && /^\s+(?:(?:prices?|futures|index|average|also|then|just|still|again)\s+)*$/i.test(gap + ' ');
+      if (!direct && !fitIds.has(near1.id)) continue;
       const s2 = sgn(it);
       if (s2 !== dir) err(f, `${where} says ${label(near1.id)} "${m[0]}" but market.json shows it ${s2 === 0 ? 'unchanged' : s2 > 0 ? 'up' : 'down'} (change ${it.change}): "${short}"`);
     }
@@ -280,8 +288,11 @@ function checkSentence(f, where, sentence, items, inherited, year) {
 }
 
 // Digit tokens that are not a year, date, ordinal or clock time.
-function strayNumbers(para) {
+function strayNumbers(rawPara) {
   const out = [];
+  // Blank item labels first so "S&P 500" and "10-year" are not read as quotes (same as checkSentence).
+  let para = rawPara;
+  for (const mm of mentions(rawPara)) para = para.slice(0, mm.start) + ' '.repeat(mm.end - mm.start) + para.slice(mm.end);
   const re = /\d[\d,]*(?:\.\d+)?/g;
   for (let m; (m = re.exec(para));) {
     const before = para.slice(0, m.index), after = para.slice(m.index + m[0].length);
@@ -292,10 +303,18 @@ function strayNumbers(para) {
   return out;
 }
 
+const sameInstant = (a, b) => isStr(a) && isStr(b) && (a === b || (Date.parse(a) === Date.parse(b) && !Number.isNaN(Date.parse(a))));
+
 function marketNumbers(d) {
   const m = d.sections && d.sections.market;
   if (!isObj(m) || m.mock === true || !Array.isArray(m.body)) return;
   const f = 'digest.json';
+  // The task stamps every section it writes with updatedAt == digest generatedAt. A recap with a different
+  // updatedAt was left unchanged this run (an older, already-live recap): exempt it entirely.
+  if (!sameInstant(m.updatedAt, d.generatedAt)) {
+    console.log('note: market recap not written this run (updatedAt != generatedAt); cross-check skipped');
+    return;
+  }
   const p = join(DIR, 'market.json');
   let mk = null;
   try { mk = JSON.parse(readFileSync(p, 'utf8')); } catch { /* treated as missing */ }

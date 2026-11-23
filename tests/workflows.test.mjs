@@ -54,6 +54,16 @@ test('market: compares without fetchedAt and keeps issue permission', () => {
   assert.match(s, /Market numbers failed/);
 });
 
+test('market: failure issue fires on any failed step and names each outcome', () => {
+  const s = read('market.yml');
+  const rep = s.slice(s.indexOf('- name: Report failure'));
+  assert.match(rep, /if: \$\{\{ failure\(\) \}\}/);
+  assert.doesNotMatch(rep, /always\(\)/);
+  for (const step of ['fetch', 'check', 'commit', 'deploy']) {
+    assert.match(rep, new RegExp(`steps\\.${step}\\.outcome`));
+  }
+});
+
 test('workflows use no leading-slash paths and no secrets', () => {
   for (const f of files) {
     const s = read(f);

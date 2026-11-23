@@ -7,7 +7,7 @@
 - Yahoo Finance public chart endpoint: `https://query1.finance.yahoo.com/v8/finance/chart/<symbol>?range=10d&interval=1d`. No key. It is unofficial and undocumented, so it can change shape, rate-limit (HTTP 429) or block cloud IPs without notice. Treat it as fragile.
 - Symbols: `^GSPC`, `^DJI`, `^IXIC`, `^TNX` (10-year yield, in percent), `CL=F` (WTI), `GC=F` (gold), `DX-Y.NYB` (dollar index).
 - Terms: personal, non-commercial use of free delayed data. Keep it to one fetch per symbol per run (7 requests per weekday).
-- Stooq now needs a key and FRED needs a free key, so Yahoo is the provisional no-key choice. Test it for a week of runs before depending on it.
+- The Yahoo endpoint is provisional: Stooq now needs a key and FRED needs a free key, so Yahoo is the only no-key choice for now. Test it for a week of runs before depending on it. A FRED key (Actions secret) is only the fallback, and only if Connor chooses to add one.
 
 ## Fallback plan
 
@@ -30,7 +30,7 @@ If Yahoo breaks, the swap is confined to `ITEMS` and `parse()` in `scripts/fetch
 ## Validation (`scripts/validate.mjs`)
 
 - `market.json`: exactly 7 items with unique known ids, all numbers finite, values above zero.
-- With `--check-market` (scheduled task only) the recap is checked against `market.json`: asOf equal; every number tied to an item named in the same sentence (value, change or changePct, magnitude only; a sentence naming no item may not quote numbers, except it inherits the previous sentence's items); direction words must agree with the sign of `change`; "flat/unchanged" needs a change of 0. Dates, ordinals, years and small bare whole numbers are not treated as quotes, but whole numbers with `%`, `$`, "points" or "basis points" are.
+- With `--check-market` (scheduled task only) a recap written this run (`sections.market.updatedAt` equals digest `generatedAt`) is checked; a recap with any other `updatedAt` was left unchanged and is exempt entirely, so a long market outage cannot block the news. The recap is checked against `market.json`: asOf equal; every number tied to an item named in the same sentence (value, change or changePct, magnitude only; a sentence naming no item may not quote numbers, except it inherits the previous sentence's items); direction verbs applied to an item ("oil rose") or any direction word beside a number tied to that item must agree with the sign of `change` (bare "higher"/"lower"/"up"/"down" with no tied number are not checked); "flat/unchanged" needs a change of 0. Dates, ordinals, years and small bare whole numbers are not treated as quotes, but whole numbers with `%`, `$`, "points" or "basis points" are.
 - The cross-check is skipped (exit 0, notice printed) when `market.json` is missing, mock, or its `asOf` is more than 4 days before today's Central date. In that case the recap may quote no numbers at all (only years and dates), so the push fails if the task wrote numbers it could not verify.
 
 ## Weekends and holidays
