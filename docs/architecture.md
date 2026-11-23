@@ -24,7 +24,7 @@ GitHub Action          -->  data/history.json    (this day in history, generated
 
 ## Hosting and paths
 
-Served at `https://block-to-globe.github.io/news-compiler/`. Always use relative paths (`data/digest.json`, never `/data/digest.json`).
+Served at `https://block-to-globe.github.io/News-Compiler/`. Always use relative paths (`data/digest.json`, never `/data/digest.json`).
 
 ## Publish workflow (P3)
 

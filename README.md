@@ -2,7 +2,7 @@
 
 A simple daily news digest, from your block to the globe. Five short sections, a "this day in history" line on top, and a KJV Bible verse at the bottom.
 
-**Live site:** https://block-to-globe.github.io/news-compiler/
+**Live site:** https://block-to-globe.github.io/News-Compiler/
 
 ## Sections
 
