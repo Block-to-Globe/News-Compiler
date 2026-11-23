@@ -17,7 +17,7 @@ Leave everything else in the file exactly as it is: `schemaVersion`. A section t
 ## Research
 
 For each of the four news sections (Local, State, Federal, International):
-- Search the outlets listed for that section in `config/sources.json`. Open the articles you rely on. If a site blocks fetching, use search snippets and headlines and say less. Never guess.
+- Start from the `entry` URLs (where present) of the outlets listed for that section in `config/sources.json`, in the listed order, skipping any marked `blocked`. Open the articles you rely on. If an outlet blocks fetching or its page is stale (nothing from the last day), move on to the next outlet in the list. If every listed outlet fails, use WebSearch with the day's date (for example `federal government news November 23 2026`) and work from headlines and snippets, saying less. Do not leave a section unchanged after trying only a few sources; leaving it unchanged is the last resort, once the listed outlets and the dated WebSearch fallback have all failed. Never guess.
 - Use stories from roughly the last 24 hours. Pick the **2 to 4** that matter most to an ordinary reader today.
 - **Local** = Shelby County, Tennessee: Memphis, Germantown, Collierville, Bartlett, Cordova, Millington, Lakeland, Arlington. County and city government (Shelby County Commission, Memphis City Council), schools, MLGW, public safety, courts, local business, weather that affects the area, local sports. Pick **2 to 4** stories.
 - **State** = Tennessee-wide: the General Assembly, the governor and state agencies, statewide courts and policy, and news from Tennessee places **outside** Shelby County. Pick **2 to 4** stories.

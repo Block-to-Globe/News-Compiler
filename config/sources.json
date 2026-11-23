@@ -1,38 +1,313 @@
 {
   "schemaVersion": 1,
   "owner": "news-ingest-engineer (Local and State entries: local-news-resolver)",
-  "notes": "Starting list from the roadmap (D6). fetch: 'untested' means the first scheduled runs should try it and record what happens here. If a site blocks fetching, use search snippets and headlines only and say less rather than guess.",
+  "notes": "fetch values: 'works', 'blocked', 'stale', 'untested'. Surveyed 2026-11-23 with WebFetch, one request per outlet entry page. Try outlets in listed order, starting from `entry` URLs, skip `blocked`, and fall back to WebSearch with the day's date (headlines and snippets only, say less). Prefer RSS entries. Market entries were not retested. Record changes here by PR.",
   "fallback": "search snippets and headlines only",
   "sections": {
     "federal": [
-      { "outlet": "AP News", "site": "apnews.com", "fetch": "untested" },
-      { "outlet": "Reuters", "site": "reuters.com", "fetch": "untested", "notes": "often blocks automated fetching" },
-      { "outlet": "NPR", "site": "npr.org", "fetch": "untested" },
-      { "outlet": "BBC News", "site": "bbc.com/news", "fetch": "untested" }
+      {
+        "outlet": "PBS NewsHour",
+        "site": "pbs.org/newshour",
+        "fetch": "works",
+        "entry": "https://www.pbs.org/newshour/feeds/rss/headlines",
+        "notes": "2026-11-23: RSS fresh (items from Nov 22). Public broadcaster."
+      },
+      {
+        "outlet": "CBS News",
+        "site": "cbsnews.com",
+        "fetch": "works",
+        "entry": "https://www.cbsnews.com/latest/rss/main",
+        "notes": "2026-11-23: RSS fresh (Nov 22)."
+      },
+      {
+        "outlet": "ABC News",
+        "site": "abcnews.com",
+        "fetch": "works",
+        "entry": "https://abcnews.com/abcnews/topstories",
+        "notes": "2026-11-23: RSS fresh (Nov 22). abcnews.go.com redirects to abcnews.com; use the abcnews.com URL."
+      },
+      {
+        "outlet": "The Hill",
+        "site": "thehill.com",
+        "fetch": "works",
+        "entry": "https://thehill.com/feed/",
+        "notes": "2026-11-23: RSS fresh (Nov 23); very long feed, only the first items are needed."
+      },
+      {
+        "outlet": "Axios",
+        "site": "axios.com",
+        "fetch": "works",
+        "entry": "https://www.axios.com/",
+        "notes": "2026-11-23: Homepage fetches; relative timestamps only (8-13 hours old)."
+      },
+      {
+        "outlet": "White House",
+        "site": "whitehouse.gov",
+        "fetch": "works",
+        "entry": "https://www.whitehouse.gov/news/",
+        "notes": "2026-11-23: Official source. News page fetches; newest items Nov 20. Use for primary-source facts, not as the only source."
+      },
+      {
+        "outlet": "Supreme Court",
+        "site": "supremecourt.gov",
+        "fetch": "works",
+        "entry": "https://www.supremecourt.gov/opinions/slipopinion/25",
+        "notes": "2026-11-23: Official orders and opinions list fetches; latest listed entries are older than a month, so only useful when the Court is in the news."
+      },
+      {
+        "outlet": "NPR",
+        "site": "npr.org",
+        "fetch": "stale",
+        "notes": "2026-11-23: npr.org/sections/news fetches but shows April 2026 items; text.npr.org is disallowed by robots."
+      },
+      {
+        "outlet": "C-SPAN",
+        "site": "c-span.org",
+        "fetch": "stale",
+        "notes": "2026-11-23: Homepage fetches but shows 2017 items."
+      },
+      {
+        "outlet": "AP News",
+        "site": "apnews.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: apnews.com/hub/politics returned SITE_BLOCKED. Use WebSearch snippets only."
+      },
+      {
+        "outlet": "BBC News",
+        "site": "bbc.com/news",
+        "fetch": "blocked",
+        "notes": "2026-11-23: feeds.bbci.co.uk RSS returned SITE_BLOCKED. Use WebSearch snippets only."
+      },
+      {
+        "outlet": "Reuters",
+        "site": "reuters.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: reuters.com/world returned SITE_BLOCKED. Use WebSearch snippets only."
+      },
+      {
+        "outlet": "USA Today",
+        "site": "usatoday.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: usatoday.com/news returned SITE_BLOCKED."
+      },
+      {
+        "outlet": "The Guardian US",
+        "site": "theguardian.com/us-news",
+        "fetch": "blocked",
+        "notes": "2026-11-23: RSS returned SITE_BLOCKED."
+      },
+      {
+        "outlet": "congress.gov",
+        "site": "congress.gov",
+        "fetch": "blocked",
+        "notes": "2026-11-23: Disallowed by robots."
+      },
+      {
+        "outlet": "State Department",
+        "site": "state.gov",
+        "fetch": "blocked",
+        "notes": "2026-11-23: robots.txt unreachable, page not fetched."
+      }
     ],
     "international": [
-      { "outlet": "AP News", "site": "apnews.com/world-news", "fetch": "untested" },
-      { "outlet": "Reuters", "site": "reuters.com/world", "fetch": "untested", "notes": "often blocks automated fetching" },
-      { "outlet": "BBC News", "site": "bbc.com/news/world", "fetch": "untested" },
-      { "outlet": "NPR", "site": "npr.org/sections/world", "fetch": "untested" }
+      {
+        "outlet": "UN News",
+        "site": "news.un.org",
+        "fetch": "works",
+        "entry": "https://news.un.org/en/",
+        "notes": "2026-11-23: Homepage fetches, November 2026 stories (no exact dates shown; dates are in story URLs). Official source."
+      },
+      {
+        "outlet": "PBS NewsHour",
+        "site": "pbs.org/newshour",
+        "fetch": "works",
+        "entry": "https://www.pbs.org/newshour/feeds/rss/headlines",
+        "notes": "2026-11-23: RSS fresh (Nov 22); mixes US and world, pick world items."
+      },
+      {
+        "outlet": "CBS News",
+        "site": "cbsnews.com",
+        "fetch": "works",
+        "entry": "https://www.cbsnews.com/latest/rss/main",
+        "notes": "2026-11-23: RSS fresh (Nov 22); mixes US and world."
+      },
+      {
+        "outlet": "ABC News",
+        "site": "abcnews.com",
+        "fetch": "works",
+        "entry": "https://abcnews.com/abcnews/topstories",
+        "notes": "2026-11-23: RSS fresh (Nov 22); mixes US and world."
+      },
+      {
+        "outlet": "NPR",
+        "site": "npr.org/sections/world",
+        "fetch": "stale",
+        "notes": "2026-11-23: npr.org/sections/news showed April 2026 items; text.npr.org disallowed by robots. Section page untested."
+      },
+      {
+        "outlet": "BBC News",
+        "site": "bbc.com/news/world",
+        "fetch": "blocked",
+        "notes": "2026-11-23: feeds.bbci.co.uk RSS returned SITE_BLOCKED. Use WebSearch snippets only."
+      },
+      {
+        "outlet": "AP News",
+        "site": "apnews.com/world-news",
+        "fetch": "blocked",
+        "notes": "2026-11-23: apnews.com returned SITE_BLOCKED. Use WebSearch snippets only."
+      },
+      {
+        "outlet": "Reuters",
+        "site": "reuters.com/world",
+        "fetch": "blocked",
+        "notes": "2026-11-23: SITE_BLOCKED. Use WebSearch snippets only."
+      },
+      {
+        "outlet": "Al Jazeera",
+        "site": "aljazeera.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: RSS returned SITE_BLOCKED."
+      },
+      {
+        "outlet": "DW",
+        "site": "dw.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: rss.dw.com returned SITE_BLOCKED."
+      },
+      {
+        "outlet": "The Guardian World",
+        "site": "theguardian.com/world",
+        "fetch": "blocked",
+        "notes": "2026-11-23: US RSS returned SITE_BLOCKED; assume same."
+      }
     ],
     "local": [
-      { "outlet": "Daily Memphian", "site": "dailymemphian.com", "fetch": "untested", "notes": "likely paywalled; P4" },
-      { "outlet": "The Commercial Appeal", "site": "commercialappeal.com", "fetch": "untested", "notes": "likely paywalled; P4" },
-      { "outlet": "WMC Action News 5", "site": "wmcactionnews5.com", "fetch": "untested", "notes": "P4" },
-      { "outlet": "WREG", "site": "wreg.com", "fetch": "untested", "notes": "P4" },
-      { "outlet": "FOX13 Memphis", "site": "fox13memphis.com", "fetch": "untested", "notes": "P4" },
-      { "outlet": "Memphis Flyer", "site": "memphisflyer.com", "fetch": "untested", "notes": "P4" }
+      {
+        "outlet": "Action News 5 (WMC)",
+        "site": "actionnews5.com",
+        "fetch": "works",
+        "entry": "https://www.actionnews5.com/news/",
+        "notes": "2026-11-23: wmcactionnews5.com now redirects to actionnews5.com (fetch the new host). Fresh Nov 23."
+      },
+      {
+        "outlet": "FOX13 Memphis",
+        "site": "fox13memphis.com",
+        "fetch": "works",
+        "entry": "https://www.fox13memphis.com/news/",
+        "notes": "2026-11-23: News page fresh (Nov 20-21)."
+      },
+      {
+        "outlet": "Daily Memphian",
+        "site": "dailymemphian.com",
+        "fetch": "works",
+        "entry": "https://dailymemphian.com/section/metro",
+        "notes": "2026-11-23: Metro section lists fresh stories (Nov 20-21); many marked Premium, so use headlines and listing only."
+      },
+      {
+        "outlet": "WREG",
+        "site": "wreg.com",
+        "fetch": "stale",
+        "notes": "2026-11-23: News page fetches but headlines look old (undated, includes a 2020 story). Retest."
+      },
+      {
+        "outlet": "Local Memphis (ABC24)",
+        "site": "localmemphis.com",
+        "fetch": "stale",
+        "notes": "2026-11-23: News page fetches but items undated and not clearly current."
+      },
+      {
+        "outlet": "Shelby County Government",
+        "site": "shelbycountytn.gov",
+        "fetch": "stale",
+        "entry": "https://www.shelbycountytn.gov/CivicAlerts.aspx",
+        "notes": "2026-11-23: Civic alerts newest item Oct 8, 2026."
+      },
+      {
+        "outlet": "MLGW",
+        "site": "mlgw.com",
+        "fetch": "stale",
+        "notes": "2026-11-23: Homepage has no dated news; mlgw.com/news untested."
+      },
+      {
+        "outlet": "The Commercial Appeal",
+        "site": "commercialappeal.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: SITE_BLOCKED."
+      },
+      {
+        "outlet": "Memphis Flyer",
+        "site": "memphisflyer.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: RSS fetch failed (client error); site pages untested."
+      }
     ],
     "state": [
-      { "outlet": "Tennessee Lookout", "site": "tennesseelookout.com", "fetch": "untested", "notes": "P4" },
-      { "outlet": "The Tennessean", "site": "tennessean.com", "fetch": "untested", "notes": "likely paywalled; P4" },
-      { "outlet": "Chattanooga Times Free Press", "site": "timesfreepress.com", "fetch": "untested", "notes": "P4" },
-      { "outlet": "Knox News", "site": "knoxnews.com", "fetch": "untested", "notes": "P4" }
+      {
+        "outlet": "Tennessee Lookout",
+        "site": "tennesseelookout.com",
+        "fetch": "works",
+        "entry": "https://tennesseelookout.com/feed/",
+        "notes": "2026-11-23: RSS fresh (Nov 23); very long feed, only first items needed."
+      },
+      {
+        "outlet": "WSMV",
+        "site": "wsmv.com",
+        "fetch": "works",
+        "entry": "https://www.wsmv.com/news/",
+        "notes": "2026-11-23: News page fresh (Nov 23)."
+      },
+      {
+        "outlet": "Chattanooga Times Free Press",
+        "site": "timesfreepress.com",
+        "fetch": "works",
+        "entry": "https://www.timesfreepress.com/news/",
+        "notes": "2026-11-23: News page fresh (Nov 22-23)."
+      },
+      {
+        "outlet": "Tennessee Governor",
+        "site": "tn.gov",
+        "fetch": "stale",
+        "entry": "https://www.tn.gov/governor/news.html",
+        "notes": "2026-11-23: Governor news page newest item Nov 3, 2026."
+      },
+      {
+        "outlet": "WKRN",
+        "site": "wkrn.com",
+        "fetch": "stale",
+        "notes": "2026-11-23: tennessee-news page showed 2019 items."
+      },
+      {
+        "outlet": "WBIR",
+        "site": "wbir.com",
+        "fetch": "blocked",
+        "notes": "2026-11-23: Fetch failed (client error)."
+      },
+      {
+        "outlet": "The Tennessean",
+        "site": "tennessean.com",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; likely paywalled. Previously blocked in run c050c49."
+      },
+      {
+        "outlet": "Knox News",
+        "site": "knoxnews.com",
+        "fetch": "untested",
+        "notes": "2026-11-23: Not tested; previously blocked in run c050c49."
+      }
     ],
     "market": [
-      { "outlet": "AP News business", "site": "apnews.com/business", "fetch": "untested", "notes": "P5. Numbers come from market.json, never from articles" },
-      { "outlet": "Reuters markets", "site": "reuters.com/markets", "fetch": "untested", "notes": "P5" }
+      {
+        "outlet": "AP News business",
+        "site": "apnews.com/business",
+        "fetch": "untested",
+        "notes": "P5. Numbers come from market.json, never from articles"
+      },
+      {
+        "outlet": "Reuters markets",
+        "site": "reuters.com/markets",
+        "fetch": "untested",
+        "notes": "P5"
+      }
     ]
   }
 }
