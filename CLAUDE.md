@@ -1,6 +1,6 @@
 # Block to Globe (repo: News Compiler)
 
-A simple daily news digest site: Local (Shelby County, TN), State (Tennessee), Federal, International, Market recap, a "this day in history" line on top, and a KJV Bible verse at the bottom. Live at https://block-to-globe.github.io/news-compiler/
+A simple daily news digest site: Local (Shelby County, TN), State (Tennessee), Federal, International, Market recap, a "this day in history" line on top, and a KJV Bible verse at the bottom. Live at https://block-to-globe.github.io/News-Compiler/ (the repo is currently named with capitals, and Pages paths are case-sensitive)
 
 Owner: Connor. Style for anything written on his behalf: informal and lighthearted, but fact-based and straight to the point.
 
