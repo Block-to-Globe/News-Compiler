@@ -14,11 +14,11 @@ Setup:
 - `README`, `LICENSE`, `.gitignore`, `CLAUDE.md`, `docs/`, `.claude/agents/`, issue labels per milestone.
 
 Workflows:
-- `publish.yml`: triggered on pushes touching `data/`, plus a backup cron ~30 minutes after the morning task. Steps: validate → fetch ESV text → write `scripture.json` → deploy. Commits made with the built-in `GITHUB_TOKEN` don't trigger other workflows, so everything happens in this one workflow. On validation failure: skip deploy, revert the bad data commit, open an issue.
+- `publish.yml`: triggered on pushes touching `data/`, plus a backup cron ~30 minutes after the morning task. Steps: validate → fetch KJV text → write `scripture.json` → deploy. Commits made with the built-in `GITHUB_TOKEN` don't trigger other workflows, so everything happens in this one workflow. On validation failure: skip deploy, revert the bad data commit, open an issue.
 - `market.yml` (weekdays ~21:30 UTC) and `history.yml` (daily ~11:30 UTC). They commit only if their file changed, with a concurrency guard so two runs can't collide.
 - Use `permissions:` with the minimum needed. Keep workflows small and readable.
 
 Secrets and access:
-- `ESV_API_KEY` (and any market-data key, only if Connor approves one) in GitHub Actions secrets only. There is no Anthropic API key. Confirm nothing sensitive appears in logs, the repo, or client code.
+- Any market-data key (only if Connor approves one) goes in GitHub Actions secrets only. The KJV text source needs no key. There is no Anthropic API key. Confirm nothing sensitive appears in logs, the repo, or client code.
 - The scheduled Claude task needs push access to the repo. Set it up, confirm it can push only `data/digest.json`, and test one full unattended run end to end. Scheduled runs can stall if an action needs approval, so check the task's permission setting and tell Connor what it got.
 - Never commit generated secrets.

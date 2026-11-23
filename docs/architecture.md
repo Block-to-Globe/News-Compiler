@@ -5,7 +5,7 @@ Static site on GitHub Pages. No server, no build step, no framework, no API key.
 ```
 Scheduled Claude task  -->  data/digest.json     (narrative: 4 news sections, market narrative, scripture reference)
 GitHub Action          -->  data/market.json     (exact market numbers)
-GitHub Action          -->  data/scripture.json  (exact ESV text for the chosen reference)
+GitHub Action          -->  data/scripture.json  (exact KJV text for the chosen reference)
 GitHub Action          -->  data/history.json    (this day in history)
                               |
                          index.html merges the four files in the browser
@@ -31,7 +31,7 @@ Served at `https://block-to-globe.github.io/news-compiler/`. Always use relative
 One workflow does everything, because commits made with an Action's built-in token do not trigger other workflows:
 
 1. Validate all data files against `docs/digest-schema.md`.
-2. Fetch ESV text for the reference in `digest.json` and write `scripture.json`.
+2. Fetch KJV text for the reference in `digest.json` and write `scripture.json`.
 3. Deploy to Pages.
 4. If validation fails: do not deploy, revert the bad data commit, open an issue. The last good version stays live.
 
