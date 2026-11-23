@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T12:50:00-06:00",
+  "generatedAt": "2026-11-23T13:13:28-06:00",
   "sections": {
     "local": {
-      "headline": "Shelby County Commission weighs data center rules; local KFC owner files bankruptcy",
+      "headline": "Commission to vote on data center rules; Millington launches $2 ride service",
       "body": [
-        "The Shelby County Commission is set to vote on a framework for land-use rules covering data centers, according to the Daily Memphian. A separate ordinance under consideration could bar new data center permits for up to a year.",
-        "A Memphis-area KFC franchisee has filed for bankruptcy in a Texas court, WMC Action News 5 reported. Several Mid-South locations are closed or at risk of closing. Also this week, Memphis-Shelby County Schools is working with the Mid-South Food Bank on a drive-thru mobile food pantry ahead of Thanksgiving."
+        "The Shelby County Commission is set to vote on a framework for land-use rules covering data centers, according to the Daily Memphian. The Daily Memphian also reported that MLGW's CEO discussed proposed rate increases.",
+        "FOX13 Memphis reported that an on-demand ride service costing $2 a trip starts in Millington on Monday. Action News 5 said the week will start cooler and brisk, with rain possible around Wednesday's Thanksgiving travel."
       ],
       "sources": [
         {
@@ -15,58 +15,131 @@
           "url": "https://dailymemphian.com/section/metroshelby-county/article/68805/shelby-county-commission-preview-data-center-land-use-regulation"
         },
         {
-          "title": "List of Mid-South KFC locations closing or at risk after franchisee bankruptcy",
-          "outlet": "WMC Action News 5",
-          "url": "https://www.actionnews5.com/2026/11/20/heres-list-mid-south-kfc-locations-closingat-risk-closing-after-franchisee-files-bankruptcy/"
+          "title": "MLGW leader discusses proposed rate increases",
+          "outlet": "The Daily Memphian",
+          "url": "https://dailymemphian.com/section/business/article/68779/mlgw-rate-hikes-memphis-light-gas-and-water-utility-hike"
         },
         {
-          "title": "MSCS to host mobile food pantry before Thanksgiving",
+          "title": "Millington on-demand ride service launches Monday",
+          "outlet": "FOX13 Memphis",
+          "url": "https://www.fox13memphis.com/news/need-a-ride-in-millington-2-service-launches-monday/article_2d37d2b1-be01-4c85-b582-9349c330c2d5.html"
+        },
+        {
+          "title": "Forecast for a cooler week with Wednesday rain",
           "outlet": "WMC Action News 5",
-          "url": "https://www.actionnews5.com/2026/11/22/mscs-host-mobile-food-pantry-ahead-thanksgiving/"
+          "url": "https://www.actionnews5.com/2026/11/23/first-alert-forecast-cooler-brisk-early-week-rain-impacts-wednesday-travel/"
         }
       ],
-      "updatedAt": "2026-11-23T12:50:00-06:00"
+      "updatedAt": "2026-11-23T13:13:28-06:00"
     },
     "state": {
-      "headline": "Tennessee lawmakers file tax bills; SEC fines University of Tennessee",
+      "headline": "Blackburn team forms DCS advisory group; state returns record unclaimed property",
       "body": [
-        "Tennessee lawmakers have filed bills on property tax caps and grocery tax cuts, according to the Chattanooga Times Free Press. Full details were not available to this digest.",
-        "The Southeastern Conference announced Sunday that the University of Tennessee will be fined $250,000 over fans throwing golf balls during a game against LSU, the Times Free Press reported. Little other statewide news was confirmed today."
+        "The transition team for incoming Gov. Blackburn has formed a four-person advisory group, led by former Department of Children's Services leader Jim Henry, to review the department, according to the Tennessee Lookout. The Chattanooga Times Free Press reported that the state returned $111.5 million in unclaimed property to 169,303 owners, a record.",
+        "WSMV reported that death row attorneys are asking for a wider review of Tennessee's execution procedures after two executions this year that they describe as \"botched\"."
       ],
-      "quiet": true,
       "sources": [
         {
-          "title": "Lawmakers file property tax cap and grocery tax cut bills",
-          "outlet": "Chattanooga Times Free Press",
-          "url": "https://www.timesfreepress.com/news/2026/nov/20/tennessee-lawmakers-file-property-tax-caps-grocery-tax-cuts/"
+          "title": "Blackburn names advisory group to review DCS",
+          "outlet": "Tennessee Lookout",
+          "url": "https://tennesseelookout.com/2026/11/23/blackburn-taps-child-welfare-advisory-group-to-review-tennessee-department-of-childrens-services/"
         },
         {
-          "title": "SEC fine over golf balls thrown at LSU game",
+          "title": "State returns record amount of unclaimed property",
           "outlet": "Chattanooga Times Free Press",
-          "url": "https://www.timesfreepress.com/news/2026/nov/22/tennessee-fined-250000-for-throwing-golf-balls-in-lsu-game/"
+          "url": "https://www.timesfreepress.com/news/2026/nov/23/record-set-after-more-than-110m-returned-to-tennesseeans-from-state-treasury/"
+        },
+        {
+          "title": "Attorneys seek wider review of execution procedures",
+          "outlet": "WSMV",
+          "url": "https://www.wsmv.com/2026/11/23/death-row-attorneys-push-expanded-review-tennessees-execution-procedures-after-2-botched-executions-this-year/"
         }
       ],
-      "updatedAt": "2026-11-23T12:50:00-06:00"
+      "updatedAt": "2026-11-23T13:13:28-06:00"
     },
     "federal": {
-      "mock": true
+      "headline": "Democrat projected to win North Carolina House race; Delta delays hit holiday travel",
+      "body": [
+        "CBS News and ABC News reported that Democrat Chuck Hubbard is projected to defeat Republican Rep. Virginia Foxx in North Carolina's 5th District. ABC News said the projection followed a recount.",
+        "PBS NewsHour, CBS News and ABC News reported that a technical problem at Delta Air Lines caused delays on Sunday, mostly at its Atlanta hub, as Americans began Thanksgiving travel. PBS NewsHour said the FAA issued a ground stop."
+      ],
+      "sources": [
+        {
+          "title": "Projection of Hubbard win over Foxx",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/democrat-chuck-hubbard-defeats-gop-rep-virginia-foxx-north-carolina/"
+        },
+        {
+          "title": "Hubbard projected to win after recount",
+          "outlet": "ABC News",
+          "url": "https://abcnews.com/Politics/democrat-chuck-hubbard-wins-recount-north-carolina-us/story?id=138362634"
+        },
+        {
+          "title": "Delta automation problem delays holiday travelers",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/nation/automation-system-problem-at-delta-causes-flight-delays-as-americans-travel-for-thanksgiving"
+        },
+        {
+          "title": "Delta delays tied to a baggage system issue",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/delta-air-lines-nationwide-delays-amid-baggage-network-system-issue/"
+        },
+        {
+          "title": "Equipment problems delay Delta flights",
+          "outlet": "ABC News",
+          "url": "https://abcnews.com/US/equipment-outage-atlanta-causes-1300-delta-flight-delays/story?id=138360900"
+        }
+      ],
+      "updatedAt": "2026-11-23T13:13:28-06:00"
     },
     "international": {
-      "mock": true
+      "headline": "UN climate talks end without a deal; Ukraine and Libya attacks draw UN attention",
+      "body": [
+        "PBS NewsHour and UN News reported that the COP31 climate talks ended without an agreement. Delegates told PBS NewsHour the draft lacked wording on fossil fuels, and UN Secretary-General Guterres said the science is clear.",
+        "The UN Security Council met on attacks on Ukraine's power grid and Black Sea shipping, UN News reported. The Associated Press, via the Chattanooga Times Free Press, said a Russian strike near Kyiv hit an apartment building and killed at least three people. CBS News reported suspected Ukrainian drones struck a Russian warship at a naval base in Benghazi, Libya, and UN News said the UN mission there urged an investigation of attacks at the port."
+      ],
+      "sources": [
+        {
+          "title": "Leaders explain why climate talks ended without a deal",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/world/in-their-own-words-leaders-at-un-climate-talks-discuss-why-negotiations-ended-without-deal"
+        },
+        {
+          "title": "COP31 closes without a climate pact",
+          "outlet": "UN News",
+          "url": "https://news.un.org/en/story/2026/11/1168855"
+        },
+        {
+          "title": "Security Council meets on attacks in Ukraine",
+          "outlet": "UN News",
+          "url": "https://news.un.org/en/story/2026/11/1168859"
+        },
+        {
+          "title": "Russian strike near Kyiv hits apartment building",
+          "outlet": "Chattanooga Times Free Press (AP)",
+          "url": "https://www.timesfreepress.com/news/2026/nov/22/russian-attack-near-ukraines-capital-strikes-apartment-building-killing-3-and-burying-others/"
+        },
+        {
+          "title": "Warship reportedly struck at Libyan naval base",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/russian-warship-struck-suspected-ukrainian-sea-drones-benghazi-naval-base-libya-officials/"
+        }
+      ],
+      "updatedAt": "2026-11-23T13:13:28-06:00"
     },
     "market": {
       "mock": true
     }
   },
   "scripture": {
-    "reference": "Psalm 145:15-16",
-    "theme": "provision"
+    "reference": "Psalm 147:3",
+    "theme": "comfort"
   },
   "notes": [
-    "federal: left unchanged, AP and BBC blocked, NPR page stale",
-    "international: left unchanged, AP and BBC blocked, NPR page stale",
     "market: left unchanged, no fresh numbers (market.json is mock)",
-    "local/state: headline-level sourcing only; Tennessean, Knox News blocked",
-    "scripture: history had only Psalm 46:1 comfort"
+    "federal/international: feed listings and headline-level gists only; AP, BBC, Reuters blocked",
+    "international: Ukraine and Libya items from listings only; Kyiv strike is AP via Times Free Press",
+    "local/state: Daily Memphian items premium, listing text only; Action News 5, FOX13, WSMV, Lookout, Times Free Press worked",
+    "scripture: deaths in Ukraine strike, so comfort theme; history read from git"
   ]
 }
