@@ -1,12 +1,52 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T06:00:00-06:00",
+  "generatedAt": "2026-11-23T12:50:00-06:00",
   "sections": {
     "local": {
-      "mock": true
+      "headline": "Shelby County Commission weighs data center rules; local KFC owner files bankruptcy",
+      "body": [
+        "The Shelby County Commission is set to vote on a framework for land-use rules covering data centers, according to the Daily Memphian. A separate ordinance under consideration could bar new data center permits for up to a year.",
+        "A Memphis-area KFC franchisee has filed for bankruptcy in a Texas court, WMC Action News 5 reported. Several Mid-South locations are closed or at risk of closing. Also this week, Memphis-Shelby County Schools is working with the Mid-South Food Bank on a drive-thru mobile food pantry ahead of Thanksgiving."
+      ],
+      "sources": [
+        {
+          "title": "Commission preview of data center land-use rules",
+          "outlet": "The Daily Memphian",
+          "url": "https://dailymemphian.com/section/metroshelby-county/article/68805/shelby-county-commission-preview-data-center-land-use-regulation"
+        },
+        {
+          "title": "List of Mid-South KFC locations closing or at risk after franchisee bankruptcy",
+          "outlet": "WMC Action News 5",
+          "url": "https://www.actionnews5.com/2026/11/20/heres-list-mid-south-kfc-locations-closingat-risk-closing-after-franchisee-files-bankruptcy/"
+        },
+        {
+          "title": "MSCS to host mobile food pantry before Thanksgiving",
+          "outlet": "WMC Action News 5",
+          "url": "https://www.actionnews5.com/2026/11/22/mscs-host-mobile-food-pantry-ahead-thanksgiving/"
+        }
+      ],
+      "updatedAt": "2026-11-23T12:50:00-06:00"
     },
     "state": {
-      "mock": true
+      "headline": "Tennessee lawmakers file tax bills; SEC fines University of Tennessee",
+      "body": [
+        "Tennessee lawmakers have filed bills on property tax caps and grocery tax cuts, according to the Chattanooga Times Free Press. Full details were not available to this digest.",
+        "The Southeastern Conference announced Sunday that the University of Tennessee will be fined $250,000 over fans throwing golf balls during a game against LSU, the Times Free Press reported. Little other statewide news was confirmed today."
+      ],
+      "quiet": true,
+      "sources": [
+        {
+          "title": "Lawmakers file property tax cap and grocery tax cut bills",
+          "outlet": "Chattanooga Times Free Press",
+          "url": "https://www.timesfreepress.com/news/2026/nov/20/tennessee-lawmakers-file-property-tax-caps-grocery-tax-cuts/"
+        },
+        {
+          "title": "SEC fine over golf balls thrown at LSU game",
+          "outlet": "Chattanooga Times Free Press",
+          "url": "https://www.timesfreepress.com/news/2026/nov/22/tennessee-fined-250000-for-throwing-golf-balls-in-lsu-game/"
+        }
+      ],
+      "updatedAt": "2026-11-23T12:50:00-06:00"
     },
     "federal": {
       "mock": true
@@ -19,10 +59,14 @@
     }
   },
   "scripture": {
-    "reference": "Psalm 46:1",
-    "theme": "comfort"
+    "reference": "Psalm 145:15-16",
+    "theme": "provision"
   },
   "notes": [
-    "Sections marked mock are not live yet. Replaced by the scheduled task: Federal and International in P3, Local and State in P4, Market in P5."
+    "federal: left unchanged, AP and BBC blocked, NPR page stale",
+    "international: left unchanged, AP and BBC blocked, NPR page stale",
+    "market: left unchanged, no fresh numbers (market.json is mock)",
+    "local/state: headline-level sourcing only; Tennessean, Knox News blocked",
+    "scripture: history had only Psalm 46:1 comfort"
   ]
 }
