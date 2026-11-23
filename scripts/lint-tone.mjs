@@ -22,7 +22,7 @@ for (const [k, s] of Object.entries(d.sections || {})) {
   const parts = [['headline', s.headline], ...(s.body || []).map((b, i) => ['body[' + i + ']', b])];
   for (const [where, t] of parts) {
     if (typeof t !== 'string') continue;
-    for (const [re, why] of RULES) { const m = t.match(re); if (m) flags.push(`${k}.${where}: "${m[0]}" (${why})`); }
+    for (const [re, why] of RULES) for (const m of t.matchAll(new RegExp(re.source, re.flags + 'g'))) flags.push(`${k}.${where}: "${m[0]}" (${why})`);
   }
 }
 if (flags.length) { console.error('Tone lint flagged:'); for (const f of flags) console.error('  - ' + f); process.exit(1); }
