@@ -1,9 +1,17 @@
 name: Market numbers
 
 # Fetches the day's closing numbers into data/market.json (the only writer of that file).
-# Runs after the US close on weekdays. Commits only when the file changed, then asks
-# the publish workflow to deploy (commits made with the built-in token do not trigger it).
-# If the source fails, nothing is committed and the last good file stays.
+# Runs after the US close on weekdays.
+#
+# Commits only when the numbers changed. fetchedAt changes on every run, so it is ignored
+# in the comparison: a holiday or a repeat run with the same closes makes no commit and no deploy.
+# Then it asks the publish workflow to deploy (commits made with the built-in token do not trigger it).
+# If the source fails or the file is invalid, nothing is committed, the last good file stays,
+# and an issue "Market numbers failed" is opened (or a comment is added to the open one).
+#
+# Requirements for the bot push:
+# - Repo Settings > Actions > General > Workflow permissions: "Read and write permissions".
+# - No branch protection on main that blocks github-actions[bot] from pushing (or an exception for it).
 
 on:
   schedule:
@@ -14,6 +22,7 @@ on:
 permissions:
   contents: write
   actions: write
+  issues: write
 
 concurrency:
   group: market
@@ -29,15 +38,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Fetch numbers
-        run: node scripts/fetch-market.mjs --out data/market.json
+        id: fetch
+        run: node scripts/fetch-market.mjs --out "$RUNNER_TEMP/market.json"
+
       - name: Check the file
-        run: node scripts/validate.mjs --only market
-      - name: Commit if changed
+        id: check
+        run: node scripts/validate.mjs --dir "$RUNNER_TEMP" --only market
+
+      - name: Commit if the numbers changed
         id: commit
         run: |
-          if git diff --quiet -- data/market.json; then
-            echo "No change."; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          cp "$RUNNER_TEMP/market.json" data/market.json
+          # Compare everything except fetchedAt, with sorted keys so formatting does not matter.
+          old=$(git show HEAD:data/market.json 2>/dev/null | jq -S 'del(.fetchedAt)' || echo "null")
+          new=$(jq -S 'del(.fetchedAt)' data/market.json)
+          if [ "$old" = "$new" ]; then
+            echo "Only fetchedAt (or formatting) changed. Nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -46,6 +66,20 @@ jobs:
           git pull --rebase origin main
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
+
       - name: Deploy
-        if: steps.commit.outputs.changed == 'true'
+        if: ${{ steps.commit.outputs.changed == 'true' }}
         run: gh workflow run publish.yml --ref main
+
+      # Reports a failed fetch or validation. Avoids a duplicate issue by commenting on the open one.
+      - name: Report failure
+        if: ${{ always() && (steps.fetch.outcome == 'failure' || steps.check.outcome == 'failure') }}
+        run: |
+          title="Market numbers failed"
+          number=$(gh issue list --repo "${{ github.repository }}" --state open --search "$title in:title" --json number --jq '.[0].number // empty')
+          body="The market fetch or check failed in run ${{ github.run_id }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). The last good data/market.json is still live. Often this is a Yahoo Finance outage; re-run the workflow once the source is back."
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --repo "${{ github.repository }}" --body "$body"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "$title" --body "$body"
+          fi

@@ -278,6 +278,58 @@ test('fetch-market: weekend and holiday status', async () => {
   assert.equal(m.marketStatus, 'holiday'); assert.match(m.note, /closed/); rmSync(r.dir, { recursive: true });
 });
 
+// Bars at 21:00Z are 4pm ET. Helper to read the written file.
+const readOut = (r) => JSON.parse(readFileSync(r.out, 'utf8'));
+
+test('fetch-market: a lagging source on a weekday evening is called a holiday only after 16:30 ET', async () => {
+  // Tue 2026-11-24 21:30Z = 16:30 ET, latest bar is Mon: claim holiday.
+  let r = await runMarket(goodHandler(['2026-11-20', '2026-11-23']), '2026-11-24T21:30:00Z');
+  assert.equal(readOut(r).marketStatus, 'holiday'); assert.match(readOut(r).note, /closed today/); rmSync(r.dir, { recursive: true });
+  // Tue 2026-11-24 20:00Z = 15:00 ET: too early to say anything. No note.
+  r = await runMarket(goodHandler(['2026-11-20', '2026-11-23']), '2026-11-24T20:00:00Z');
+  let m = readOut(r); assert.equal(m.marketStatus, 'open'); assert.equal(m.note, undefined); assert.equal(m.asOf, '2026-11-23'); rmSync(r.dir, { recursive: true });
+  // Tue 16:29 ET (21:29Z): still no claim.
+  r = await runMarket(goodHandler(['2026-11-20', '2026-11-23']), '2026-11-24T21:29:00Z');
+  m = readOut(r); assert.equal(m.note, undefined); rmSync(r.dir, { recursive: true });
+});
+
+test('fetch-market: weekend after a fresh Friday close carries the weekend note and Friday asOf', async () => {
+  const r = await runMarket(goodHandler(['2026-11-19', '2026-11-20']), '2026-11-22T15:00:00Z'); // Sunday
+  const m = readOut(r); assert.equal(m.asOf, '2026-11-20'); assert.equal(m.marketStatus, 'weekend'); assert.match(m.note, /last close/);
+  rmSync(r.dir, { recursive: true });
+});
+
+test('fetch-market drops a latest bar that is today and not yet closed', async () => {
+  // Run at 14:00 ET on Tue the 24th; the source already shows a live 24th bar.
+  const r = await runMarket(goodHandler(['2026-11-23', '2026-11-24']), '2026-11-24T19:00:00Z');
+  assert.equal(r.code, 1, 'only one complete bar remains'); assert.equal(existsSync(r.out), false); rmSync(r.dir, { recursive: true });
+  const r2 = await runMarket((q, s) => {
+    const sym = decodeURIComponent(q.url.split('/chart/')[1].split('?')[0]); const c = CLOSES[sym];
+    s.end(JSON.stringify(chart(['2026-11-20', '2026-11-23', '2026-11-24'], [c[0], c[1], c[1] + 99])));
+  }, '2026-11-24T19:00:00Z');
+  const m = readOut(r2); assert.equal(m.asOf, '2026-11-23'); assert.equal(m.items.find((i) => i.id === 'sp500').value, 5050);
+  assert.equal(m.marketStatus, 'open'); rmSync(r2.dir, { recursive: true });
+});
+
+test('fetch-market drops a latest bar with a null close', async () => {
+  const r = await runMarket((q, s) => {
+    const sym = decodeURIComponent(q.url.split('/chart/')[1].split('?')[0]); const c = CLOSES[sym];
+    s.end(JSON.stringify(chart(['2026-11-20', '2026-11-21', '2026-11-24'], [c[0], c[1], null])));
+  }, '2026-11-24T21:30:00Z');
+  const m = readOut(r); assert.equal(m.asOf, '2026-11-21'); assert.equal(m.items[0].value, 5050); rmSync(r.dir, { recursive: true });
+});
+
+test('fetch-market: a symbol more than 3 days behind the S&P 500 aborts, 3 days is allowed', async () => {
+  const mk = (gap) => (q, s) => {
+    const sym = decodeURIComponent(q.url.split('/chart/')[1].split('?')[0]);
+    s.end(JSON.stringify(chart(sym === 'GC=F' ? gap : ['2026-11-20', '2026-11-24'], CLOSES[sym])));
+  };
+  let r = await runMarket(mk(['2026-11-17', '2026-11-20']));
+  assert.equal(r.code, 1); assert.match(r.err, /far from/); assert.equal(existsSync(r.out), false); rmSync(r.dir, { recursive: true });
+  r = await runMarket(mk(['2026-11-18', '2026-11-21']));
+  assert.equal(r.code, 0, r.err); rmSync(r.dir, { recursive: true });
+});
+
 for (const [name, handler] of [
   ['an HTTP error', (q, s) => { s.statusCode = 429; s.end('{}'); }],
   ['bad JSON', (q, s) => s.end('nope')],
@@ -293,6 +345,8 @@ for (const [name, handler] of [
 
 // ---------- market narrative vs market.json ----------
 
+const NOW_OK = '2026-11-23T12:00:00Z'; // two days after the fixture asOf
+const check = (d, now = NOW_OK) => validate(d, ['--only', 'digest', '--check-market', '--now', now]);
 function liveMarketSandbox(bodyText) {
   const d = sandbox();
   const r = (cpSync(join(root, 'data/market.json'), join(d, 'data/market.json')), 0);
@@ -302,30 +356,112 @@ function liveMarketSandbox(bodyText) {
 }
 test('market narrative: numbers that match market.json pass', () => {
   const d = liveMarketSandbox('The S&P 500 rose 1.00% to 1,000.00 on Friday. Oil gained 0.84% to $60.00 and the dollar index held at 100.');
-  const r = validate(d, ['--only', 'digest', '--check-market']);
+  const r = check(d);
   assert.equal(r.status, 0, r.stderr); rmSync(d, { recursive: true });
 });
 test('market narrative: a number not in market.json fails', () => {
   const d = liveMarketSandbox('The S&P 500 rose 1.7% to 1,000.00 on Friday.');
-  const r = validate(d, ['--only', 'digest', '--check-market']);
+  const r = check(d);
   assert.equal(r.status, 1); assert.match(r.stderr, /1\.7/); rmSync(d, { recursive: true });
 });
 test('market narrative: asOf mismatch fails', () => {
   const d = liveMarketSandbox('Stocks were mixed.');
   edit(d, 'digest.json', (g) => { g.sections.market.asOf = '2026-11-20'; });
-  const r = validate(d, ['--only', 'digest', '--check-market']);
+  const r = check(d);
   assert.equal(r.status, 1); assert.match(r.stderr, /asOf/); rmSync(d, { recursive: true });
-});
-test('market narrative: live section with mock market.json fails', () => {
-  const d = liveMarketSandbox('Stocks were mixed.');
-  edit(d, 'market.json', (m) => { m.mock = true; });
-  assert.equal(validate(d, ['--only', 'digest', '--check-market']).status, 1); rmSync(d, { recursive: true });
 });
 
 test('market narrative cross-check is off unless --check-market is passed (deploys never fail on it)', () => {
   const d = liveMarketSandbox('The S&P 500 rose 9.9% on Friday.');
   assert.equal(validate(d, ['--only', 'digest']).status, 0);
   rmSync(d, { recursive: true });
+});
+
+
+// Fixture: sp500 1000 (+10, +1.00%), dow 2000 (-20, -1.00%), nasdaq 3000 (0, 0%), us10y 4.00 (+0.01, +0.25%),
+// wti 60 (+0.5, +0.84%), gold 2000 (-5, -0.25%), dxy 100 (+0.1, +0.1%).
+const recap = (t) => { const d = liveMarketSandbox(t); const r = check(d); rmSync(d, { recursive: true }); return r; };
+const goodRecaps = [
+  'The S&P 500 rose 1% on Friday, closing at 1,000.00.',
+  'The Dow fell 1.00% to 2,000, down 20 points.',
+  'The Dow slipped 20.00 points while the S&P 500 climbed 10 points.',
+  'The Dow lost 1% on Nov. 21 (Friday), and the Nasdaq was flat at 3,000.00.',
+  'Gold dropped 0.25% to $2,000.00, down $5. Crude oil rose 0.84% to $60.',
+  'The 10-year Treasury yield rose to 4.00%, up 1 basis point.',
+  'The 10-year yield edged up 0.01 percentage points. It closed at 4%.',
+  'Oil gained 0.8% to $60.0 in 2026 trading, the dollar index up 0.1%.',
+  'The Dow fell. It lost 1.0% on the day.',                 // second sentence inherits the Dow
+  'Stocks were mixed on Friday, Nov. 21, 2026, with 3 of 4 gauges moving.',
+  'The Dow is down -1.00% and the S&P 500 is up +1.00%.',
+  'The Nasdaq was flat on Friday.',
+  'The Dow declined 2,000 points?',                         // matches value; strict number rules are not about prose
+];
+for (const t of goodRecaps.slice(0, -1)) test(`market narrative passes: ${t.slice(0, 50)}`, () => { const r = recap(t); assert.equal(r.status, 0, r.stderr); });
+
+const badRecaps = [
+  ['small whole percent is checked', 'The S&P 500 rose 2% on Friday.', /2%.*S&P 500/],
+  ['dollar amount is checked', 'Oil gained 0.84% to $61 a barrel.', /\$61/],
+  ['number tied to the wrong item', 'The Dow rose 10 points.', /10/],
+  ['number with no item named', 'Stocks fell 1.00% on Friday.', /names no market item/],
+  ['carried item still checked', 'The Dow fell. It lost 7% on the day.', /7%/],
+  ['rose but fell', 'The Dow rose 1.00% on Friday.', /Dow.*"rose".*down/],
+  ['fell but rose', 'Oil fell 0.84% to $60.00.', /Oil.*"fell".*up/],
+  ['flat item said to rise', 'The Nasdaq rose on Friday.', /Nasdaq.*"rose".*unchanged/],
+  ['direction per item in a mixed sentence', 'The S&P 500 fell while the Dow rose.', /"fell"|"rose"/],
+  ['flat said of a mover', 'The Dow was flat on Friday.', /Dow.*"flat"/],
+  ['rounding must match', 'The S&P 500 rose 1.5% on Friday.', /1\.5%/],
+  ['yield value wrong', 'The 10-year yield rose to 4.25%.', /4\.25%/],
+  ['basis points wrong', 'The 10-year yield rose 5 basis points.', /5 basis points/],
+  ['bare large number wrong', 'The Dow closed at 2,500.', /2,500/],
+  ['dxy value wrong', 'The dollar index rose 0.5%.', /0\.5%/],
+];
+for (const [name, t, re] of badRecaps) test(`market narrative fails: ${name}`, () => {
+  const r = recap(t); assert.equal(r.status, 1, 'expected a failure for: ' + t); assert.match(r.stderr, re);
+});
+
+test('market narrative: failures are one line each', () => {
+  const r = recap('The S&P 500 rose 2%. Gold fell 9%.');
+  assert.equal(r.status, 1);
+  assert.equal(r.stderr.split('\n').filter((l) => l.startsWith('  - ')).length, 2);
+});
+
+test('market narrative: cross-check skipped (exit 0, notice) for mock, missing or stale market.json when the recap quotes no numbers', () => {
+  const body = "Stocks ended mixed at Friday's close on Nov. 21, 2026.";
+  let d = liveMarketSandbox(body); edit(d, 'market.json', (m) => { m.mock = true; });
+  const r = check(d); assert.equal(r.status, 0, r.stderr); assert.match(r.stdout, /skipped/); rmSync(d, { recursive: true });
+  d = liveMarketSandbox(body); rmSync(join(d, 'data/market.json'));
+  assert.equal(check(d).status, 0); rmSync(d, { recursive: true });
+  d = liveMarketSandbox(body); edit(d, 'digest.json', (g) => { g.sections.market.asOf = '2026-11-10'; });
+  assert.equal(check(d, '2026-11-26T12:00:00Z').status, 0, 'asOf 5 days before today'); rmSync(d, { recursive: true });
+});
+test('market narrative: staleness is asOf vs the Central date (4 days fresh, 5 stale), not fetchedAt', () => {
+  let d = liveMarketSandbox('The S&P 500 rose 9.9% on Friday.'); edit(d, 'market.json', (m) => { m.fetchedAt = '2020-01-01T00:00:00Z'; });
+  assert.equal(check(d, '2026-11-25T23:00:00Z').status, 1, 'Central 11-25 is 4 days after 11-21: still checked'); rmSync(d, { recursive: true });
+  d = liveMarketSandbox('The S&P 500 rose 9.9% on Friday.');
+  const r5 = check(d, '2026-11-26T07:00:00Z'); assert.equal(r5.status, 1, '01:00 Central on 11-26 is 5 days: skipped, and a quoted number then fails'); assert.match(r5.stderr, /cannot be checked/); rmSync(d, { recursive: true });
+  d = liveMarketSandbox('Stocks were mixed.');
+  assert.equal(check(d, '2026-11-26T07:00:00Z').status, 0, 'skipped, no numbers quoted'); assert.equal(check(d, '2026-11-26T03:00:00Z').status, 0, 'checked, nothing to contradict'); rmSync(d, { recursive: true });
+});
+test('market narrative: when the check is skipped, a recap that quotes numbers fails', () => {
+  for (const mut of [(d) => edit(d, 'market.json', (m) => { m.mock = true; }), (d) => rmSync(join(d, 'data/market.json'))]) {
+    const d = liveMarketSandbox('The S&P 500 rose 1% to 1,000.00 on Nov. 21, 2026.'); mut(d);
+    const r = check(d); assert.equal(r.status, 1); assert.match(r.stderr, /quotes 1,000\.00/); assert.match(r.stderr, /quotes 1,/);
+    rmSync(d, { recursive: true });
+  }
+  const d = liveMarketSandbox('Stocks fell 2 percent.'); edit(d, 'market.json', (m) => { m.mock = true; });
+  assert.equal(check(d).status, 1); rmSync(d, { recursive: true });
+});
+test('market narrative: fresh market.json with a different asOf still fails', () => {
+  const d = liveMarketSandbox('Stocks were mixed.'); edit(d, 'digest.json', (g) => { g.sections.market.asOf = '2026-11-20'; });
+  assert.equal(check(d).status, 1); rmSync(d, { recursive: true });
+});
+
+// ---------- market.json shape: item count and duplicates ----------
+test('market.json with fewer than 7 items or a duplicate id is rejected', () => {
+  let d = sandbox(); edit(d, 'market.json', (m) => { m.items.pop(); });
+  let r = validate(d, ['--only', 'market']); assert.equal(r.status, 1); assert.match(r.stderr, /expected all 7/); rmSync(d, { recursive: true });
+  d = sandbox(); edit(d, 'market.json', (m) => { m.items[1].id = 'sp500'; });
+  r = validate(d, ['--only', 'market']); assert.equal(r.status, 1); assert.match(r.stderr, /duplicate item id "sp500"/); rmSync(d, { recursive: true });
 });
 
 // ---------- scripture bank ----------

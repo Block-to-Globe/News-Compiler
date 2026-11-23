@@ -16,6 +16,8 @@ function opt(name, dflt) {
 const DIR = opt('--dir', 'data');
 const ONLY = opt('--only', 'digest,market,scripture,history').split(',');
 const MAX_AGE_H = opt('--max-age-hours', null);
+// Clock override for the market freshness test (tests only).
+const NOW_MS = opt('--now', null) ? Date.parse(opt('--now', null)) : Date.now();
 // Cross-check the market recap against market.json. Only the scheduled task passes this:
 // the deploy must not fail just because market.json moved on after the recap was written.
 const CHECK_MARKET = args.includes('--check-market');
@@ -137,6 +139,9 @@ function market(m) {
   text(f, 'source', m.source);
   if (!Array.isArray(m.items) || m.items.length === 0) { err(f, 'items must be a non-empty array'); return; }
   const ids = ['sp500', 'dow', 'nasdaq', 'us10y', 'wti', 'gold', 'dxy'];
+  if (m.items.length < ids.length) err(f, `items has ${m.items.length} entries, expected all ${ids.length}`);
+  const seen = new Set();
+  for (const it of m.items) if (isObj(it)) { if (seen.has(it.id)) err(f, `duplicate item id "${it.id}"`); seen.add(it.id); }
   m.items.forEach((it, i) => {
     if (!isObj(it)) { err(f, `items[${i}] must be an object`); return; }
     if (!ids.includes(it.id)) err(f, `items[${i}].id "${it.id}" is not a known id`);
@@ -170,34 +175,154 @@ function history(h) {
   ts(f, 'fetchedAt', h.fetchedAt);
 }
 
-// The market recap may only quote numbers that appear in market.json (rule: numbers are never model-typed).
+// ---- market recap vs market.json (run only with --check-market) ----
+// Deterministic rules: every number the recap quotes must belong to a market item named in the same
+// sentence (or, if the sentence names none, the one before it), and direction words must match the sign.
+const SYN = {
+  sp500: /s&p(?:\s*500)?/gi,
+  dow: /\bdow(?:\s+jones)?(?:\s+industrial\s+average)?\b/gi,
+  nasdaq: /\bnasdaq(?:\s+composite)?\b/gi,
+  us10y: /\b10[-\s]?(?:yr|year)(?:\s+treasury)?(?:\s+yields?)?|\btreasury(?:\s+yields?)?|\byields?\b/gi,
+  wti: /\b(?:wti|crude|oil|west texas intermediate)\b/gi,
+  gold: /\bgold\b/gi,
+  dxy: /\bdollar(?:\s+index)?\b|\bdxy\b/gi,
+};
+const UP = /\b(rose|rises|rise|rising|gained|gains|gain|climbed|climbs|advanced|rallied|jumped|surged|added|higher|up)\b/gi;
+const DOWN = /\b(fell|falls|fall|falling|dropped|drops|declined|declines|slipped|slid|lost|lower|down|retreated|sank|tumbled|dipped)\b/gi;
+const FLAT = /\b(flat|unchanged|little changed)\b/gi;
+const MONTH = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s*$/i;
+const ABBR = /\b(U\.S|Nov|Dec|Jan|Feb|Mar|Apr|Aug|Sept?|Oct|No|St|Inc|Corp|Co|Mr|Ms|Dr|a\.m|p\.m)\./g;
+
+function splitSentences(para) {
+  const masked = para.replace(ABBR, (m) => m.replace(/\./g, '\u0001'));
+  return masked.split(/(?<=[.!?])\s+(?=[A-Z$"“(])/).map((x) => x.replace(/\u0001/g, '.'));
+}
+const decimalsOf = (frac) => (frac ? frac.length - 1 : 0);
+const roundTo = (v, d) => Math.round(v * 10 ** d) / 10 ** d;
+const near = (a, b) => Math.abs(a - b) < 1e-6;
+const sgn = (it) => Math.sign(it.change);
+
+function mentions(sentence) {
+  const out = [];
+  for (const [id, re] of Object.entries(SYN)) {
+    re.lastIndex = 0;
+    for (let m; (m = re.exec(sentence));) out.push({ id, start: m.index, end: m.index + m[0].length });
+  }
+  return out.sort((x, y) => x.start - y.start);
+}
+
+// Does the quoted number match this item in the way its unit suffix says?
+function fits(it, q) {
+  const { n, d, pct, usd, bp, signed, neg } = q;
+  const test = (v) => near(roundTo(Math.abs(v), d), n);
+  const signOk = () => true; // magnitudes are compared without the sign (docs/digest-schema.md); direction words carry the sign
+  if (bp) return it.unit === 'percent' && near(Math.round(Math.abs(it.change) * 100), n) && signOk(it.change);
+  if (pct) {
+    if (test(it.changePct) && signOk(it.changePct)) return true;
+    return it.unit === 'percent' && (test(it.value) || (test(it.change) && signOk(it.change)));
+  }
+  if (usd) return test(it.value) || (test(it.change) && signOk(it.change));
+  return test(it.value) || (test(it.change) && signOk(it.change));
+}
+
+function checkSentence(f, where, sentence, items, inherited, year) {
+  const own = mentions(sentence);
+  // Blank out label text so the "500" in "S&P 500" or "10" in "10-year" are not read as quotes.
+  let scan = sentence;
+  for (const m of own) scan = scan.slice(0, m.start) + ' '.repeat(m.end - m.start) + scan.slice(m.end);
+  const ids = own.length ? [...new Set(own.map((m) => m.id))] : inherited;
+  const short = sentence.length > 70 ? sentence.slice(0, 67) + '...' : sentence;
+  const label = (id) => (items.find((i) => i.id === id) || {}).label || id;
+
+  const re = /(?<![\w.,])([+\-−])?(\$)?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?:(\s?(?:%|percent\b))|(\s(?:percentage points?|basis points?|bps)\b)|(\s(?:points?)\b))?/gi;
+  for (let m; (m = re.exec(scan));) {
+    const tok = m[0].trim();
+    const before = scan.slice(0, m.index), after = scan.slice(m.index + m[0].length);
+    const n = Number(m[3].replace(/,/g, '') + (m[4] || ''));
+    const d = decimalsOf(m[4]);
+    const pct = !!m[5], usd = !!m[2], bp = !!(m[6] && /basis|bps/i.test(m[6])), pts = !!m[7] || (!!m[6] && !bp);
+    const sign = m[1] && /^[\-−]$/.test(m[1]) ? 'neg' : m[1] === '+' ? 'pos' : null;
+    // Dates, ordinals, ISO dates, clock times: not market quotes.
+    if (MONTH.test(before) || /^(st|nd|rd|th)\b/i.test(after) || /\d[-\/]$/.test(before) || /^[-\/]\d/.test(after) || /[:]$/.test(before) || /^:\d/.test(after)) continue;
+    const whole = !m[4] && !/,/.test(m[3]);
+    const marked = pct || usd || bp || pts;
+    if (!marked && whole && n < 1000) continue;                       // "two", "3 of 7", times: not checked
+    if (!marked && whole && Math.abs(n - year) <= 1 && n >= 1900) continue; // years
+    if (!ids.length) { err(f, `${where} quotes ${tok} but names no market item in "${short}"`); continue; }
+    const q = { n, d, pct, usd, bp, signed: !!sign, neg: sign === 'neg' };
+    const hit = ids.map((id) => items.find((i) => i.id === id)).filter(Boolean).some((it) => fits(it, q));
+    if (!hit) err(f, `${where} quotes ${tok}, which does not match ${ids.map(label).join(' / ')} (value, change or % change) in market.json: "${short}"`);
+  }
+
+  // "flat"/"unchanged" needs a change of exactly 0.
+  FLAT.lastIndex = 0;
+  for (let m; own.length && (m = FLAT.exec(scan));) {
+    const at = m.index, dist = (x) => (at < x.start ? x.start - at : at >= x.end ? at - x.end : 0);
+    const n1 = own.reduce((a, b) => (dist(b) < dist(a) ? b : a));
+    const it = items.find((i) => i.id === n1.id);
+    if (it && isNum(it.change) && it.change !== 0) err(f, `${where} says ${label(n1.id)} "${m[0]}" but market.json shows a change of ${it.change}: "${short}"`);
+  }
+  // Direction words vs the sign of the nearest item named in the sentence.
+  for (const [re2, dir] of [[UP, 1], [DOWN, -1]]) {
+    re2.lastIndex = 0;
+    for (let m; (m = re2.exec(scan));) {
+      if (!own.length) break;
+      const at = m.index;
+      const dist = (x) => (at < x.start ? x.start - at : at >= x.end ? at - x.end : 0);
+      const near1 = own.reduce((a, b) => (dist(b) < dist(a) ? b : a));
+      const it = items.find((i) => i.id === near1.id);
+      if (!it || !isNum(it.change) || !isNum(it.changePct)) continue;
+      const s2 = sgn(it);
+      if (s2 !== dir) err(f, `${where} says ${label(near1.id)} "${m[0]}" but market.json shows it ${s2 === 0 ? 'unchanged' : s2 > 0 ? 'up' : 'down'} (change ${it.change}): "${short}"`);
+    }
+  }
+  return ids;
+}
+
+// Digit tokens that are not a year, date, ordinal or clock time.
+function strayNumbers(para) {
+  const out = [];
+  const re = /\d[\d,]*(?:\.\d+)?/g;
+  for (let m; (m = re.exec(para));) {
+    const before = para.slice(0, m.index), after = para.slice(m.index + m[0].length);
+    if (/^\d{4}$/.test(m[0]) && Number(m[0]) >= 1900 && Number(m[0]) <= 2100 && !/\$\s?$/.test(before) && !/^\s?(%|percent)/.test(after)) continue;
+    if (MONTH.test(before) || /^(st|nd|rd|th)\b/i.test(after) || /\d[-\/]$/.test(before) || /^[-\/]\d/.test(after) || /:$/.test(before) || /^:\d/.test(after)) continue;
+    out.push(m[0]);
+  }
+  return out;
+}
+
 function marketNumbers(d) {
   const m = d.sections && d.sections.market;
   if (!isObj(m) || m.mock === true || !Array.isArray(m.body)) return;
   const f = 'digest.json';
   const p = join(DIR, 'market.json');
   let mk = null;
-  try { mk = JSON.parse(readFileSync(p, 'utf8')); } catch { /* handled below */ }
-  if (!isObj(mk) || mk.mock === true || !Array.isArray(mk.items)) { err(f, 'sections.market is live but market.json is missing, mock or unreadable, so its numbers cannot be checked'); return; }
+  try { mk = JSON.parse(readFileSync(p, 'utf8')); } catch { /* treated as missing */ }
+  // Fail-safe: when market.json is missing, mock or old, the task leaves the recap alone and
+  // there is nothing fresh to check it against. Only a fresh market.json can contradict the recap.
+  // Age is asOf vs today's Central date (never fetchedAt, which market.yml does not always commit).
+  const central = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(NOW_MS));
+  const age = isObj(mk) && isStr(mk.asOf) && YMD.test(mk.asOf) ? (Date.parse(central) - Date.parse(mk.asOf)) / 864e5 : Infinity;
+  if (!isObj(mk) || mk.mock === true || !Array.isArray(mk.items) || age > 4) {
+    console.log('note: market cross-check skipped (market.json is missing, mock or more than 4 days old)');
+    // Nothing to check numbers against, so the recap may quote none (rule 4: numbers are never model-typed).
+    m.body.forEach((para, pi) => {
+      if (!isStr(para)) return;
+      for (const tok of strayNumbers(para)) err(f, `sections.market.body[${pi}] quotes ${tok}, but market.json is missing, mock or stale so numbers cannot be checked; a recap written without fresh data must quote no numbers`);
+    });
+    return;
+  }
   if (m.asOf !== mk.asOf) err(f, `sections.market.asOf ${m.asOf} does not match market.json asOf ${mk.asOf}`);
-  const allowed = [];
-  for (const it of mk.items) for (const k of ['value', 'change', 'changePct']) {
-    if (!isNum(it[k])) continue;
-    const v = Math.abs(it[k]);
-    allowed.push(v, Math.round(v * 10) / 10, Math.round(v));
-  }
   const year = Number(String(mk.asOf).slice(0, 4));
-  for (const para of m.body) {
-    if (!isStr(para)) continue;
-    for (const tok of para.match(/\d[\d,]*(?:\.\d+)?/g) || []) {
-      const hasPunct = /[.,]/.test(tok);
-      const n = Number(tok.replace(/,/g, ''));
-      if (!Number.isFinite(n)) continue;
-      if (!hasPunct && n < 1000) continue;       // small whole numbers (dates, "two") are not checked
-      if (n === year) continue;
-      if (!allowed.some((a) => Math.abs(a - n) < 0.005)) err(f, `sections.market quotes ${tok}, which is not in market.json`);
+  m.body.forEach((para, pi) => {
+    if (!isStr(para)) return;
+    let inherited = [];
+    for (const sen of splitSentences(para)) {
+      const ids = checkSentence(f, `sections.market.body[${pi}]`, sen, mk.items, inherited, year);
+      inherited = ids;
     }
-  }
+  });
 }
 
 let digestData = null;

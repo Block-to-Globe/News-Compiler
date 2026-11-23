@@ -1,16 +1,25 @@
 name: Publish site
 
 # Validate the data, fetch the KJV verse text and the history line, deploy to GitHub Pages.
-# If a push breaks validation, nothing is deployed (the last good site stays live).
-# When that push touched only data/digest.json, it is reverted and an issue is opened.
+#
+# Failure handling:
+# - Validation failure (validate job): nothing is deployed, so the last good site stays live.
+#   On a push whose commit touched only data/digest.json, that commit is reverted.
+#   An issue is opened in every case.
+# - Build or deploy failure (infra, KJV source down, Pages outage): nothing is reverted,
+#   because the data is probably fine. An issue says the deploy failed.
+#
+# Commits made with the built-in GITHUB_TOKEN do not trigger other workflows, so the
+# market and digest updates reach the site through this workflow (market.yml asks for a run).
 
 on:
   push:
     branches: [main]
   schedule:
-    # Backup run, about 30 minutes after the 6:00 AM Central digest task (12:30 UTC),
-    # in case a push did not trigger a deploy. Also runs the freshness check.
-    - cron: '30 12 * * *'
+    # Backup run at 13:30 UTC. The daily digest task starts at about 11:00 UTC (summer)
+    # or 12:00 UTC (winter) and can take 30+ minutes, so this runs after it has finished.
+    # The same run also does the freshness check.
+    - cron: '30 13 * * *'
   workflow_dispatch:
 
 permissions:
@@ -21,13 +30,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Validate data files
         run: node scripts/validate.mjs --only digest,market
+
+  build:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Stage site files
         run: |
@@ -70,9 +84,10 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
 
+  # Runs only when validation failed. Reverts a push that touched only data/digest.json.
   revert-bad-data:
-    needs: build
-    if: ${{ always() && needs.build.result == 'failure' && github.event_name == 'push' }}
+    needs: validate
+    if: ${{ always() && needs.validate.result == 'failure' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -86,6 +101,7 @@ jobs:
 
       - name: Revert the commit if it touched only data/digest.json
         id: revert
+        if: ${{ github.event_name == 'push' }}
         run: |
           echo "reverted=false" >> "$GITHUB_OUTPUT"
           files=$(git diff --name-only HEAD~1 HEAD)
@@ -99,12 +115,13 @@ jobs:
           fi
 
       - name: Open an issue
+        if: ${{ always() }}
         run: |
           short=$(echo "${{ github.sha }}" | cut -c1-7)
           if [ "${{ steps.revert.outputs.reverted }}" = "true" ]; then
             what="The commit only changed data/digest.json, so it was reverted. The last good version of the site is still live."
           else
-            what="Nothing was deployed, so the last good version of the site is still live. The commit was not reverted automatically (it changed more than data/digest.json, or the revert could not be pushed)."
+            what="Nothing was deployed, so the last good version of the site is still live. The commit was not reverted automatically (it changed more than data/digest.json, it was a scheduled run, or the revert could not be pushed)."
           fi
           gh issue create --repo "${{ github.repository }}" \
             --title "Publish failed on $short" \
@@ -112,6 +129,26 @@ jobs:
 
           Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           The run log lists each problem."
+
+  # Runs when build or deploy failed but validation passed. Nothing is reverted.
+  report-deploy-failure:
+    needs: [validate, build, deploy]
+    if: ${{ always() && needs.validate.result == 'success' && (needs.build.result == 'failure' || needs.deploy.result == 'failure') }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Open an issue
+        run: |
+          short=$(echo "${{ github.sha }}" | cut -c1-7)
+          gh issue create --repo "${{ github.repository }}" \
+            --title "Deploy failed on $short" \
+            --body "The data passed validation, but the build or the Pages deploy failed for commit $short. This is probably an infrastructure or source problem, not bad data, so nothing was reverted. The last good version of the site is still live unless the deploy step finished.
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Re-run the workflow once the cause is clear."
 
   freshness:
     if: ${{ github.event_name == 'schedule' }}
@@ -124,7 +161,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # The daily task should have written digest.json within the last few hours.
+      # The daily task should have written digest.json by 13:30 UTC, and the check allows 20 hours.
       - name: Check digest age
         id: age
         continue-on-error: true
