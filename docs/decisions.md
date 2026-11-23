@@ -9,6 +9,7 @@
 | 2026-11-23 | One writer per file; four separate data files | Prevent merge conflicts, isolate failures |
 | 2026-11-23 | Validate, fetch ESV, and deploy inside one workflow | Built-in-token commits don't trigger other workflows |
 | 2026-11-23 | MIT license for code | Simple default; ESV text excluded |
+| 2026-11-23 | Words only, minimalist page: summaries of each section, no images, charts, graphs or tables. Market block is the written recap only | Connor's call. `market.json` stays as the source of truth for numbers quoted in the recap |
 
 ## Open
 
