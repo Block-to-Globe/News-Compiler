@@ -78,9 +78,8 @@ The task never writes verse text.
   "schemaVersion": 1,
   "fetchedAt": "2026-11-23T06:20:00-06:00",
   "reference": "Psalm 46:1-3",
-  "translation": "ESV",
-  "text": "verse text from the ESV API",
-  "copyright": "Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved."
+  "translation": "KJV",
+  "text": "verse text from a public-domain KJV source"
 }
 ```
 

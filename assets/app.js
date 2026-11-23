@@ -119,9 +119,9 @@
 
   // ---------- scripture ----------
 
-  function esvLink(ref) {
+  function kjvLink(ref) {
     if (!/^[1-3]?\s?[A-Za-z][A-Za-z ]*\s\d+(:\d+(-\d+)?)?$/.test(ref)) return null;
-    return 'https://www.esv.org/' + encodeURIComponent(ref).replace(/%20/g, '+') + '/';
+    return 'https://www.biblegateway.com/passage/?version=KJV&search=' + encodeURIComponent(ref);
   }
 
   function renderScripture(scrRes, digestRes) {
@@ -136,20 +136,20 @@
     if (textOk) {
       var bq = el('blockquote', null, s.text);
       nodes.push(bq);
-      nodes.push(el('cite', null, '— ' + s.reference + ' (ESV)'));
+      nodes.push(el('cite', null, '— ' + s.reference + ' (KJV)'));
     } else if (dRef) {
       // Text missing or doesn't match today's reference: show the reference with a link.
-      var p = el('p', 'fallback', "Today's verse: " + dRef + ' (ESV). ');
-      var link = esvLink(dRef);
+      var p = el('p', 'fallback', "Today's verse: " + dRef + ' (KJV). ');
+      var link = kjvLink(dRef);
       if (link) {
-        var a = el('a', null, 'Read it at esv.org');
+        var a = el('a', null, 'Read it online');
         a.href = link; a.rel = 'noopener noreferrer'; a.target = '_blank';
         p.appendChild(a);
       }
       nodes.push(p);
     } else if (s && isStr(s.text) && isStr(s.reference)) {
       nodes.push(el('blockquote', null, s.text));
-      nodes.push(el('cite', null, '— ' + s.reference + ' (ESV)'));
+      nodes.push(el('cite', null, '— ' + s.reference + ' (KJV)'));
     } else {
       failBlock(root, "Today's verse isn't available right now.");
       return;

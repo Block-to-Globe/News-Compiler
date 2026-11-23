@@ -3,7 +3,6 @@
   "mock": true,
   "fetchedAt": "2026-11-23T06:20:00-06:00",
   "reference": "Psalm 46:1",
-  "translation": "ESV",
-  "text": "[Mock verse text. The real ESV text is fetched from the ESV API in P3 and P6.]",
-  "copyright": "Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved."
+  "translation": "KJV",
+  "text": "[Mock verse text. The real KJV text is fetched from a public-domain source in P3 and P6.]"
 }
