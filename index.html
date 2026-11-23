@@ -6,6 +6,11 @@
 <meta name="color-scheme" content="light dark">
 <meta name="description" content="Block to Globe: a short daily news digest, from your block to the globe.">
 <title>Block to Globe</title>
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -63,5 +68,9 @@
 </footer>
 
 <script src="assets/app.js" defer></script>
+<script>
+// Optional: lets the page install and open offline. Any failure is ignored.
+try { if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js', { scope: './' }).catch(function () {}); }); } catch (e) {}
+</script>
 </body>
 </html>
