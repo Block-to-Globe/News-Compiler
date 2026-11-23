@@ -1,0 +1,134 @@
+name: Publish site
+
+# Validate the data, fetch the KJV verse text, deploy to GitHub Pages.
+# If a push breaks validation, nothing is deployed (the last good site stays live).
+# When that push touched only data/digest.json, it is reverted and an issue is opened.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Backup run, about 30 minutes after the 6:00 AM Central digest task (12:30 UTC),
+    # in case a push did not trigger a deploy. Also runs the freshness check.
+    - cron: '30 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate data files
+        run: node scripts/validate.mjs --only digest,market,history
+
+      - name: Stage site files
+        run: |
+          mkdir _site
+          cp index.html _site/
+          cp -r assets _site/assets
+          cp -r data _site/data
+          # The repo's scripture.json is mock data. Only fresh KJV text is deployed.
+          rm -f _site/data/scripture.json
+
+      - name: Fetch KJV text
+        run: |
+          node scripts/fetch-scripture.mjs --out _site/data/scripture.json
+          if [ -f _site/data/scripture.json ]; then
+            node scripts/validate.mjs --dir _site/data --only scripture || rm -f _site/data/scripture.json
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  revert-bad-data:
+    needs: build
+    if: ${{ always() && needs.build.result == 'failure' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Revert the commit if it touched only data/digest.json
+        id: revert
+        run: |
+          echo "reverted=false" >> "$GITHUB_OUTPUT"
+          files=$(git diff --name-only HEAD~1 HEAD)
+          if [ "$files" = "data/digest.json" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git revert --no-edit HEAD
+            if git push origin HEAD:main; then
+              echo "reverted=true" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Open an issue
+        run: |
+          short=$(echo "${{ github.sha }}" | cut -c1-7)
+          if [ "${{ steps.revert.outputs.reverted }}" = "true" ]; then
+            what="The commit only changed data/digest.json, so it was reverted. The last good version of the site is still live."
+          else
+            what="Nothing was deployed, so the last good version of the site is still live. The commit was not reverted automatically (it changed more than data/digest.json, or the revert could not be pushed)."
+          fi
+          gh issue create --repo "${{ github.repository }}" \
+            --title "Publish failed on $short" \
+            --body "Validation failed for commit $short. $what
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          The run log lists each problem."
+
+  freshness:
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # The daily task should have written digest.json within the last few hours.
+      - name: Check digest age
+        id: age
+        continue-on-error: true
+        run: node scripts/validate.mjs --only digest --max-age-hours 20
+
+      - name: Open an issue if stale
+        if: ${{ steps.age.outcome == 'failure' }}
+        run: |
+          open=$(gh issue list --repo "${{ github.repository }}" --state open --search "Digest is stale in:title" --json number --jq 'length')
+          if [ "$open" = "0" ]; then
+            gh issue create --repo "${{ github.repository }}" \
+              --title "Digest is stale" \
+              --body "data/digest.json has not been updated by the daily task in the last 20 hours. The page shows a stale note after 26 hours. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi

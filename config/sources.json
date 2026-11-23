@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "owner": "news-ingest-engineer (Local and State entries: local-news-resolver)",
+  "notes": "Starting list from the roadmap (D6). fetch: 'untested' means the first scheduled runs should try it and record what happens here. If a site blocks fetching, use search snippets and headlines only and say less rather than guess.",
+  "fallback": "search snippets and headlines only",
+  "sections": {
+    "federal": [
+      { "outlet": "AP News", "site": "apnews.com", "fetch": "untested" },
+      { "outlet": "Reuters", "site": "reuters.com", "fetch": "untested", "notes": "often blocks automated fetching" },
+      { "outlet": "NPR", "site": "npr.org", "fetch": "untested" },
+      { "outlet": "BBC News", "site": "bbc.com/news", "fetch": "untested" }
+    ],
+    "international": [
+      { "outlet": "AP News", "site": "apnews.com/world-news", "fetch": "untested" },
+      { "outlet": "Reuters", "site": "reuters.com/world", "fetch": "untested", "notes": "often blocks automated fetching" },
+      { "outlet": "BBC News", "site": "bbc.com/news/world", "fetch": "untested" },
+      { "outlet": "NPR", "site": "npr.org/sections/world", "fetch": "untested" }
+    ],
+    "local": [
+      { "outlet": "Daily Memphian", "site": "dailymemphian.com", "fetch": "untested", "notes": "likely paywalled; P4" },
+      { "outlet": "The Commercial Appeal", "site": "commercialappeal.com", "fetch": "untested", "notes": "likely paywalled; P4" },
+      { "outlet": "WMC Action News 5", "site": "wmcactionnews5.com", "fetch": "untested", "notes": "P4" },
+      { "outlet": "WREG", "site": "wreg.com", "fetch": "untested", "notes": "P4" },
+      { "outlet": "FOX13 Memphis", "site": "fox13memphis.com", "fetch": "untested", "notes": "P4" },
+      { "outlet": "Memphis Flyer", "site": "memphisflyer.com", "fetch": "untested", "notes": "P4" }
+    ],
+    "state": [
+      { "outlet": "Tennessee Lookout", "site": "tennesseelookout.com", "fetch": "untested", "notes": "P4" },
+      { "outlet": "The Tennessean", "site": "tennessean.com", "fetch": "untested", "notes": "likely paywalled; P4" },
+      { "outlet": "Chattanooga Times Free Press", "site": "timesfreepress.com", "fetch": "untested", "notes": "P4" },
+      { "outlet": "Knox News", "site": "knoxnews.com", "fetch": "untested", "notes": "P4" }
+    ],
+    "market": [
+      { "outlet": "AP News business", "site": "apnews.com/business", "fetch": "untested", "notes": "P5. Numbers come from market.json, never from articles" },
+      { "outlet": "Reuters markets", "site": "reuters.com/markets", "fetch": "untested", "notes": "P5" }
+    ]
+  }
+}

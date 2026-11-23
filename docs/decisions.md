@@ -10,6 +10,10 @@
 | 2026-11-23 | Validate, fetch Scripture text, and deploy inside one workflow | Built-in-token commits don't trigger other workflows |
 | 2026-11-23 | MIT license for code | Simple default; Scripture text is separate (KJV, public domain) |
 | 2026-11-23 | **KJV instead of ESV.** Verse shown with reference and "KJV"; footer says it is public domain in the US. No ESV API key, no Crossway permissions to track | Connor's call, to avoid copyright. Text still comes from a source, never model-typed |
+| 2026-11-23 | `publish.yml` replaces `pages.yml`: validate, stage, fetch verse, deploy, revert-on-failure, backup cron, freshness check | P3. One workflow because built-in-token commits do not trigger others |
+| 2026-11-23 | `scripture.json` is generated at deploy time and not committed. If the fetch fails the file is omitted and the page shows the reference with a link | One writer, no daily commits, no stale or mock verse can go live |
+| 2026-11-23 | Provisional verse source: bible-api.com (free, no key). Final choice in P6 | Keep P3 moving; the fetcher validates translation and reference so a bad source cannot publish a wrong verse |
+| 2026-11-23 | Freshness check flags a digest older than 20 hours at the 12:30 UTC run; page stale banner stays at 26 hours | A missed morning run is about 24.5 hours old at check time |
 | 2026-11-23 | Words only, minimalist page: summaries of each section, no images, charts, graphs or tables. Market block is the written recap only | Connor's call. `market.json` stays as the source of truth for numbers quoted in the recap |
 
 ## Open
