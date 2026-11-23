@@ -102,84 +102,19 @@
     setBlock(root, 'ok', nodes);
   }
 
-  // ---------- market ----------
+  // ---------- market (words only) ----------
 
-  function fmtNum(n, digits) {
-    return n.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits });
-  }
-
-  function fmtValue(item) {
-    switch (item.unit) {
-      case 'percent': return fmtNum(item.value, 2) + '%';
-      case 'usd': return '$' + fmtNum(item.value, 2);
-      default: return fmtNum(item.value, 2);
-    }
-  }
-
-  function fmtChange(n, suffix) {
-    var sign = n > 0 ? '+' : (n < 0 ? '−' : '');
-    return sign + fmtNum(Math.abs(n), 2) + (suffix || '');
-  }
-
-  function marketTable(m) {
-    var items = (m && Array.isArray(m.items) ? m.items : []).filter(function (i) {
-      return i && isStr(i.label) && isNum(i.value) && isNum(i.change) && isNum(i.changePct);
-    });
-    if (!items.length || !isStr(m.asOf)) return null;
-
-    var wrap = el('div', 'market-table-wrap');
-    var table = el('table', 'market-table');
-    table.appendChild(el('caption', null, 'Close as of ' + prettyDate(m.asOf)));
-    var thead = el('thead');
-    var hr = el('tr');
-    ['Market', 'Level', 'Change', '%'].forEach(function (h, idx) {
-      var th = el('th', null, h);
-      th.scope = 'col';
-      hr.appendChild(th);
-    });
-    thead.appendChild(hr);
-    table.appendChild(thead);
-
-    var tbody = el('tbody');
-    items.forEach(function (i) {
-      var tr = el('tr');
-      var th = el('th', null, i.label);
-      th.scope = 'row';
-      tr.appendChild(th);
-      tr.appendChild(el('td', null, fmtValue(i)));
-      var dir = i.change > 0 ? 'up' : (i.change < 0 ? 'down' : '');
-      var chg = i.unit === 'percent' ? fmtChange(i.change, ' pt') : fmtChange(i.change);
-      tr.appendChild(el('td', dir, chg));
-      tr.appendChild(el('td', dir, fmtChange(i.changePct, '%')));
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    wrap.appendChild(table);
-    return wrap;
-  }
-
-  function renderMarket(marketRes, digestRes) {
+  function renderMarket(digestRes) {
     var root = $('sec-market');
-    var nodes = [];
-
-    var m = marketRes.ok ? marketRes.data : null;
-    var table = m ? marketTable(m) : null;
-    if (m && table && isStr(m.note)) nodes.push(el('p', 'market-note', m.note));
-    if (table) nodes.push(table);
-
     var narr = digestRes.ok && digestRes.data && digestRes.data.sections
       ? digestRes.data.sections.market : null;
-    var narrOk = narr && validBody(narr.body);
-    if (narrOk) {
-      narr.body.forEach(function (t) { nodes.push(el('p', null, t)); });
-      var src = sourcesEl(narr.sources);
-      if (src) nodes.push(src);
-    }
-
-    if (!table && !narrOk) { failBlock(root); return; }
-    if (!table) nodes.unshift(el('p', 'fallback', "Today's numbers aren't available right now."));
-    if (!narrOk) nodes.push(el('p', 'fallback', "The written recap isn't available right now."));
-    setBlock(root, table && narrOk ? 'ok' : 'partial', nodes);
+    if (!narr || !validBody(narr.body)) { failBlock(root); return; }
+    var nodes = [];
+    if (isStr(narr.asOf)) nodes.push(el('p', 'asof', 'As of ' + prettyDate(narr.asOf)));
+    narr.body.forEach(function (t) { nodes.push(el('p', null, t)); });
+    var src = sourcesEl(narr.sources);
+    if (src) nodes.push(src);
+    setBlock(root, 'ok', nodes);
   }
 
   // ---------- scripture ----------
@@ -312,7 +247,6 @@
   function init() {
     var files = {
       digest: load('data/digest.json'),
-      market: load('data/market.json'),
       scripture: load('data/scripture.json'),
       history: load('data/history.json')
     };
@@ -325,7 +259,7 @@
       });
     });
 
-    Promise.all([files.market, files.digest]).then(function (r) { renderMarket(r[0], r[1]); });
+    files.digest.then(renderMarket);
     Promise.all([files.scripture, files.digest]).then(function (r) { renderScripture(r[0], r[1]); });
     files.history.then(runHistory);
   }
