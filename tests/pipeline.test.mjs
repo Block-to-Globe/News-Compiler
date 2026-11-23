@@ -327,3 +327,19 @@ test('market narrative cross-check is off unless --check-market is passed (deplo
   assert.equal(validate(d, ['--only', 'digest']).status, 0);
   rmSync(d, { recursive: true });
 });
+
+// ---------- scripture bank ----------
+
+test('repo bank is well formed and contains the mock verse', () => {
+  const b = JSON.parse(readFileSync(join(root, 'data/scripture-bank.json'), 'utf8'));
+  assert.ok(b.verses.length >= 150);
+  const refs = b.verses.map((v) => v.reference);
+  assert.equal(new Set(refs).size, refs.length, 'duplicate references');
+  for (const v of b.verses) { assert.ok(b.themes.includes(v.theme), v.reference); assert.match(v.reference, /^([1-3] )?[A-Z][a-z]+( [A-Za-z]+)* \d+:\d+(-\d+)?$/, v.reference); }
+});
+test('digest scripture must be a bank reference with its own theme', () => {
+  let d = sandbox(); edit(d, 'digest.json', (g) => { g.scripture.reference = 'Psalm 119:176'; });
+  let r = validate(d, ['--only', 'digest']); assert.equal(r.status, 1); assert.match(r.stderr, /not in scripture-bank/); rmSync(d, { recursive: true });
+  d = sandbox(); edit(d, 'digest.json', (g) => { g.scripture.theme = 'justice'; });
+  r = validate(d, ['--only', 'digest']); assert.equal(r.status, 1); assert.match(r.stderr, /does not match the bank/); rmSync(d, { recursive: true });
+});
