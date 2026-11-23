@@ -391,3 +391,21 @@ test('audit: task prompt references only files and commands that exist', () => {
     assert.ok(existsSync(join(root, f)), `${f} is mentioned in the prompt but missing`);
   }
 });
+
+// ---------- tone lint ----------
+
+function lint(bodyText, headline = 'Congress passes a funding bill') {
+  const d = sandbox();
+  edit(d, 'digest.json', (g) => { g.sections.federal.headline = headline; g.sections.federal.body = [bodyText]; });
+  const r = spawnSync('node', [join(root, 'scripts/lint-tone.mjs'), '--file', join(d, 'data/digest.json')], { encoding: 'utf8' });
+  rmSync(d, { recursive: true }); return r;
+}
+test('tone lint: neutral wording passes', () => {
+  const r = lint('The Senate voted 62 to 38 on Tuesday to pass a funding bill, according to the AP. Supporters said it avoids a shutdown; opponents said it spends too much.');
+  assert.equal(r.status, 0, r.stderr);
+});
+test('tone lint: loaded wording, first person and predictions are flagged', () => {
+  const r = lint('The senator slammed the bill. We think it will likely fail! The vote was shocking.');
+  assert.equal(r.status, 1);
+  for (const w of ['slammed', 'We', 'will likely', '!', 'shocking']) assert.ok(r.stderr.includes(w), w);
+});

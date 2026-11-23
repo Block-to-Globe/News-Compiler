@@ -68,9 +68,10 @@ Pick one verse **reference** from `data/scripture-bank.json` for the bottom of t
 ## Validate, commit, push
 
 1. Run `node scripts/validate.mjs --only digest --check-market`. Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
-2. Run `git status` and `git diff --stat`. Only `data/digest.json` may be changed. If anything else changed, undo it.
-3. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.
-4. Never edit this file, `config/`, `scripts/`, `docs/` or any workflow. If you think one needs a change, say so in your report instead.
+2. Run `node scripts/lint-tone.mjs`. It flags loaded wording, first person, predictions and opinion. Rewrite every flagged phrase in plain, attributed language and run it again until it prints `tone: ok`. If a flag is a false alarm (for example a word inside a direct, attributed phrase), say so in your report instead of contorting the sentence.
+3. Run `git status` and `git diff --stat`. Only `data/digest.json` may be changed. If anything else changed, undo it.
+4. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.
+5. Never edit this file, `config/`, `scripts/`, `docs/` or any workflow. If you think one needs a change, say so in your report instead.
 
 ## Report (your final message)
 
