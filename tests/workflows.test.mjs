@@ -9,7 +9,7 @@ import { join } from 'node:path';
 const root = new URL('..', import.meta.url).pathname;
 const dir = join(root, '.github', 'workflows');
 const read = (f) => readFileSync(join(dir, f), 'utf8');
-const files = ['publish.yml', 'market.yml'];
+const files = ['publish.yml', 'market.yml', 'prefetch.yml'];
 
 test('workflows parse as YAML', () => {
   for (const f of files) {
@@ -70,4 +70,21 @@ test('workflows use no leading-slash paths and no secrets', () => {
     assert.doesNotMatch(s, /(secrets\.(?!GITHUB_TOKEN))/, `${f} references a secret`);
     assert.doesNotMatch(s, /(href|src|path):\s*\/(?!\/)/, `${f} has an absolute path`);
   }
+});
+
+test('prefetch: runs before the digest task and writes only the raw-feed branch', () => {
+  const s = read('prefetch.yml');
+  assert.match(s, /cron: '45 9 \* \* \*'/);
+  assert.match(s, /node scripts\/fetch-sources\.mjs/);
+  assert.match(s, /git push --force origin raw-feed/);
+  assert.doesNotMatch(s, /origin (HEAD:)?main/);
+  assert.match(s, /Prefetch failed/);
+});
+
+test('task prompt: no website fetching, reads the prefetched feed', () => {
+  const s = readFileSync(join(root, 'task', 'daily-digest-prompt.md'), 'utf8');
+  assert.match(s, /No website fetching/);
+  assert.match(s, /git fetch --depth=1 origin raw-feed/);
+  assert.match(s, /more than 18 hours old/);
+  assert.doesNotMatch(s, /page fetches per section/);
 });

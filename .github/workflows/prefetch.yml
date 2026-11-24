@@ -1,0 +1,65 @@
+name: Prefetch news
+
+# Reads the outlets in config/sources.json and saves headlines, links, dates and short excerpts
+# to the `raw-feed` branch (file feed.json). The scheduled digest task reads that file instead of
+# fetching websites itself, because an unattended Claude run stalls whenever a fetch needs approval.
+#
+# - Only writer of the raw-feed branch. It holds one commit, replaced on every run, so no history piles up.
+# - raw-feed is not main, so this never triggers a deploy and nothing here reaches the public site.
+# - Partial failures are fine: a failed outlet is recorded with its error. The job fails only if no outlet worked,
+#   and then the last good raw-feed stays in place and an issue "Prefetch failed" is opened (or commented on).
+#
+# Requirement: Repo Settings > Actions > General > Workflow permissions: "Read and write permissions".
+
+on:
+  schedule:
+    # 09:45 UTC = 3:45 AM Central in winter, 4:45 AM in summer: before the 5:32 AM Central digest task either way.
+    - cron: '45 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: prefetch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch sources
+        id: fetch
+        run: node scripts/fetch-sources.mjs --out "$RUNNER_TEMP/raw"
+
+      - name: Publish to raw-feed
+        id: publish
+        run: |
+          cd "$RUNNER_TEMP/raw"
+          git init -q -b raw-feed
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add feed.json
+          git commit -q -m "raw feed: $(jq -r .fetchedAt feed.json)"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git push --force origin raw-feed
+
+      - name: Report failure
+        if: ${{ failure() }}
+        run: |
+          title="Prefetch failed"
+          number=$(gh issue list --repo "${{ github.repository }}" --state open --search "$title in:title" --json number --jq '.[0].number // empty')
+          body="The prefetch failed in run ${{ github.run_id }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Step outcomes: fetch=${{ steps.fetch.outcome }}, publish=${{ steps.publish.outcome }}. The previous raw-feed branch is still in place. The digest task treats a feed older than 18 hours as missing and falls back to WebSearch."
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --repo "${{ github.repository }}" --body "$body"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "$title" --body "$body"
+          fi
