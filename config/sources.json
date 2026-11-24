@@ -201,7 +201,7 @@
         "site": "dailymemphian.com",
         "fetch": "works",
         "entry": "https://dailymemphian.com/section/metro",
-        "notes": "2026-11-23: Metro section lists fresh stories (Nov 20-21); many marked Premium, so use headlines and listing only."
+        "notes": "2026-11-23: Metro section lists fresh stories (Nov 20-21); many marked Premium, so use headlines and listing only. Article text is Premium; listing text only."
       },
       {
         "outlet": "WREG",
@@ -247,7 +247,7 @@
         "site": "tennesseelookout.com",
         "fetch": "works",
         "entry": "https://tennesseelookout.com/feed/",
-        "notes": "2026-11-23: RSS fresh (Nov 23); very long feed, only first items needed."
+        "notes": "2026-11-23: RSS fresh (Nov 23); very long feed, only first items needed. RSS works; article pages failed to fetch once."
       },
       {
         "outlet": "WSMV",
@@ -261,7 +261,7 @@
         "site": "timesfreepress.com",
         "fetch": "works",
         "entry": "https://www.timesfreepress.com/news/",
-        "notes": "2026-11-23: News page fresh (Nov 22-23)."
+        "notes": "2026-11-23: News page fresh (Nov 22-23); listing fresh; one article page returned stale on 2026-11-23."
       },
       {
         "outlet": "Tennessee Governor",

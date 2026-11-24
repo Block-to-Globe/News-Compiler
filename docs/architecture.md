@@ -40,7 +40,7 @@ A backup cron at **13:30 UTC** (7:30 AM CST, 8:30 AM CDT) re-runs it in case a p
 
 ## Schedule
 
-- Morning ~6:00 AM Central daily: one task run writes Local, State, Federal, International, the Market recap (from the previous close in `market.json`) and picks the Scripture reference. There is no evening task run.
+- Morning ~5:32 AM Central daily (about 11:32 UTC winter, 10:32 UTC summer): one task run writes Local, State, Federal, International, the Market recap (from the previous close in `market.json`) and picks the Scripture reference. There is no evening task run.
 - 13:30 UTC daily: `publish.yml` backup deploy and freshness check (history line and verse are regenerated on every deploy).
 - Weekdays 21:30 UTC: `market.yml` fetches the close, commits `market.json` only when something other than `fetchedAt` changed, then dispatches `publish.yml`. If the fetch fails it commits nothing and opens an issue.
 

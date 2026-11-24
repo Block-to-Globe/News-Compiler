@@ -22,7 +22,7 @@ See `docs/architecture.md` for details and `docs/digest-schema.md` for the data 
 
 ## Status
 
-Milestone P2 (UI shell). The page renders the mock data in `data/`; real content arrives in P3 onward.
+Milestones P1 to P6 are built (pipeline, market recap, Local and State, verse bank, history line, tone lint). P7 (QA and a week of real daily runs) is in progress. Sections the task has not written yet show "Coming soon."
 
 ## Scripture
 
