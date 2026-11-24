@@ -1,7 +1,7 @@
 // Block to Globe service worker. Plain JS, relative paths only.
 // Shell files: cache-first (precached). data/*.json: network-first, cache fallback.
 // Cross-origin requests (e.g. the Wikipedia fallback) are never touched or cached.
-const CACHE = 'btg-v1';
+const CACHE = 'btg-v2';
 const SHELL = [
   './',
   'index.html',
