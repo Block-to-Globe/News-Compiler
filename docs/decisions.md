@@ -2,7 +2,7 @@
 
 | Date | Decision | Why |
 |---|---|---|
-| 2026-11-23 | Org **Block to Globe**, repo **News Compiler**, site at `block-to-globe.github.io/news-compiler/` | Connor's naming |
+| 2026-11-23 | Org **Block to Globe**, repo **News Compiler**, site at `block-to-globe.github.io/News-Compiler/` | Connor's naming |
 | 2026-11-23 | No Anthropic API key. A scheduled Claude task writes the digest and pushes it | Avoid a separate API bill; uses Claude plan usage |
 | 2026-11-23 | Fixed location: Shelby County, TN (local) and Tennessee (state). No Worker, no location prompt | Simplicity; a picker is a later feature |
 | 2026-11-23 | ESV translation, references only in repo, text fetched from the ESV API, notice in footer. **Superseded 2026-11-23 by the KJV decision below** | Crossway terms; Scripture never model-typed |
@@ -19,8 +19,8 @@
 
 ## Open
 
-- Pick the KJV text source (no-key, public-domain; `bible-api.com` is a candidate) and check its terms and rate limits. Resolve in P6. With the KJV, daily verses in git history are not a copyright concern.
-- Market data source (Stooq + FRED preferred). Resolve in P5.
+- Final review of the KJV text source's terms and rate limits (bible-api.com is in use; the fetcher validates translation and reference).
+- The market source is decided in D-market.
 
 ## D-market: provisional no-key source for market numbers
 Stooq now needs a CAPTCHA-derived key and FRED needs a free key, so the market fetcher uses Yahoo Finance's public chart endpoint (no key, unofficial) for the seven items. It is all-or-nothing: if any item fails, nothing is written and the last good file stays. The swap point is `ITEMS` and `parse()` in `scripts/fetch-market.mjs`. If it proves flaky, the fallback is a free FRED key stored as an Actions secret (Connor's call).
@@ -42,6 +42,6 @@ Schema stays v1; the only new fields are two optional booleans on scripture-bank
 | Recap opens by naming the day of the close; says "markets were closed" on weekends and holidays | The morning recap always reports a past session and must not read as today's numbers | Hide the recap on closed days (rejected: a short "markets were closed" line is more useful) |
 | Page shows a per-section "Last updated" hint when that section's `updatedAt` is over about 30 hours old | A partial task run can leave one section old while `generatedAt` is fresh; the 26-hour banner would miss it | Hide old sections (rejected: graceful degradation keeps content visible) |
 | Optional bank flags `avoidOnPoliticalDays`, `avoidOnCrimeDays` | Keeps a verse from reading as commentary on the day's top story | Separate "safe" bank (rejected: duplicate list to maintain) |
-| Backup deploy and freshness check move from 12:30 to 13:30 UTC | More margin after the ~6:00 AM Central task, which can run long or start late. A missed run is about 25.5 hours old (CST) or 26.5 hours (CDT) at check time, so the 20-hour threshold still catches it | Keep 12:30 (rejected: 30 minutes is little margin for a long task run) |
+| Backup deploy and freshness check move from 12:30 to 13:30 UTC | More margin after the 5:32 AM Central task, which can run long or start late. A missed run is about 25.5 hours old (CST) or 26.5 hours (CDT) at check time, so the 20-hour threshold still catches it | Keep 12:30 (rejected: 30 minutes is little margin for a long task run) |
 | Revert job fires only when the validate step fails, not on staging, Pages setup, upload or deploy failures | An infrastructure blip must never revert a good digest | Revert on any build failure (the previous behavior) |
 | `market.yml` opens an issue when the fetch fails, and commits only when something other than `fetchedAt` changed | A silent failure streak was invisible; a commit that only bumps `fetchedAt` is noise and triggers a pointless deploy | Commit every run (rejected: noise); rely on the recap check (rejected: it is skipped when data is old) |

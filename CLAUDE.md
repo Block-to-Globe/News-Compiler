@@ -1,6 +1,6 @@
 # Block to Globe (repo: News Compiler)
 
-A simple daily news digest site: Local (Shelby County, TN), State (Tennessee), Federal, International, Market recap, a "this day in history" line on top, and a KJV Bible verse at the bottom. Live at https://block-to-globe.github.io/News-Compiler/ (the repo is currently named with capitals, and Pages paths are case-sensitive)
+A simple daily news digest site: Local (Shelby County, TN), State (Tennessee), Federal, International, Market recap, a "this day in history" line on top, and a KJV Bible verse at the bottom. Live at https://block-to-globe.github.io/News-Compiler/ (the repo name uses capitals, and Pages paths are case-sensitive)
 
 Owner: Connor. Style for anything written on his behalf: informal and lighthearted, but fact-based and straight to the point.
 
@@ -9,7 +9,7 @@ Full plan: see `docs/architecture.md` and the roadmap in the News Compiler Claud
 ## Rules (read before changing anything)
 
 1. **One writer per file.** `data/digest.json` is written only by the scheduled Claude task. `data/market.json`, `data/scripture.json`, `data/history.json` are written only by GitHub Actions. `config/sources.json` and `task/daily-digest-prompt.md` change through PRs. If you need a change in a file you don't own, ask the owner.
-2. **Relative paths only.** The site is served from `/news-compiler/`, so never use a leading `/` in links, scripts, styles or `fetch()` URLs.
+2. **Relative paths only.** The site is served from `/News-Compiler/`, so never use a leading `/` in links, scripts, styles or `fetch()` URLs.
 3. **No secrets in the repo or client code.** There is no Anthropic API key and no Scripture API key (the KJV source needs none).
 4. **Numbers and Scripture are never model-typed.** Market numbers come from `market.json`; verse text comes from a public-domain KJV source.
 5. **Neutral, original, short.** News summaries are 1-2 paragraphs in original wording with source links. No article text copied. No editorializing.
