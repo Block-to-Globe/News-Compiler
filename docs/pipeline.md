@@ -15,7 +15,7 @@ How a day's content gets from the news to the page, and what happens when someth
 
 ## Run order (America/Chicago)
 
-1. About 6:00 AM: the task writes `digest.json` and pushes. The task starts about 11:00 UTC (summer) or 12:00 UTC (winter).
+1. About 5:32 AM Central (about 11:32 UTC winter, 10:32 UTC summer): the task writes `digest.json` and pushes.
 2. The push triggers `publish.yml`. The backup run at 13:30 UTC (about 7:30 AM CST, 8:30 AM CDT) does the same in case a push did not trigger a deploy, and also runs the freshness check.
 3. `market.yml` (weekdays 21:30 UTC) runs `scripts/fetch-market.mjs` and validates the result. It commits `data/market.json` only if content other than `fetchedAt` changed, then dispatches `publish.yml`. If the source fails or the file is invalid, nothing is committed.
 
@@ -62,4 +62,4 @@ Digest commits come from the task, touch only `data/digest.json`, and carry the 
 
 ## Tests
 
-`node --test` runs `tests/pipeline.test.mjs`: the validator against good and bad data, and the verse and history fetchers against a local fake source (success and every skip path).
+`node --test` runs all of `tests/*.test.mjs` (validator, verse and history fetchers, tone lint, PWA and service worker, workflow and repo audits).

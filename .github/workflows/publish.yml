@@ -16,8 +16,8 @@ on:
   push:
     branches: [main]
   schedule:
-    # Backup run at 13:30 UTC. The daily digest task starts at about 11:00 UTC (summer)
-    # or 12:00 UTC (winter) and can take 30+ minutes, so this runs after it has finished.
+    # Backup run at 13:30 UTC. The daily digest task starts at about 5:32 AM Central (about 11:32 UTC winter,
+    # 10:32 UTC summer) and can take 30+ minutes, so this runs after it has finished.
     # The same run also does the freshness check.
     - cron: '30 13 * * *'
   workflow_dispatch:
