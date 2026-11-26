@@ -214,17 +214,13 @@ function mentions(sentence) {
 }
 
 // Does the quoted number match this item in the way its unit suffix says?
+// Magnitudes are compared without the sign (docs/digest-schema.md); direction words carry the sign.
 function fits(it, q) {
-  const { n, d, pct, usd, bp, signed, neg } = q;
+  const { n, d, pct, bp } = q;
   const test = (v) => near(roundTo(Math.abs(v), d), n);
-  const signOk = () => true; // magnitudes are compared without the sign (docs/digest-schema.md); direction words carry the sign
-  if (bp) return it.unit === 'percent' && near(Math.round(Math.abs(it.change) * 100), n) && signOk(it.change);
-  if (pct) {
-    if (test(it.changePct) && signOk(it.changePct)) return true;
-    return it.unit === 'percent' && (test(it.value) || (test(it.change) && signOk(it.change)));
-  }
-  if (usd) return test(it.value) || (test(it.change) && signOk(it.change));
-  return test(it.value) || (test(it.change) && signOk(it.change));
+  if (bp) return it.unit === 'percent' && near(Math.round(Math.abs(it.change) * 100), n);
+  if (pct) return test(it.changePct) || (it.unit === 'percent' && (test(it.value) || test(it.change)));
+  return test(it.value) || test(it.change);
 }
 
 function checkSentence(f, where, sentence, items, inherited, year) {
@@ -234,7 +230,8 @@ function checkSentence(f, where, sentence, items, inherited, year) {
   for (const m of own) scan = scan.slice(0, m.start) + ' '.repeat(m.end - m.start) + scan.slice(m.end);
   const ids = own.length ? [...new Set(own.map((m) => m.id))] : inherited;
   const short = sentence.length > 70 ? sentence.slice(0, 67) + '...' : sentence;
-  const label = (id) => (items.find((i) => i.id === id) || {}).label || id;
+  const byId = new Map(items.map((i) => [i.id, i]));
+  const label = (id) => (byId.get(id) || {}).label || id;
 
   const fitIds = new Set(); // items that a quoted number in this sentence is tied to
   const re = /(?<![\w.,])([+\-−])?(\$)?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?:(\s?(?:%|percent\b))|(\s(?:percentage points?|basis points?|bps)\b)|(\s(?:points?)\b))?/gi;
@@ -244,7 +241,6 @@ function checkSentence(f, where, sentence, items, inherited, year) {
     const n = Number(m[3].replace(/,/g, '') + (m[4] || ''));
     const d = decimalsOf(m[4]);
     const pct = !!m[5], usd = !!m[2], bp = !!(m[6] && /basis|bps/i.test(m[6])), pts = !!m[7] || (!!m[6] && !bp);
-    const sign = m[1] && /^[\-−]$/.test(m[1]) ? 'neg' : m[1] === '+' ? 'pos' : null;
     // Dates, ordinals, ISO dates, clock times: not market quotes.
     if (MONTH.test(before) || /^(st|nd|rd|th)\b/i.test(after) || /\d[-\/]$/.test(before) || /^[-\/]\d/.test(after) || /[:]$/.test(before) || /^:\d/.test(after)) continue;
     const whole = !m[4] && !/,/.test(m[3]);
@@ -252,9 +248,9 @@ function checkSentence(f, where, sentence, items, inherited, year) {
     if (!marked && whole && n < 1000) continue;                       // "two", "3 of 7", times: not checked
     if (!marked && whole && Math.abs(n - year) <= 1 && n >= 1900) continue; // years
     if (!ids.length) { err(f, `${where} quotes ${tok} but names no market item in "${short}"`); continue; }
-    const q = { n, d, pct, usd, bp, signed: !!sign, neg: sign === 'neg' };
-    const hit = ids.map((id) => items.find((i) => i.id === id)).filter(Boolean).some((it) => fits(it, q));
-    for (const id of ids) { const it = items.find((i) => i.id === id); if (it && fits(it, q)) fitIds.add(id); }
+    const q = { n, d, pct, bp };
+    let hit = false;
+    for (const id of ids) { const it = byId.get(id); if (it && fits(it, q)) { fitIds.add(id); hit = true; } }
     if (!hit) err(f, `${where} quotes ${tok}, which does not match ${ids.map(label).join(' / ')} (value, change or % change) in market.json: "${short}"`);
   }
 
@@ -263,7 +259,7 @@ function checkSentence(f, where, sentence, items, inherited, year) {
   for (let m; own.length && (m = FLAT.exec(scan));) {
     const at = m.index, dist = (x) => (at < x.start ? x.start - at : at >= x.end ? at - x.end : 0);
     const n1 = own.reduce((a, b) => (dist(b) < dist(a) ? b : a));
-    const it = items.find((i) => i.id === n1.id);
+    const it = byId.get(n1.id);
     if (it && isNum(it.change) && it.change !== 0) err(f, `${where} says ${label(n1.id)} "${m[0]}" but market.json shows a change of ${it.change}: "${short}"`);
   }
   // Direction words vs the sign of the nearest item named in the sentence.
@@ -274,7 +270,7 @@ function checkSentence(f, where, sentence, items, inherited, year) {
       const at = m.index;
       const dist = (x) => (at < x.start ? x.start - at : at >= x.end ? at - x.end : 0);
       const near1 = own.reduce((a, b) => (dist(b) < dist(a) ? b : a));
-      const it = items.find((i) => i.id === near1.id);
+      const it = byId.get(near1.id);
       if (!it || !isNum(it.change) || !isNum(it.changePct)) continue;
       // Only check a direction word that is tied to the item: a quoted number that fits it, or a move verb right after its name.
       const gap = scan.slice(near1.end, at);

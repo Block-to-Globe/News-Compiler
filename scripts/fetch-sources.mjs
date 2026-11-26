@@ -21,6 +21,7 @@ export const ITEMS_PER_OUTLET = 12;
 export const ARTICLES_PER_OUTLET = 4;
 export const MAX_AGE_HOURS = 60;
 const TIMEOUT_MS = 15000;
+const CONCURRENCY = 6; // outlets fetched at once: fast, but polite to each site
 const UA = 'BlockToGlobeBot/1.0 (+https://github.com/Block-to-Globe/News-Compiler; personal news digest)';
 
 // Outlets whose stories are mostly subscriber-only: listing text only.
@@ -123,13 +124,14 @@ async function readOutlet(o, now) {
     if (!items.length) { rec.status = 'empty'; return rec; }
     rec.items = items;
     if (!PREMIUM.includes(o.outlet)) {
-      for (const it of items.slice(0, ARTICLES_PER_OUTLET)) {
+      // An outlet's top articles are fetched together; each failure only drops that excerpt.
+      await Promise.all(items.slice(0, ARTICLES_PER_OUTLET).map(async (it) => {
         try {
           const { text, paywalled } = leadText(await get(it.url));
           if (paywalled) it.paywalled = true;
           else if (text.length >= 200) it.excerpt = text;
         } catch { /* listing text only for this item */ }
-      }
+      }));
     } else {
       rec.listingOnly = true;
     }
@@ -140,6 +142,15 @@ async function readOutlet(o, now) {
   return rec;
 }
 
+// Runs fn over items with at most `limit` in flight; results keep the input order.
+export async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  const worker = async () => { while (next < items.length) { const i = next++; out[i] = await fn(items[i], i); } };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
+}
+
 export async function main(argv) {
   const i = argv.indexOf('--out');
   if (i < 0 || !argv[i + 1]) throw new Error('usage: fetch-sources.mjs --out <dir>');
@@ -148,14 +159,19 @@ export async function main(argv) {
   const cfg = JSON.parse(readFileSync(join(root, 'config', 'sources.json'), 'utf8'));
   const now = Date.now();
   const feed = { schemaVersion: 1, fetchedAt: new Date(now).toISOString(), sections: {} };
+  // The same outlet entry can serve several sections: read each entry once.
+  const unique = new Map();
+  for (const outlets of Object.values(cfg.sections)) {
+    for (const o of outlets) if (o.fetch === 'works' && o.entry && !unique.has(o.entry)) unique.set(o.entry, o);
+  }
+  const recs = await mapLimit([...unique.values()], CONCURRENCY, (o) => readOutlet(o, now));
+  const byEntry = new Map(recs.map((r) => [r.entry, r]));
   let ok = 0;
-  const cache = new Map(); // the same outlet entry can serve several sections
   for (const [section, outlets] of Object.entries(cfg.sections)) {
     feed.sections[section] = [];
     for (const o of outlets) {
       if (o.fetch !== 'works' || !o.entry) continue;
-      if (!cache.has(o.entry)) cache.set(o.entry, await readOutlet(o, now));
-      const rec = cache.get(o.entry);
+      const rec = byEntry.get(o.entry);
       if (rec.status === 'ok') ok++;
       feed.sections[section].push(rec);
     }

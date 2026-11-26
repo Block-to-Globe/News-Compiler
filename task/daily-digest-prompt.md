@@ -97,7 +97,7 @@ Pick one verse **reference** from `data/scripture-bank.json` for the bottom of t
 1. Run `node scripts/validate.mjs --only digest --check-market`. (A recap left unchanged, with its old `updatedAt`, is exempt: the checker skips the market cross-check for it. A recap you wrote this run is always checked.) Fix every problem it reports and run it again until it prints `ok`. If you cannot get it to pass, **do not push**. Report what failed.
 2. Run `node scripts/lint-tone.mjs`. It checks headlines, bodies, source titles and the scripture `why` line for loaded wording, first person, predictions and opinion. It ignores text inside double quotation marks, so a loaded word is acceptable only as a short, attributed direct quote (for example: the governor called the plan a "disaster"), never in your own voice. Rewrite every flagged phrase in plain, attributed language and run it again until it prints `tone: ok`. If a flag is a false alarm, say so in your report instead of contorting the sentence.
 3. Run `git status` and `git diff --stat`. Only `data/digest.json` may be changed. If anything else changed, undo it.
-4. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.
+4. Commit with the message `digest: YYYY-MM-DD morning` (today's Central date). That line is the whole message: no `Claude-Session` trailer, session link or other footer. Push to `main`. If the push is rejected, run `git pull --rebase origin main` and push once more.
 5. Never edit this file, `config/`, `scripts/`, `docs/` or any workflow. If you think one needs a change, say so in your report instead.
 
 ## Report (your final message)

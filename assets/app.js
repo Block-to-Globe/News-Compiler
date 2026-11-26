@@ -1,4 +1,4 @@
-/* Block to Globe: loads four data files independently and renders each block.
+/* Block to Globe: loads three data files independently and renders each block.
    A missing or malformed file only affects its own block. Relative paths only. */
 (function () {
   'use strict';
@@ -51,18 +51,21 @@
   var SECTION_STALE_MS = 30 * 60 * 60 * 1000;
   var MARKET_STALE_DAYS = 4;
 
+  // Built once and reused: creating an Intl.DateTimeFormat is the expensive part.
+  var CHICAGO_FMT = new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
   // Date parts for a Date in Central time: {y, m, d} as numbers.
   function chicagoParts(d) {
     var out = {};
-    new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
-      .formatToParts(d).forEach(function (x) { out[x.type] = x.value; });
+    CHICAGO_FMT.formatToParts(d).forEach(function (x) { out[x.type] = x.value; });
     return { y: +out.year, m: +out.month, d: +out.day };
   }
 
   function chicagoDateStr(d) {
     var c = chicagoParts(d);
-    function p(n) { return (n < 10 ? '0' : '') + n; }
-    return c.y + '-' + p(c.m) + '-' + p(c.d);
+    return c.y + '-' + pad2(c.m) + '-' + pad2(c.d);
   }
 
   // Whole days between a YYYY-MM-DD string and today in Central time (null if unparseable).
@@ -82,12 +85,13 @@
     return el('p', 'stale-note', 'Last updated ' + label + '.');
   }
 
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   // "2026-11-21" -> "Nov 21, 2026" without timezone shifts.
   function prettyDate(ymd) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || '');
     if (!m) return ymd || '';
-    var names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var mo = names[parseInt(m[2], 10) - 1];
+    var mo = MONTHS[parseInt(m[2], 10) - 1];
     return mo ? mo + ' ' + parseInt(m[3], 10) + ', ' + m[1] : ymd;
   }
 
@@ -172,12 +176,12 @@
     var dRef = dScr && isStr(dScr.reference) ? dScr.reference : null;
     var s = scrRes.ok ? scrRes.data : null;
 
-    var textOk = s && isStr(s.text) && isStr(s.reference) && (!dRef || s.reference === dRef);
+    var hasText = s && isStr(s.text) && isStr(s.reference);
 
     var nodes = [];
-    if (textOk) {
-      var bq = el('blockquote', null, s.text);
-      nodes.push(bq);
+    // Show the fetched text when it matches today's reference (or there is no reference to match).
+    if (hasText && (!dRef || s.reference === dRef)) {
+      nodes.push(el('blockquote', null, s.text));
       nodes.push(el('cite', null, '— ' + s.reference + ' (KJV)'));
     } else if (dRef) {
       // Text missing or doesn't match today's reference: show the reference with a link.
@@ -189,9 +193,6 @@
         p.appendChild(a);
       }
       nodes.push(p);
-    } else if (s && isStr(s.text) && isStr(s.reference)) {
-      nodes.push(el('blockquote', null, s.text));
-      nodes.push(el('cite', null, '— ' + s.reference + ' (KJV)'));
     } else {
       failBlock(root, "Today's verse isn't available right now.");
       return;
@@ -244,17 +245,18 @@
   ];
   var GRIM = new RegExp('\\b(?:' + GRIM_TERMS.join('|') + ')', 'i');
 
+  // One 3-second timer: it aborts the request where AbortController exists and rejects either way.
   function wikiFallback() {
     var c = chicagoParts(new Date());
-    function p(n) { return (n < 10 ? '0' : '') + n; }
-    var url = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/' + p(c.m) + '/' + p(c.d);
+    var url = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected/' + pad2(c.m) + '/' + pad2(c.d);
     var ctl = typeof AbortController === 'function' ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 3000);
-    var race = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')); }, 3000); });
+    var timer;
+    var timeout = new Promise(function (_, rej) {
+      timer = setTimeout(function () { if (ctl) ctl.abort(); rej(new Error('timeout')); }, 3000);
+    });
     var req = fetch(url, { signal: ctl ? ctl.signal : undefined })
       .then(function (r) { if (!r.ok) throw new Error('wiki ' + r.status); return r.json(); })
       .then(function (j) {
-        clearTimeout(timer);
         var found = null;
         (j.selected || []).some(function (e) {
           if (!e || !isStr(e.text) || !isNum(e.year) || GRIM.test(e.text)) return false;
@@ -268,7 +270,10 @@
         if (!found) throw new Error('no entries');
         return found;
       });
-    return Promise.race([req, race]);
+    return Promise.race([req, timeout]).then(
+      function (v) { clearTimeout(timer); return v; },
+      function (e) { clearTimeout(timer); throw e; }
+    );
   }
 
   function runHistory(res) {
@@ -312,12 +317,11 @@
 
     files.digest.then(function (res) {
       renderMeta(res);
-      SECTIONS.forEach(function (key) {
-        var sec = res.ok && res.data && res.data.sections ? res.data.sections[key] : null;
-        renderSection(key, sec);
-      });
+      var secs = res.ok && res.data && res.data.sections ? res.data.sections : null;
+      SECTIONS.forEach(function (key) { renderSection(key, secs ? secs[key] : null); });
     });
 
+    // Separate chain on purpose: an error in one block never stops another (rule 6).
     files.digest.then(renderMarket);
     Promise.all([files.scripture, files.digest]).then(function (r) { renderScripture(r[0], r[1]); });
     files.history.then(runHistory);

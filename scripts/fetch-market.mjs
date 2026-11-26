@@ -33,13 +33,16 @@ const ITEMS = [
 
 function die(msg) { console.error('market: ' + msg + ' (nothing written)'); process.exit(1); }
 const r2 = (n) => Math.round(n * 100) / 100;
-const etParts = (d) => Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-  timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23', weekday: 'short',
-}).formatToParts(d).map((p) => [p.type, p.value]));
+// One formatter, built once: Intl.DateTimeFormat construction is the slow part.
+const ET_FMT = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', hourCycle: 'h23', weekday: 'short',
+});
+const etParts = (d) => Object.fromEntries(ET_FMT.formatToParts(d).map((p) => [p.type, p.value]));
 const etDate = (d) => { const p = etParts(d); return `${p.year}-${p.month}-${p.day}`; };
 
 const AFTER_CLOSE_MIN = 16 * 60 + 30; // 16:30 ET: the cash close plus a buffer for the data vendor
-const etMinutes = (d) => { const p = etParts(d); return Number(p.hour) * 60 + Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', minute: '2-digit' }).format(d)); };
+const etMinutes = (d) => { const p = etParts(d); return Number(p.hour) * 60 + Number(p.minute); };
 const validClose = (c) => typeof c === 'number' && Number.isFinite(c) && c > 0;
 
 // Returns { date: 'YYYY-MM-DD' (ET), last, prev } from the last two COMPLETE daily closes.
@@ -71,8 +74,8 @@ async function get(item) {
   return p;
 }
 
-const got = [];
-for (const it of ITEMS) got.push({ it, p: await get(it) });
+// All symbols at once; any failure still exits 1 with nothing written (die() inside get()).
+const got = await Promise.all(ITEMS.map(async (it) => ({ it, p: await get(it) })));
 
 const asOf = got[0].p.date; // S&P 500 sets the trading day
 for (const { it, p } of got) {

@@ -28,8 +28,6 @@ if (!m) bail('bad date ' + date);
 
 let filter;
 try { filter = JSON.parse(readFileSync(FILTER, 'utf8')); } catch { bail('could not read ' + FILTER); }
-const avoid = (filter.avoid || []).map((s) => s.toLowerCase());
-const prefer = (filter.prefer || []).map((s) => s.toLowerCase());
 
 const url = `${BASE}/api/rest_v1/feed/onthisday/selected/${m[2]}/${m[3]}`;
 let res;
@@ -48,7 +46,11 @@ if (!feed || !Array.isArray(feed.selected)) bail('feed has no "selected" list');
 const clean = (t) => String(t).replace(/\s+/g, ' ').trim();
 // Match at the start of a word, so "dies" does not match "studies".
 const esc = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const hits = (text, words) => words.filter((w) => new RegExp('\\b' + esc(w)).test(text)).length;
+// Each word's pattern is built once, not once per entry.
+const wordRes = (list) => (list || []).map((w) => new RegExp('\\b' + esc(String(w).toLowerCase())));
+const avoid = wordRes(filter.avoid);
+const prefer = wordRes(filter.prefer);
+const hits = (text, res) => res.filter((re) => re.test(text)).length;
 
 const candidates = [];
 feed.selected.forEach((e, idx) => {
@@ -59,7 +61,7 @@ feed.selected.forEach((e, idx) => {
   if (typeof page !== 'string' || !/^https:\/\/[^\s<>"']+$/.test(page)) return; // prefer well-documented entries with a linked article
   if (/[<>]/.test(text)) return;
   const low = text.toLowerCase();
-  if (hits(low, avoid) > 0) return; // skip graphic or grim entries entirely
+  if (avoid.some((re) => re.test(low))) return; // skip graphic or grim entries entirely
   candidates.push({ idx, year: e.year, text, url: page, score: hits(low, prefer) });
 });
 

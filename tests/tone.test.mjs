@@ -99,7 +99,7 @@ test('prompt: keeps the market date, fail-safe, scripture and originality rules'
   const p = readFileSync(join(root, 'task/daily-digest-prompt.md'), 'utf8');
   assert.match(p, /TZ=America\/Chicago date/);
   assert.match(p, /Markets were closed <today's weekday>; these are <asOf weekday>'s closes/);
-  assert.match(p, /Do not rely on `marketStatus` or `note` alone/);
+  assert.match(p, /Do not (?:rely on|use) `marketStatus` or `note`/);
   assert.match(p, /one item per number/);
   assert.match(p, /skips the market cross-check/);
   assert.match(p, /only `comfort`, `peace` or `prayer`/);
