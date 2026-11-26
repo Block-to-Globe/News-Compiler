@@ -22,6 +22,8 @@ const RULES = [
   [/\b(clearly|obviously|of course|undeniably|everyone knows|it is no secret)\b/i, 'asserts what the sources did not'],
   [/\b(should|must) (be|do|stop|resign|act)\b/i, 'opinion or advice'],
 ];
+// Global copies, built once (matchAll needs the g flag; a fresh RegExp per call was wasted work).
+const RULES_G = RULES.map(([re, why]) => [new RegExp(re.source, re.flags + 'g'), why]);
 
 const QUOTED = /"[^"]*"|“[^”]*”/g;
 
@@ -41,8 +43,8 @@ export function lintText(t) {
   const out = [];
   if (typeof t !== 'string') return out;
   const masked = maskQuotes(t);
-  for (const [re, why] of RULES) {
-    for (const m of masked.matchAll(new RegExp(re.source, re.flags + 'g'))) {
+  for (const [re, why] of RULES_G) {
+    for (const m of masked.matchAll(re)) {
       if (m[0] === 'I' && isRomanNumeralI(masked, m.index)) continue;
       out.push([m[0], why]);
     }

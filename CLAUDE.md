@@ -23,3 +23,4 @@ Full plan: see `docs/architecture.md` and the roadmap in the News Compiler Claud
 - One milestone at a time (P1 to P7), in order. Each ends with `qa-release-guard` checking the "Done when" line.
 - Commits touching `data/` from the scheduled task contain only `data/digest.json`.
 - Keep workflows small and readable.
+- No Claude session links (`Claude-Session:` trailers or `claude.ai/code/session_...` URLs) in commit messages, PR descriptions or files.

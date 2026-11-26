@@ -351,7 +351,7 @@ const NOW_OK = '2026-11-23T12:00:00Z'; // two days after the fixture asOf
 const check = (d, now = NOW_OK) => validate(d, ['--only', 'digest', '--check-market', '--now', now]);
 function liveMarketSandbox(bodyText) {
   const d = sandbox();
-  const r = (cpSync(join(root, 'data/market.json'), join(d, 'data/market.json')), 0);
+  // sandbox() already holds the fixed market fixture; never the live data/market.json, which changes daily.
   edit(d, 'market.json', (m) => { delete m.mock; m.source = 'test'; });
   edit(d, 'digest.json', (g) => { g.sections.market = { asOf: '2026-11-21', body: [bodyText], updatedAt: g.generatedAt }; });
   return d;

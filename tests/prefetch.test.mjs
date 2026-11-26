@@ -2,7 +2,7 @@
 // Parser checks for scripts/fetch-sources.mjs. No network.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseFeed, parseLinks, leadText, isFresh, clean, DESC_MAX, EXCERPT_MAX } from '../scripts/fetch-sources.mjs';
+import { parseFeed, parseLinks, leadText, isFresh, clean, mapLimit, DESC_MAX, EXCERPT_MAX } from '../scripts/fetch-sources.mjs';
 
 const rss = `<?xml version="1.0"?><rss><channel>
 <item><title><![CDATA[Council &amp; mayor meet]]></title><link>https://example.com/a/1</link>
@@ -62,4 +62,16 @@ test('isFresh: drops old items, keeps undated ones', () => {
   assert.equal(isFresh({ published: '2026-11-23T10:00:00Z' }, now), true);
   assert.equal(isFresh({ published: '2026-11-10T10:00:00Z' }, now), false);
   assert.equal(isFresh({ published: null }, now), true);
+});
+
+test('mapLimit: keeps input order and never runs more than the limit at once', async () => {
+  let active = 0, peak = 0;
+  const out = await mapLimit([30, 5, 20, 1, 10], 2, async (ms, i) => {
+    active++; peak = Math.max(peak, active);
+    await new Promise((r) => setTimeout(r, ms));
+    active--; return i;
+  });
+  assert.deepEqual(out, [0, 1, 2, 3, 4]);
+  assert.equal(peak, 2);
+  assert.deepEqual(await mapLimit([], 3, async () => 1), []);
 });
