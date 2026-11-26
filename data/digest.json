@@ -1,148 +1,149 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T05:34:34-06:00",
+  "generatedAt": "2026-11-26T05:34:34-06:00",
   "sections": {
     "local": {
-      "headline": "Council backs $4M in utility help; judge closes National Guard lawsuit",
+      "headline": "Winter weather advisory runs to noon; Council delays MLGW rate votes",
       "body": [
-        "Action News 5 reported that the Memphis City Council approved $4 million in utility assistance while discussion of MLGW's proposed rate increase continues.",
-        "FOX13 Memphis and WBBJ reported that the lawsuit challenging the National Guard's deployment to Memphis is now closed."
+        "Action News 5 posted a winter weather advisory for portions of West Tennessee, East Arkansas and Southeast Missouri, in effect until noon Thursday. It calls for up to two inches of snow and warns that slick roads could affect the morning commute.",
+        "FOX13 Memphis reported that the Memphis City Council voted to put off action on MLGW's water and gas rate increase for two weeks. FOX13 also published a list of Thanksgiving week food giveaways around the Memphis area."
       ],
       "sources": [
         {
-          "title": "Council approves utility aid as MLGW rate talks go on",
-          "outlet": "WMC Action News 5",
-          "url": "https://www.actionnews5.com/2026/11/25/memphis-council-approves-4m-utility-assistance-mlgw-rate-discussion-continues/"
+          "title": "Winter weather advisory for the Mid-South",
+          "outlet": "Action News 5 (WMC)",
+          "url": "https://www.actionnews5.com/weather/alerts/"
         },
         {
-          "title": "Lawsuit over Guard deployment in Memphis is closed",
+          "title": "Council delays MLGW water and gas rate vote",
           "outlet": "FOX13 Memphis",
-          "url": "https://www.fox13memphis.com/news/lawsuit-challenging-national-guard-deployment-in-memphis-officially-closed/article_6e01acfc-7444-4892-a262-436951e9a6a7.html"
+          "url": "https://www.fox13memphis.com/news/city-council-votes-to-table-mlgw-water-and-gas-rate-increase-for-two-weeks/article_f9a29a31-9757-4e7d-9c9f-45f089f2eafc.html"
         },
         {
-          "title": "Judge closes suit over Guard presence in Memphis",
-          "outlet": "WBBJ",
-          "url": "https://www.wbbjtv.com/2026/11/24/judge-closes-lawsuit-challenging-national-guards-deployment-memphis/"
+          "title": "Thanksgiving food giveaways around Memphis",
+          "outlet": "FOX13 Memphis",
+          "url": "https://www.fox13memphis.com/news/thanksgiving-food-giveaways-continue-leading-up-to-holiday/article_db337734-0fc7-4654-9a1f-2694fd0c001e.html"
         }
       ],
-      "updatedAt": "2026-11-25T05:34:34-06:00"
+      "updatedAt": "2026-11-26T05:34:34-06:00"
     },
     "state": {
-      "headline": "Broderick wins U.S. House seat; state House Democrats pick Love as leader",
+      "headline": "Snow advisory for part of Middle Tennessee; flood grant deadline extended",
       "body": [
-        "The Chattanooga Times Free Press reported that Democrat Victoria Broderick won a Tennessee seat in the U.S. House, ousting Rep. Scott DesJarlais. Tennessee Lookout reported earlier that DesJarlais had conceded the 4th Congressional District race. Tennessee Lookout also reported that Democrats in the state House chose Harold Love as their new minority leader and kept Clemmons as chair.",
-        "WSMV reported that rain arriving Wednesday is expected to complicate holiday travel, with snow showers possible on Thanksgiving."
+        "WSMV posted a winter weather advisory for part of Middle Tennessee from 6 p.m. Thursday to noon Friday, with up to two inches of wet snow expected and slick roads possible for Friday morning travel.",
+        "The Chattanooga Times Free Press reported that Copperhill businesses hit by early November flooding now have until Dec. 11 to apply for an initial state recovery grant, according to state Rep. Dan Howell. Separately, Tennessee Lookout reported that a new federal scorecard shows the state trailing a national benchmark for having enough foster homes."
       ],
       "sources": [
         {
-          "title": "Broderick wins House seat over DesJarlais",
-          "outlet": "Chattanooga Times Free Press",
-          "url": "https://www.timesfreepress.com/news/2026/nov/24/democrat-victoria-broderick-wins-tennessee-house-seat-ousting-rep-scott-desjarlais/"
-        },
-        {
-          "title": "DesJarlais concedes 4th District race",
-          "outlet": "Tennessee Lookout",
-          "url": "https://tennesseelookout.com/2026/11/16/desjarlais-concedes-tennessee-4th-congressional-district-to-democrat-victoria-broderick/"
-        },
-        {
-          "title": "State House Democrats choose new leaders",
-          "outlet": "Tennessee Lookout",
-          "url": "https://tennesseelookout.com/2026/11/25/tennessee-house-democrats-select-new-minority-leader-in-harold-love-keep-clemmons-as-chair"
-        },
-        {
-          "title": "Rain and snow showers may affect holiday travel",
+          "title": "Winter weather advisory for part of Middle Tennessee",
           "outlet": "WSMV",
-          "url": "https://www.wsmv.com/2026/11/25/rain-arrives-wednesday-complicates-travel-snow-showers-thanksgiving/"
+          "url": "https://www.wsmv.com/weather/alerts/"
+        },
+        {
+          "title": "More time for Copperhill flood recovery grants",
+          "outlet": "Chattanooga Times Free Press",
+          "url": "https://www.timesfreepress.com/news/2026/nov/25/copperhill-business-aid-deadline-extended-as-flood-recovery-continues/"
+        },
+        {
+          "title": "Federal scorecard on Tennessee foster care",
+          "outlet": "Tennessee Lookout",
+          "url": "https://tennesseelookout.com/2026/11/25/tennessee-lags-by-most-measures-in-new-federal-foster-care-analysis/"
         }
       ],
-      "updatedAt": "2026-11-25T05:34:34-06:00"
+      "updatedAt": "2026-11-26T05:34:34-06:00"
     },
     "federal": {
-      "headline": "Army detonation in Iowa set to proceed; jury convicts Huawei",
+      "headline": "Administration proposes higher tariffs on China, EU and other partners",
       "body": [
-        "ABC News reported that the Army said its planned detonation of lead explosives in Iowa would go ahead after an appeals court denied a bid to stop it. CBS News reported that officials set the detonation for Wednesday morning. According to ABC News, Iowa's governor issued an emergency proclamation covering three counties.",
-        "PBS NewsHour and ABC News reported that a U.S. jury found Chinese tech company Huawei guilty of charges that include conspiracy to steal trade secrets and bank fraud. ABC News put the number of counts at 10."
+        "PBS NewsHour and CBS News reported that the Trump administration moved Wednesday to raise tariffs on major trading partners, including an added 20% on Chinese goods. PBS said the European Union, Japan, South Korea and Taiwan are among the others, and that the administration argues excess factory output abroad hurts American manufacturers.",
+        "PBS NewsHour also reported Commerce Department figures showing consumer prices in October up 3.8% from a year earlier, compared with 3.6% in September. In Iowa, ABC News and PBS NewsHour reported that officials saw encouraging early results, with no sign of spreading lead, after the Army detonated a stockpile of lead azide."
       ],
       "sources": [
         {
-          "title": "Army says Iowa detonation will go ahead",
-          "outlet": "ABC News",
-          "url": "https://abcnews.com/Politics/trump-ordered-military-hold-off-iowa-explosives-detonation/story?id=138384845"
-        },
-        {
-          "title": "Officials set Wednesday morning for Iowa detonation",
-          "outlet": "CBS News",
-          "url": "https://www.cbsnews.com/news/army-iowa-explosives-trump-appeals-court/"
-        },
-        {
-          "title": "Iowa governor issues proclamation ahead of detonation",
-          "outlet": "ABC News",
-          "url": "https://abcnews.com/US/us-army-details-mitigation-plans-controlled-iowa-munition/story?id=138410668"
-        },
-        {
-          "title": "Jury finds Huawei guilty in federal trial",
+          "title": "Proposed tariff increases on trading partners",
           "outlet": "PBS NewsHour",
-          "url": "https://www.pbs.org/newshour/nation/u-s-jury-finds-chinese-tech-giant-huawei-guilty-of-conspiracy-to-steal-trade-secrets-bank-fraud"
+          "url": "https://www.pbs.org/newshour/politics/trump-administration-to-raise-tariffs-on-china-eu-brazil-and-others"
         },
         {
-          "title": "Huawei convicted on 10 counts",
+          "title": "New tariffs planned for China, EU and others",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/trump-administration-tariffs-14-trading-partners/"
+        },
+        {
+          "title": "October inflation figures",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/economy/inflation-remains-stubbornly-high-despite-a-drop-in-gas-prices"
+        },
+        {
+          "title": "Early lead readings after Iowa detonation",
           "outlet": "ABC News",
-          "url": "https://abcnews.com/Business/wireStory/us-jury-find-chinese-tech-giant-huawei-guilty-138421898"
+          "url": "https://abcnews.com/US/iowa-detonation-lead-azide-army/story?id=138425051"
+        },
+        {
+          "title": "Army briefing after Iowa detonation",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/nation/watch-live-army-offers-update-after-detonating-lead-azide-stockpile-in-iowa"
         }
       ],
-      "updatedAt": "2026-11-25T05:34:34-06:00"
+      "updatedAt": "2026-11-26T05:34:34-06:00"
     },
     "international": {
-      "headline": "Riyadh drone strike reported; UN chief presses for Colombia peace deal",
+      "headline": "Cairo highway fire after tanker crash kills at least 31",
       "body": [
-        "Al Jazeera reported that Saudi civil defense said 11 people were injured in a Houthi drone attack on a tower in Riyadh. The outlet later reported that the Saudi-led coalition intercepted Houthi attacks following a strike on Hodeidah in Yemen. Separately, ABC News reported that President Trump said the Iran war is \"funded\" through January.",
-        "UN News reported that Secretary-General António Guterres urged renewed commitment to Colombia's landmark peace agreement."
+        "CBS News and the Associated Press reported that a fuel tanker crash sparked a large fire on a highway near Cairo, killing at least 31 people.",
+        "UN News reported that the U.N. aid chief, Tom Fletcher, arrived in Yemen on Wednesday and warned that fighting and supply route restrictions are keeping families from food and medicine. Separately, The Hill reported that an Iranian army spokesperson said, according to state media, that Iran is increasing surveillance and control over the Strait of Hormuz."
       ],
       "sources": [
         {
-          "title": "Saudi officials report injuries in Riyadh drone attack",
-          "outlet": "Al Jazeera",
-          "url": "https://www.aljazeera.com/news/2026/11/24/saudi-led-coalition-condemns-terrorist-attack-on-tower-in-riyadh"
+          "title": "Deadly tanker crash and fire on Cairo highway",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/egypt-fuel-tanker-crash-cairo-highway-fire/"
         },
         {
-          "title": "Coalition reports intercepting Houthi attacks",
-          "outlet": "Al Jazeera",
-          "url": "https://www.aljazeera.com/news/2026/11/25/saudi-led-coalition-intercepts-houthi-attacks-after-hodeidah-strike"
+          "title": "Cairo ring road fire after fuel tanker crash",
+          "outlet": "AP via U.S. News",
+          "url": "https://www.usnews.com/news/world/articles/2026-11-25/a-fire-on-a-major-highway-surrounding-cairo-kills-at-least-30-people-egypts-health-ministry-says"
         },
         {
-          "title": "Live updates on Iran and war funding",
-          "outlet": "ABC News",
-          "url": "https://abcnews.com/International/live-updates/iran-live-updates-tehran-strait-hormuz-safe-demands/?id=138369648"
-        },
-        {
-          "title": "Guterres speaks on Colombia peace deal",
+          "title": "U.N. aid chief arrives in Yemen",
           "outlet": "UN News",
-          "url": "https://news.un.org/en/story/2026/11/1168864"
+          "url": "https://news.un.org/en/story/2026/11/1168872"
+        },
+        {
+          "title": "Iran says it is tightening watch on Hormuz",
+          "outlet": "The Hill",
+          "url": "https://thehill.com/policy/defense/6243090-iran-strait-of-hormuz-ships/"
         }
       ],
-      "updatedAt": "2026-11-25T05:34:34-06:00"
+      "updatedAt": "2026-11-26T05:34:34-06:00"
     },
     "market": {
-      "asOf": "2026-11-24",
+      "asOf": "2026-11-25",
       "body": [
-        "These are the most recent closes, from Tuesday, November 24. The S&P 500 fell 0.5%. The Dow rose 0.85%. The Nasdaq fell 1.48%.",
-        "The 10-year Treasury yield fell 1 basis point to 4.9%. Oil fell 1.55%. Gold fell 0.32%. The US Dollar Index rose 0.16%."
+        "Markets were closed Thursday; these are Wednesday's closes from November 25. The S&P 500 fell 0.25%. The Dow rose 0.33%. The Nasdaq fell 0.62%.",
+        "The 10-year Treasury yield fell 6 basis points to 4.85%. Oil rose 0.75%. Gold rose 1.96%. The US Dollar Index rose 0.14%. A midday report from ABC News tied the choppy trading to a sell-off in some leading artificial intelligence companies."
       ],
-      "updatedAt": "2026-11-25T05:34:34-06:00"
+      "sources": [
+        {
+          "title": "Midday trading as AI stocks sell off",
+          "outlet": "ABC News",
+          "url": "https://abcnews.com/Business/stocks-tumble-tech-sell-off-resumes-nvidia-falls/story?id=138442070"
+        }
+      ],
+      "updatedAt": "2026-11-26T05:34:34-06:00"
     }
   },
   "scripture": {
-    "reference": "Psalm 145:18",
-    "theme": "prayer"
+    "reference": "Psalm 34:18",
+    "theme": "comfort"
   },
   "notes": [
-    "feed: prefetch missing or stale, used search only",
-    "all news sections: search headlines only, no article text read",
-    "local: both items from search headlines; utility aid is single-source",
-    "state: one outlet per story",
-    "federal: governor proclamation is single-source (ABC)",
-    "international: Riyadh and Hodeidah items single outlet (Al Jazeera, not a listed outlet); Iran funding line ABC only, from a live blog; Colombia item UN News only",
-    "market: no cause sentence, no article read",
-    "scripture: violence and war day, prayer theme (peace used last two days)"
+    "feed: fetched early Wednesday afternoon, about 16 hours before this run",
+    "local: rate vote and giveaways from FOX13; rate vote is headline only; advisory from WMC alert text",
+    "state: one outlet per story; foster care item is feed description only",
+    "federal: CBS tariff item is listing only; inflation single outlet (PBS)",
+    "international: Cairo from search headlines only; Yemen UN News only; Hormuz is The Hill listing only",
+    "market: cause sentence from a midday ABC report",
+    "scripture: deadly crash day, comfort theme"
   ]
 }
