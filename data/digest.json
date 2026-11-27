@@ -1,149 +1,152 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-26T05:34:34-06:00",
+  "generatedAt": "2026-11-27T05:34:41-06:00",
   "sections": {
     "local": {
-      "headline": "Winter weather advisory runs to noon; Council delays MLGW rate votes",
+      "headline": "MLGW power back after holiday outages; fatal North Memphis shooting probed",
       "body": [
-        "Action News 5 posted a winter weather advisory for portions of West Tennessee, East Arkansas and Southeast Missouri, in effect until noon Thursday. It calls for up to two inches of snow and warns that slick roads could affect the morning commute.",
-        "FOX13 Memphis reported that the Memphis City Council voted to put off action on MLGW's water and gas rate increase for two weeks. FOX13 also published a list of Thanksgiving week food giveaways around the Memphis area."
+        "Power has been restored after outages hit more than 1,900 MLGW customers around noon on Thanksgiving, Action News 5 reported. Most were reported around Cordova, near Germantown and Walnut Grove roads, and the cause was not clear. Separately, police are looking into a fatal Thanksgiving shooting in North Memphis, according to Action News 5. WREG reported that a man was killed.",
+        "FOX13 Memphis reported that Memphis Animal Services will hold a pet adoption event from noon to 4 p.m. Saturday and Sunday at 2350 Appling Cove. The city said 190 cats and dogs are ready for homes."
       ],
       "sources": [
         {
-          "title": "Winter weather advisory for the Mid-South",
+          "title": "Thanksgiving Day power outages restored",
           "outlet": "Action News 5 (WMC)",
-          "url": "https://www.actionnews5.com/weather/alerts/"
+          "url": "https://www.actionnews5.com/2026/11/26/more-than-1900-mlgw-customers-without-power-thanksgiving/"
         },
         {
-          "title": "Council delays MLGW water and gas rate vote",
-          "outlet": "FOX13 Memphis",
-          "url": "https://www.fox13memphis.com/news/city-council-votes-to-table-mlgw-water-and-gas-rate-increase-for-two-weeks/article_f9a29a31-9757-4e7d-9c9f-45f089f2eafc.html"
+          "title": "North Memphis shooting investigation",
+          "outlet": "Action News 5 (WMC)",
+          "url": "https://www.actionnews5.com/2026/11/26/memphis-police-investigating-deadly-thanksgiving-shooting-north-memphis/"
         },
         {
-          "title": "Thanksgiving food giveaways around Memphis",
+          "title": "Man killed in North Memphis shooting",
+          "outlet": "WREG",
+          "url": "https://wreg.com/news/man-killed-after-north-memphis-shooting-mpd/"
+        },
+        {
+          "title": "Weekend pet adoption event",
           "outlet": "FOX13 Memphis",
-          "url": "https://www.fox13memphis.com/news/thanksgiving-food-giveaways-continue-leading-up-to-holiday/article_db337734-0fc7-4654-9a1f-2694fd0c001e.html"
+          "url": "https://www.fox13memphis.com/news/mas-holding-adoption-event-for-black-friday/article_6c66eed7-8fb8-4df6-ba68-8f70fe7d1286.html"
         }
       ],
-      "updatedAt": "2026-11-26T05:34:34-06:00"
+      "updatedAt": "2026-11-27T05:34:41-06:00"
     },
     "state": {
-      "headline": "Snow advisory for part of Middle Tennessee; flood grant deadline extended",
+      "headline": "Snow falls on Thanksgiving; Tennessee band stays for delayed Macy's parade",
       "body": [
-        "WSMV posted a winter weather advisory for part of Middle Tennessee from 6 p.m. Thursday to noon Friday, with up to two inches of wet snow expected and slick roads possible for Friday morning travel.",
-        "The Chattanooga Times Free Press reported that Copperhill businesses hit by early November flooding now have until Dec. 11 to apply for an initial state recovery grant, according to state Rep. Dan Howell. Separately, Tennessee Lookout reported that a new federal scorecard shows the state trailing a national benchmark for having enough foster homes."
+        "Thanksgiving brought snow to parts of Tennessee. WSMV published photos from around Middle Tennessee, and WVLT also shared pictures of the holiday snowfall.",
+        "WSMV reported that the Dobyns-Bennett High School band from East Tennessee is extending its New York City stay to play in the Macy's Thanksgiving Day Parade, which bad weather pushed to Saturday. The trip involves nearly 400 students, and the band director said it had already cost about $750,000."
       ],
       "sources": [
         {
-          "title": "Winter weather advisory for part of Middle Tennessee",
+          "title": "Photos of Thanksgiving snow in Middle Tennessee",
           "outlet": "WSMV",
-          "url": "https://www.wsmv.com/weather/alerts/"
+          "url": "https://www.wsmv.com/2026/11/27/photos-snow-falls-across-middle-tennessee-thanksgiving-day/"
         },
         {
-          "title": "More time for Copperhill flood recovery grants",
-          "outlet": "Chattanooga Times Free Press",
-          "url": "https://www.timesfreepress.com/news/2026/nov/25/copperhill-business-aid-deadline-extended-as-flood-recovery-continues/"
+          "title": "Pictures of Tennessee holiday snow",
+          "outlet": "WVLT",
+          "url": "https://www.wvlt.tv/2026/11/27/tennessee-gets-thanksgiving-day-snow-see-pictures/"
         },
         {
-          "title": "Federal scorecard on Tennessee foster care",
-          "outlet": "Tennessee Lookout",
-          "url": "https://tennesseelookout.com/2026/11/25/tennessee-lags-by-most-measures-in-new-federal-foster-care-analysis/"
+          "title": "School band extends New York stay for parade",
+          "outlet": "WSMV",
+          "url": "https://www.wsmv.com/2026/11/26/east-tn-high-school-band-secures-funding-stay-nyc-perform-postponed-macys-thanksgiving-day-parade/"
         }
       ],
-      "updatedAt": "2026-11-26T05:34:34-06:00"
+      "updatedAt": "2026-11-27T05:34:41-06:00"
     },
     "federal": {
-      "headline": "Administration proposes higher tariffs on China, EU and other partners",
+      "headline": "Thanksgiving storm disrupts travel and power; Trump disputes GDP figures",
       "body": [
-        "PBS NewsHour and CBS News reported that the Trump administration moved Wednesday to raise tariffs on major trading partners, including an added 20% on Chinese goods. PBS said the European Union, Japan, South Korea and Taiwan are among the others, and that the administration argues excess factory output abroad hurts American manufacturers.",
-        "PBS NewsHour also reported Commerce Department figures showing consumer prices in October up 3.8% from a year earlier, compared with 3.6% in September. In Iowa, ABC News and PBS NewsHour reported that officials saw encouraging early results, with no sign of spreading lead, after the Army detonated a stockpile of lead azide."
+        "A Thanksgiving storm system brought rough weather to large parts of the country. New York's governor declared a state of emergency for southern areas of the state, including New York City and Long Island, ABC News reported. CBS News, citing FlightAware, said about 1,300 flights were delayed Thursday morning and another 400 or so canceled. A later NBC News headline reported hundreds of thousands of people without power.",
+        "PBS NewsHour reported that President Trump on Thursday accused the Commerce Department of deliberately issuing wrong growth numbers ahead of the midterms and said he wants it investigated. ABC News reported that the department's Wednesday revision put third-quarter growth at an annual rate of 4.3%, up from an earlier estimate of 3.4%."
       ],
       "sources": [
         {
-          "title": "Proposed tariff increases on trading partners",
-          "outlet": "PBS NewsHour",
-          "url": "https://www.pbs.org/newshour/politics/trump-administration-to-raise-tariffs-on-china-eu-brazil-and-others"
-        },
-        {
-          "title": "New tariffs planned for China, EU and others",
-          "outlet": "CBS News",
-          "url": "https://www.cbsnews.com/news/trump-administration-tariffs-14-trading-partners/"
-        },
-        {
-          "title": "October inflation figures",
-          "outlet": "PBS NewsHour",
-          "url": "https://www.pbs.org/newshour/economy/inflation-remains-stubbornly-high-despite-a-drop-in-gas-prices"
-        },
-        {
-          "title": "Early lead readings after Iowa detonation",
+          "title": "New York emergency declaration ahead of storm",
           "outlet": "ABC News",
-          "url": "https://abcnews.com/US/iowa-detonation-lead-azide-army/story?id=138425051"
+          "url": "https://abcnews.com/US/new-york-declares-emergency-thanksgiving-storm-threatens-east/story?id=138464273"
         },
         {
-          "title": "Army briefing after Iowa detonation",
+          "title": "Maps of Thanksgiving storm disruptions",
+          "outlet": "CBS News",
+          "url": "https://www.cbsnews.com/news/maps-thanksgiving-storms-disrupt-holiday-festivities-travel/"
+        },
+        {
+          "title": "Power outages from Thanksgiving storms",
+          "outlet": "NBC News",
+          "url": "https://www.nbcnews.com/news/us-news/much-country-thanksgiving-featured-nasty-weather-rcna611521"
+        },
+        {
+          "title": "Trump's complaint about GDP figures",
           "outlet": "PBS NewsHour",
-          "url": "https://www.pbs.org/newshour/nation/watch-live-army-offers-update-after-detonating-lead-azide-stockpile-in-iowa"
+          "url": "https://www.pbs.org/newshour/politics/trump-calls-gdp-figures-fake-and-demands-an-investigation-of-commerce-department"
+        },
+        {
+          "title": "Revised third-quarter growth estimate",
+          "outlet": "ABC News",
+          "url": "https://abcnews.com/Business/gdp-report-provide-revision-3rd-quarter-data-latest/story?id=138410335"
         }
       ],
-      "updatedAt": "2026-11-26T05:34:34-06:00"
+      "updatedAt": "2026-11-27T05:34:41-06:00"
     },
     "international": {
-      "headline": "Cairo highway fire after tanker crash kills at least 31",
+      "headline": "Two Italians killed in Kuwait drone strike; Iran denies responsibility",
       "body": [
-        "CBS News and the Associated Press reported that a fuel tanker crash sparked a large fire on a highway near Cairo, killing at least 31 people.",
-        "UN News reported that the U.N. aid chief, Tom Fletcher, arrived in Yemen on Wednesday and warned that fighting and supply route restrictions are keeping families from food and medicine. Separately, The Hill reported that an Iranian army spokesperson said, according to state media, that Iran is increasing surveillance and control over the Strait of Hormuz."
+        "Two Italians were killed in a drone strike in Kuwait, and Iran denied responsibility, according to a UPI headline. A U.S. News headline attributed the drones to Iran. The same headline reported that Israeli strikes killed 10 people in Gaza; an earlier headline carried by ClickOrlando put that number at 8.",
+        "In Ukraine, President Volodymyr Zelenskyy warned Thursday that Russia is preparing another major attack on energy infrastructure and other critical services, PBS NewsHour reported. A Kyiv Independent headline said Russian attacks over the past day killed 6 people, injured 25 and caused power outages in six regions."
       ],
       "sources": [
         {
-          "title": "Deadly tanker crash and fire on Cairo highway",
-          "outlet": "CBS News",
-          "url": "https://www.cbsnews.com/news/egypt-fuel-tanker-crash-cairo-highway-fire/"
+          "title": "Kuwait drone strike and Iran's denial",
+          "outlet": "UPI",
+          "url": "https://www.upi.com/Top_News/World-News/2026/11/26/italy-Italians-killed-Kuwait-drone-strike-Iran/1511795749242"
         },
         {
-          "title": "Cairo ring road fire after fuel tanker crash",
-          "outlet": "AP via U.S. News",
-          "url": "https://www.usnews.com/news/world/articles/2026-11-25/a-fire-on-a-major-highway-surrounding-cairo-kills-at-least-30-people-egypts-health-ministry-says"
+          "title": "Deaths reported in Gaza and Kuwait",
+          "outlet": "U.S. News",
+          "url": "https://www.usnews.com/news/world/articles/2026-11-26/israeli-strikes-kill-8-in-gaza-and-other-mideast-news"
         },
         {
-          "title": "U.N. aid chief arrives in Yemen",
-          "outlet": "UN News",
-          "url": "https://news.un.org/en/story/2026/11/1168872"
+          "title": "Earlier report on Gaza strikes",
+          "outlet": "ClickOrlando",
+          "url": "https://www.clickorlando.com/news/world/2026/11/26/israeli-strikes-kill-8-in-gaza-and-other-mideast-news/"
         },
         {
-          "title": "Iran says it is tightening watch on Hormuz",
-          "outlet": "The Hill",
-          "url": "https://thehill.com/policy/defense/6243090-iran-strait-of-hormuz-ships/"
+          "title": "Zelenskyy warning on Ukraine's power grid",
+          "outlet": "PBS NewsHour",
+          "url": "https://www.pbs.org/newshour/world/zelenskyy-warns-of-imminent-major-russian-attack-on-ukraines-power-grid"
+        },
+        {
+          "title": "Casualties and outages across Ukraine",
+          "outlet": "Kyiv Independent",
+          "url": "https://kyivindependent.com/russian-attacks-kill-6-injure-25-across-ukraine-over-past-day-power-outages-across-6-oblasts/"
         }
       ],
-      "updatedAt": "2026-11-26T05:34:34-06:00"
+      "updatedAt": "2026-11-27T05:34:41-06:00"
     },
     "market": {
       "asOf": "2026-11-25",
       "body": [
-        "Markets were closed Thursday; these are Wednesday's closes from November 25. The S&P 500 fell 0.25%. The Dow rose 0.33%. The Nasdaq fell 0.62%.",
-        "The 10-year Treasury yield fell 6 basis points to 4.85%. Oil rose 0.75%. Gold rose 1.96%. The US Dollar Index rose 0.14%. A midday report from ABC News tied the choppy trading to a sell-off in some leading artificial intelligence companies."
+        "Markets were closed Thursday for Thanksgiving; these are Wednesday's closes from November 25. The S&P 500 fell 0.25%. The Dow rose 0.33%. The Nasdaq fell 0.62%.",
+        "The 10-year Treasury yield fell 6 basis points to 4.85%. Oil rose 2.51%. Gold rose 3.4%. The US Dollar Index rose 0.01%."
       ],
-      "sources": [
-        {
-          "title": "Midday trading as AI stocks sell off",
-          "outlet": "ABC News",
-          "url": "https://abcnews.com/Business/stocks-tumble-tech-sell-off-resumes-nvidia-falls/story?id=138442070"
-        }
-      ],
-      "updatedAt": "2026-11-26T05:34:34-06:00"
+      "updatedAt": "2026-11-27T05:34:41-06:00"
     }
   },
   "scripture": {
-    "reference": "Psalm 34:18",
-    "theme": "comfort"
+    "reference": "2 Thessalonians 3:16",
+    "theme": "peace"
   },
   "notes": [
-    "feed: fetched early Wednesday afternoon, about 16 hours before this run",
-    "local: rate vote and giveaways from FOX13; rate vote is headline only; advisory from WMC alert text",
-    "state: one outlet per story; foster care item is feed description only",
-    "federal: CBS tariff item is listing only; inflation single outlet (PBS)",
-    "international: Cairo from search headlines only; Yemen UN News only; Hormuz is The Hill listing only",
-    "market: cause sentence from a midday ABC report",
-    "scripture: deadly crash day, comfort theme"
+    "feed: fetched early Thursday afternoon, about 16 hours before this run; Axios error (HTTP 403)",
+    "local: shooting from search headlines only (Action News 5, WREG)",
+    "state: snow from search headlines only; band story single outlet (WSMV)",
+    "federal: outage item is NBC search headline only; FCC and other single-source items skipped",
+    "international: Kuwait, Gaza and Kyiv Independent items from search headlines only; Zelenskyy single outlet (PBS)",
+    "market: oil, gold and dollar figures changed in market.json since the Nov 26 run with the same asOf; please verify",
+    "scripture: deadly violence in lead stories, peace theme"
   ]
 }
