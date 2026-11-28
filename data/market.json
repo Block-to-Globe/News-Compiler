@@ -1,64 +1,63 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-11-27T03:42:29.799Z",
-  "asOf": "2026-11-25",
-  "marketStatus": "holiday",
-  "note": "Markets were closed today; showing the last close.",
+  "fetchedAt": "2026-11-28T03:25:08.117Z",
+  "asOf": "2026-11-27",
+  "marketStatus": "closed",
   "items": [
     {
       "id": "sp500",
       "label": "S&P 500",
-      "value": 7182.78,
-      "change": -18.31,
-      "changePct": -0.25,
+      "value": 7297.49,
+      "change": 114.71,
+      "changePct": 1.6,
       "unit": "points"
     },
     {
       "id": "dow",
       "label": "Dow",
-      "value": 50182.95,
-      "change": 164.25,
-      "changePct": 0.33,
+      "value": 50774.94,
+      "change": 591.99,
+      "changePct": 1.18,
       "unit": "points"
     },
     {
       "id": "nasdaq",
       "label": "Nasdaq",
-      "value": 23585.8,
-      "change": -147.74,
-      "changePct": -0.62,
+      "value": 24129.5,
+      "change": 543.7,
+      "changePct": 2.31,
       "unit": "points"
     },
     {
       "id": "us10y",
       "label": "10-yr Treasury",
-      "value": 4.85,
-      "change": -0.06,
-      "changePct": -1.14,
+      "value": 4.94,
+      "change": 0.09,
+      "changePct": 1.82,
       "unit": "percent"
     },
     {
       "id": "wti",
       "label": "Oil (WTI)",
-      "value": 85.78,
-      "change": 2.1,
-      "changePct": 2.51,
+      "value": 83.08,
+      "change": -0.6,
+      "changePct": -0.72,
       "unit": "usd"
     },
     {
       "id": "gold",
       "label": "Gold",
-      "value": 3655.9,
-      "change": 120.1,
-      "changePct": 3.4,
+      "value": 3668.5,
+      "change": 132.7,
+      "changePct": 3.75,
       "unit": "usd"
     },
     {
       "id": "dxy",
       "label": "US Dollar Index",
-      "value": 103.68,
-      "change": 0.01,
-      "changePct": 0.01,
+      "value": 104.01,
+      "change": 0.34,
+      "changePct": 0.33,
       "unit": "index"
     }
   ],
