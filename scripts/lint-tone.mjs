@@ -21,6 +21,13 @@ const RULES = [
   [/!/, 'exclamation mark'],
   [/\b(clearly|obviously|of course|undeniably|everyone knows|it is no secret)\b/i, 'asserts what the sources did not'],
   [/\b(should|must) (be|do|stop|resign|act)\b/i, 'opinion or advice'],
+  // Spin rules. Each targets a pattern that adds judgment the facts do not carry.
+  [/\b(insist(s|ed)?|tout(s|ed)?|boast(s|ed)?|bragg?(s|ed)?|lament(s|ed)?|decr(y|ies|ied)|vow(s|ed)?|warn(s|ed)?)\b|\b(claim(s|ed|ing)?|admit(s|ted)?|concede(s|d)?) that\b|\b(falsely|wrongly|baselessly) (claim|said|say)/i, 'loaded attribution verb; use "said"'],
+  [/\b(massive|huge|sweeping|unprecedented|dramatic(ally)?|devastating|staggering|alarming|troubling|crackdown|firestorm|backlash|chaos|chaotic|brutal|draconian|hard-?line|far-(right|left)|beleaguered|blockbuster|surprising(ly)?|unexpected(ly)?|landmark (ruling|decision|law|bill|deal|case|agreement)|historic(?! (district|site|home|house|building|church|marker|preservation|commission)))\b/i, 'characterization; state the fact or number instead'],
+  [/\b(in an? (bid|effort|attempt) to|aimed at|designed to|apparently|seemingly)\b/i, 'motive or intent; attribute it to whoever stated it, or drop it'],
+  [/\b(in a (blow|win|victory|setback) (to|for)|a (win|victory|setback|blow) for|dealt a (blow|setback)|raising (questions|concerns|eyebrows)|sparking (outrage|fury|backlash|concern)|amid (growing|mounting|rising) (concerns?|criticism|pressure|questions|fears|anger|outrage))\b/i, 'framing; report what happened, not what it means'],
+  [/\b(critics|opponents|supporters|observers|experts|analysts|some|many) (say|said|argue[sd]?|believe[sd]?|fear(s|ed)?|worr(y|ied)|warn(s|ed)?)\b/i, 'unnamed group; name who said it or drop it'],
+  [/\b(poised to|(?<!(less|more|as|most|least) )likely to|is widely expected|on track to|could (soon|eventually)|may (soon|eventually))\b/i, 'speculation; report only what has happened or is scheduled'],
 ];
 // Global copies, built once (matchAll needs the g flag; a fresh RegExp per call was wasted work).
 const RULES_G = RULES.map(([re, why]) => [new RegExp(re.source, re.flags + 'g'), why]);

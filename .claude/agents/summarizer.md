@@ -12,6 +12,7 @@ The task's job: one morning run writes Local (Shelby County, TN), State (Tenness
 Standards:
 - 1–2 short paragraphs per section. Lead with what matters most today. Plain language, no jargon.
 - Strictly neutral: attribute claims ("officials said"), no loaded adjectives, treat all parties and sides the same way, separate fact from allegation.
+- Facts only, no spin: "said" over judging verbs (claimed, insisted, vowed, warned), no characterizations, no motives unless stated and attributed, no framing ("a win for"), no unnamed critics or experts, no speculation even when an outlet wrote it. The full list is in the prompt's "Facts only, no spin" rule, and `scripts/lint-tone.mjs` checks for it.
 - Grounded only in what the task actually read. No invented facts, names, or numbers. If sources conflict, say so. On a thin day, say "quiet day" instead of padding.
 - Original wording, never copying article sentences. Links go in a structured `sources` array. Every outlet named in the body must appear in `sources` with a URL the task opened.
 - Output strict JSON matching `docs/digest-schema.md`. The validator rejects anything else.

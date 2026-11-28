@@ -77,6 +77,50 @@ test('tone: mock sections are skipped', () => {
   assert.deepEqual(lintDigest(d), []);
 });
 
+// ---------- spin ----------
+for (const [t, hit] of [
+  ['The mayor claimed that crime fell.', 'claimed that'],
+  ['The senator insisted the bill was fair.', 'insisted'],
+  ['Iran vows to counter the blockade.', 'vows'],
+  ['Zelenskyy warned that Russia is preparing an attack.', 'warned'],
+  ['The governor touted the new budget.', 'touted'],
+  ['The storm caused massive outages.', 'massive'],
+  ['Lawmakers passed a sweeping tax bill.', 'sweeping'],
+  ['A historic vote passed the House.', 'historic'],
+  ['Police announced a crackdown on speeding.', 'crackdown'],
+  ['The city cut bus routes in a bid to save money.', 'in a bid to'],
+  ['The plan is apparently stalled.', 'apparently'],
+  ['The ruling is a win for the governor.', 'a win for'],
+  ['The vote passed amid growing criticism.', 'amid growing criticism'],
+  ['The memo is raising questions about the budget.', 'raising questions'],
+  ['Critics say the plan costs too much.', 'Critics say'],
+  ['Experts warn the bridge is unsafe.', 'Experts warn'],
+  ['The bill is likely to pass next week.', 'likely to'],
+  ['The company is poised to cut jobs.', 'poised to'],
+]) {
+  test(`tone: spin is flagged: ${t}`, () => {
+    assert.ok(hits(t).includes(hit), JSON.stringify(lintText(t)));
+  });
+}
+for (const t of [
+  'The mayor said crime fell 4% last year, according to police data.',
+  'Low-income families were less likely to use vouchers once approved.',
+  'Insurance claims rose after the storm, the state said.',
+  'A group linked to the attack claimed responsibility, officials said.',
+  'The man was admitted to the hospital, police said.',
+  'The senator conceded the race on Wednesday.',
+  'The National Weather Service issued a winter storm warning.',
+  'The council met in the historic district on Monday.',
+  'Some residents said the road flooded twice this month.',
+  'More than 500,000 customers lost power, CBS News reported.',
+  'The board votes on the project on Dec. 3.',
+  'The governor called the plan a "historic win," the AP reported.',
+]) {
+  test(`tone: plain facts pass: ${t}`, () => {
+    assert.deepEqual(hits(t), []);
+  });
+}
+
 // ---------- CLI ----------
 test('tone CLI: exits 1 and names the field for a flagged source title', () => {
   const dir = mkdtempSync(join(tmpdir(), 'btg-tone-'));
@@ -108,6 +152,9 @@ test('prompt: keeps the market date, fail-safe, scripture and originality rules'
   assert.match(p, /Never imply punishment or vengeance/);
   assert.match(p, /Do not use the word "judgment" in a `why`/);
   assert.match(p, /Israel, Zion or Jerusalem/);
+  assert.match(p, /Facts only, no spin/);
+  assert.match(p, /No speculation, even an outlet's/);
+  assert.match(p, /Named sources only/);
   assert.match(p, /Never connect the verse to a candidate, party, ruling or vote result/);
   assert.match(p, /last 30 days/);
   assert.match(p, /git fetch --unshallow/);

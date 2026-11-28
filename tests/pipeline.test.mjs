@@ -564,7 +564,7 @@ function lint(bodyText, headline = 'Congress passes a funding bill') {
   rmSync(d, { recursive: true }); return r;
 }
 test('tone lint: neutral wording passes', () => {
-  const r = lint('The Senate voted 62 to 38 on Tuesday to pass a funding bill, according to the AP. Supporters said it avoids a shutdown; opponents said it spends too much.');
+  const r = lint('The Senate voted 62 to 38 on Tuesday to pass a funding bill, according to the AP. Senate Majority Leader Jane Doe said it avoids a shutdown; Sen. John Roe said it spends too much.');
   assert.equal(r.status, 0, r.stderr);
 });
 test('tone lint: loaded wording, first person and predictions are flagged', () => {
